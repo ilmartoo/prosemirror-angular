@@ -1,0 +1,7 @@
+@import "src/app/rich-text-editor/rich-text-editor-styles"; // Necesario para estilar el editor de ProseMirror
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  font-size: inherit;
+}
+

@@ -1,0 +1,26 @@
+
+Necesitamos:
+- Texto enriquecido
+- Tablas
+- Formulas (mediante imagenes o componentes editables puesto que comandos estilo latex no les mola)
+
+Soluciones:
+
++-------------+--------------------+--------+----------------------+
+| Alternativa | Componente Angular | Output | Internacionalización |
++-------------+--------------------+--------+----------------------+
+| ProseMirror | No                 | HTML   |                      |
+| TinyMCE     | Si                 | HTML   | https://www.tiny.cloud/docs/configure/localization/
+| CKEditor5   | Si                 | HTML   |                      |
+| Editor.js   | No                 | JSON   | https://editorjs.io/i18n/
+| Quill       |                    | HTML   |                      |
++-------------+--------------------+--------+----------------------+
+
+https://www.mathjax.org/ --> MathOverflow
+https://katex.org/ -->-->--> KanhAcademy
+
+------------------------------------------------------------------------------------/////////
+
+REVISAR COMO SE PODRÍA IMPLEMENTAR UN MODULO DE FUNCIONES AL ESTILO RICH TEXT
+- PREGUNTARLE A ANTONIO CUANDO VUELVA
+- Actualmente solo se me ocurre insertar el comando y luego se pone bonito
