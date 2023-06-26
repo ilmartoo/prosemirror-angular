@@ -1,0 +1,21 @@
+<div class="base" #base (focusout)="itemFocusLost($event)">
+  <button [ngClass]="{
+    item: true,
+    active: EditorMenuItemStatus.ACTIVE === currentStatus || isPopupOpen
+  }"      [disabled]="EditorMenuItemStatus.DISABLED === currentStatus"
+          (click)="isPopupOpen ? closePopup() : openPopup()">
+    <img class="icon" [src]="filePath" [alt]="tooltip ?? ''">
+    <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>
+  </button>
+
+  <div #popup [ngClass]="{ 'popup': true, show: isPopupOpen }" tabindex="-1">
+    <label>Name</label>
+    <input #linkName type="text" name="link-name">
+
+    <label>Reference</label>
+    <input #linkReference type="text" name="link-reference">
+
+<!--    <button (click)="addLink()">Create</button>-->
+  </div>
+
+</div>

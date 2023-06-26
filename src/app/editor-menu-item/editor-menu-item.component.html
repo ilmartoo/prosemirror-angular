@@ -1,0 +1,9 @@
+<div class="base" (mousedown)="preventLosingEditorFocus($event)">
+  <button [ngClass]="{
+    item: true,
+    active: EditorMenuItemStatus.ACTIVE === currentStatus,
+  }" [disabled]="EditorMenuItemStatus.DISABLED === currentStatus" (click)="executeCommand()">
+    <img class="icon" [src]="filePath" [alt]="tooltip ?? ''">
+    <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>
+  </button>
+</div>
