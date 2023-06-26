@@ -1,20 +1,28 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
-import {EditorComponent} from '@tinymce/tinymce-angular';
-import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
-import { RichTextEditorComponent } from './rich-text-editor/rich-text-editor.component';
+import {AppComponent} from './app.component';
+import {RichTextEditorComponent} from './rich-text-editor/rich-text-editor.component';
+import {EditorMenuComponent} from './editor-menu/editor-menu.component';
+import {EditorMenuMarkComponent} from './editor-menu-item/editor-menu-mark.component';
+import {EditorMenuWrapperComponent} from './editor-menu-item/editor-menu-wrapper.component';
+import {EditorMenuTextblockComponent} from './editor-menu-item/editor-menu-textblock.component';
+import {EditorMenuItemComponent} from './editor-menu-item/editor-menu-item.component';
+import {EditorMenuLinkComponent} from './editor-menu-item/editor-menu-link.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RichTextEditorComponent
+    RichTextEditorComponent,
+    EditorMenuComponent,
+    EditorMenuItemComponent,
+    EditorMenuMarkComponent,
+    EditorMenuLinkComponent,
+    EditorMenuTextblockComponent,
+    EditorMenuWrapperComponent,
   ],
 	imports: [
 		BrowserModule,
-		EditorComponent,
-		CKEditorModule
 	],
   providers: [],
   bootstrap: [AppComponent]
