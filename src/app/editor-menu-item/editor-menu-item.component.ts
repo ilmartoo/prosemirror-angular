@@ -25,7 +25,7 @@ export class EditorMenuItemComponent<T = MarkType | NodeType> implements OnInit 
   @Input({ required: true }) view!: EditorView;
   @Input({ required: true }) type!: T;
   @Input() attrs?: Attrs;
-  @Output() clicked = new EventEmitter<Command>();
+  @Output() execute = new EventEmitter<Command>();
 
   currentStatus = EditorMenuItemStatus.ENABLED;
   command: Command = (): boolean => { return false };
@@ -49,8 +49,9 @@ export class EditorMenuItemComponent<T = MarkType | NodeType> implements OnInit 
   // Override this method in child editor-menu-item to represent its functionality
   protected initCommand(): void { };
 
-  protected executeCommand(): void {
-    this.clicked.emit(this.command);
+  // Sends a signal to parent to execute given command or saved command
+  protected executeCommand(command?: Command): void {
+    this.execute.emit(command ?? this.command);
   }
 
   // Prevents losing editor focus when clicking on an editor item
