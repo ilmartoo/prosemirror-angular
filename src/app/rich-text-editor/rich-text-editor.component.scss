@@ -29,6 +29,16 @@ app-editor-menu {
       line-height: 1.5;
     }
 
+    em,
+    i {
+      font-style: italic;
+    }
+
+    b,
+    strong {
+      font-weight: bold;
+    }
+
     *:not(pre) > code {
       padding: 0.1rem;
 
