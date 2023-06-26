@@ -1,0 +1,97 @@
+<div class="editor-menu" *ngIf="view">
+  <app-editor-menu-mark [view]="view"
+                        [type]="view.state.schema.marks['strong']"
+                        (clicked)="executeCommand($event, view)"
+                        icon="bold"
+                        tooltip="Bold"
+  ></app-editor-menu-mark>
+  <app-editor-menu-mark [view]="view"
+                        [type]="view.state.schema.marks['em']"
+                        (clicked)="executeCommand($event, view)"
+                        icon="italic"
+                        tooltip="Italic"
+  ></app-editor-menu-mark>
+  <app-editor-menu-mark [view]="view"
+                        [type]="view.state.schema.marks['underline']"
+                        (clicked)="executeCommand($event, view)"
+                        icon="underline"
+                        tooltip="Underline"
+  ></app-editor-menu-mark>
+  <app-editor-menu-mark [view]="view"
+                        [type]="view.state.schema.marks['strikethrough']"
+                        (clicked)="executeCommand($event, view)"
+                        icon="strikethrough"
+                        tooltip="Strikethrough"
+  ></app-editor-menu-mark>
+  <app-editor-menu-mark [view]="view"
+                        [type]="view.state.schema.marks['code']"
+                        (clicked)="executeCommand($event, view)"
+                        icon="code"
+                        tooltip="Inline code"
+  ></app-editor-menu-mark>
+  <app-editor-menu-link [view]="view"
+                        [type]="view.state.schema.marks['link']"
+                        (clicked)="executeCommand($event, view)"
+                        icon="link"
+                        tooltip="Hyperlink"
+  ></app-editor-menu-link>
+
+  <div class="separator"></div>
+
+  <app-editor-menu-textblock [view]="view"
+                             [type]="view.state.schema.nodes['paragraph']"
+                             (clicked)="executeCommand($event, view)"
+                             icon="paragraph"
+                             tooltip="Text paragraph"
+  ></app-editor-menu-textblock>
+  <app-editor-menu-textblock [view]="view"
+                             [type]="view.state.schema.nodes['heading']"
+                             [attrs]="{ level: 1 }"
+                             (clicked)="executeCommand($event, view)"
+                             icon="header1"
+                             tooltip="Header 1"
+  ></app-editor-menu-textblock>
+  <app-editor-menu-textblock [view]="view"
+                             [type]="view.state.schema.nodes['heading']"
+                             [attrs]="{ level: 2 }"
+                             (clicked)="executeCommand($event, view)"
+                             icon="header2"
+                             tooltip="Header 2"
+  ></app-editor-menu-textblock>
+  <app-editor-menu-textblock [view]="view"
+                             [type]="view.state.schema.nodes['heading']"
+                             [attrs]="{ level: 3 }"
+                             (clicked)="executeCommand($event, view)"
+                             icon="header3"
+                             tooltip="Header 3"
+  ></app-editor-menu-textblock>
+  <app-editor-menu-wrapper [view]="view"
+                           [type]="view.state.schema.nodes['blockquote']"
+                           (clicked)="executeCommand($event, view)"
+                           icon="blockquote"
+                           tooltip="Quote text"
+  ></app-editor-menu-wrapper>
+  <app-editor-menu-textblock [view]="view"
+                             [type]="view.state.schema.nodes['code_block']"
+                             (clicked)="executeCommand($event, view)"
+                             icon="code_block"
+                             tooltip="Code block"
+  ></app-editor-menu-textblock>
+  <app-editor-menu-wrapper [view]="view"
+                           [type]="view.state.schema.nodes['bullet_list']"
+                           (clicked)="executeCommand($event, view)"
+                           icon="bullet_list"
+                           tooltip="Bullet list"
+  ></app-editor-menu-wrapper>
+  <app-editor-menu-wrapper [view]="view"
+                           [type]="view.state.schema.nodes['ordered_list']"
+                           (clicked)="executeCommand($event, view)"
+                           icon="ordered_list"
+                           tooltip="Ordered list"
+  ></app-editor-menu-wrapper>
+  <!--  <app-editor-menu-item [type]="view.state.schema.nodes['checklist']"-->
+  <!--                        [status]="getNodeStatus('checklist')"-->
+  <!--                        icon="checklist"-->
+  <!--                        tooltip="Checklist"-->
+  <!--  ></app-editor-menu-item>-->
+</div>
