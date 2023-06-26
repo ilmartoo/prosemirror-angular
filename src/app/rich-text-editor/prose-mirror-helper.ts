@@ -34,7 +34,7 @@ export class ProseMirrorHelper {
    */
   static activeMarksInRange(node: ProseNode, start: number, end: number): Mark[] {
     if (start > end) {
-      return [];
+      return this.activeMarksInRange(node, end, start);
     }
 
     const activeMarks = new Set<Mark>();
@@ -55,7 +55,7 @@ export class ProseMirrorHelper {
    */
   static parentNodesInRange(node: ProseNode, start: number, end: number): ProseNode[] {
     if (start > end) {
-      return [];
+      return this.parentNodesInRange(node, end, start);
     }
 
     const presentNodes = new Set<ProseNode>();
@@ -134,6 +134,40 @@ export class ProseMirrorHelper {
 
       return this.parentNodesInRange(state.doc, $range.start, $range.end);
     }
+  }
+
+  /**
+   * Looks for a mark type in a range
+   * @param type Mark type to look for
+   * @param node Editor node to be used for the mark lookup
+   * @param start Starting position (inclusive)
+   * @param end End position (inclusive)
+   * @returns ResolvedLocation of the first mark that matches the given type or undefined if not found
+   */
+  static searchForMarkTypeInRange(type: MarkTypeForLookup, node: ProseNode, start: number, end: number): { resolvedPos: ResolvedPos, mark: Mark } | undefined {
+    if (start > end) {
+      return this.searchForMarkTypeInRange(type, node, end, start);
+    }
+
+    for (let i = start; i <= end; i++) {
+      const resolvedPos = node.resolve(i);
+      const mark = this.isMarkTypeActiveAt(type, resolvedPos);
+      if (mark) {
+        return { resolvedPos, mark };
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Looks for a mark type in the current selection
+   * @param type Mark type to look for
+   * @param state State of the editor
+   * @returns ResolvedLocation of the first mark that matches the given type or undefined if not found
+   */
+  static searchForMarkTypeInSelection(type: MarkTypeForLookup, state: EditorState): { resolvedPos: ResolvedPos, mark: Mark } | undefined {
+    return this.searchForMarkTypeInRange(type, state.doc, state.selection.from, state.selection.to);
   }
 
   /**
@@ -285,9 +319,7 @@ export class ProseMirrorHelper {
       for (const key in a) {
 
         // Check for equality on child elements
-        const areChildrenEquals = this.areEquals(a[key], b[key]);
-        console.log(areChildrenEquals);
-        if (!areChildrenEquals) {
+        if (!this.areEquals(a[key], b[key])) {
           return false;
         }
       }

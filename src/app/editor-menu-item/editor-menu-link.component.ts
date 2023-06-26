@@ -1,9 +1,10 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {EditorMenuItemComponent} from './editor-menu-item.component';
-import {Mark, MarkType, NodeRange, ResolvedPos} from 'prosemirror-model';
-import {toggleMark} from 'prosemirror-commands';
+import {ResolvedPos} from 'prosemirror-model';
 import {EditorState} from 'prosemirror-state';
 import {ProseMirrorHelper} from '../rich-text-editor/prose-mirror-helper';
+import {createLink, selectRange} from '../rich-text-editor/custom-commands';
+import {EditorMenuMarkComponent} from './editor-menu-mark.component';
 
 @Component({
   selector: 'app-editor-menu-link',
@@ -11,7 +12,7 @@ import {ProseMirrorHelper} from '../rich-text-editor/prose-mirror-helper';
   styleUrls: ['./editor-menu-item.component.scss', './editor-menu-link.component.scss'],
   providers: [{ provide: EditorMenuItemComponent, useExisting: EditorMenuLinkComponent }],
 })
-export class EditorMenuLinkComponent extends EditorMenuItemComponent<MarkType> {
+export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
 
   @ViewChild('base') baseRef!: ElementRef<HTMLDivElement>;
   @ViewChild('popup') popupRef!: ElementRef<HTMLDivElement>;
@@ -19,16 +20,12 @@ export class EditorMenuLinkComponent extends EditorMenuItemComponent<MarkType> {
   @ViewChild('linkReference') hrefRef!: ElementRef<HTMLInputElement>;
 
   protected isPopupOpen = false;
+  protected canCreateLink = false;
 
-  protected data: {
-    linkMark?: Mark,
-    selectedRange?: NodeRange,
-    insertPos?: ResolvedPos,
+  protected range: {
+    from?: number,
+    to?: number,
   } = {};
-
-  protected override initCommand(): void {
-    this.command = toggleMark(this.type, this.attrs);
-  }
 
   protected openPopup(): void {
     this.isPopupOpen = true;
@@ -57,62 +54,79 @@ export class EditorMenuLinkComponent extends EditorMenuItemComponent<MarkType> {
   }
 
   private resetPopup(): void {
+    this.canCreateLink = false;
+
     this.nameRef.nativeElement.readOnly = false;
     this.nameRef.nativeElement.value = '';
     this.hrefRef.nativeElement.value = '';
 
-    this.data = {};
+    this.range = {};
   }
 
   private updatePopupText(state: EditorState): void {
-    const linkData: { name?: string, href?: string } = { };
+    const link: { name?: string, href?: string } = { };
 
     const selection = state.selection;
-    const selectedLinkMark = ProseMirrorHelper.isMarkTypeActiveAt(this.type, selection.$head);
-    const markRange = selectedLinkMark ? ProseMirrorHelper.expandMarkActiveRange(state.doc, selectedLinkMark, selection.head) : null;
+    const selectedLink = ProseMirrorHelper.searchForMarkTypeInSelection(this.type, state);
+    const markRange = selectedLink ? ProseMirrorHelper.expandMarkActiveRange(state.doc, selectedLink.mark, selectedLink.resolvedPos.pos) : null;
 
     // If open when a link is on head
-    if (selectedLinkMark && markRange) {
-        this.data.linkMark = selectedLinkMark;
-        this.data.selectedRange = markRange;
+    if (selectedLink && markRange) {
+      this.range.from = markRange.$from.pos - 1;
+      this.range.to = markRange.$to.pos + 1;
 
-        linkData.name = state.doc.textBetween(markRange.start, markRange.end).trim();
-        linkData.href = selectedLinkMark.attrs['href'] as string;
+      this.selectLinkText(markRange.$from, markRange.$to);
+
+      link.name = state.doc.textBetween(markRange.start, markRange.end).trim();
+      link.href = selectedLink.mark.attrs['href'] as string;
+      this.canCreateLink = true;
     }
     // If a selection is in place
     else if (!selection.empty) {
-      this.data.selectedRange = selection.$from.blockRange(selection.$to) ?? undefined;
+      this.range.from = selection.$from.pos - 1;
+      this.range.to = selection.$to.pos + 1;
 
-      linkData.name = state.doc.textBetween(selection.from, selection.to).trim();
+      link.name = state.doc.textBetween(selection.from, selection.to).trim();
     }
     // Else insert in cursor position
     else {
-      this.data.insertPos = selection.$head;
+      this.range.from = selection.$head.pos;
     }
 
-    if (linkData.name) { // Nullish check (Empty string)
-      this.nameRef.nativeElement.readOnly = true;
-      this.nameRef.nativeElement.value = linkData.name;
+    if (link.name) { // Nullish check (Empty string)
+      // this.nameRef.nativeElement.readOnly = true;
+      this.nameRef.nativeElement.value = link.name;
 
-      if (linkData.href) { // Nullish check (Empty string)
-        this.hrefRef.nativeElement.value = linkData.href;
+      if (link.href) { // Nullish check (Empty string)
+        this.hrefRef.nativeElement.value = link.href;
       }
     }
   }
 
-  // protected createLink(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView): boolean {
-  //   if (!(this.data.linkMark || this.data.selectedRange || this.data.insertPos)) { return false }
-  //   if (dispatch) {
-  //
-  //   }
-  //   return true;
-  // }
-  //
-  // protected addLink() {
-  //
-  //   let valid = false;
-  //   if (valid) {
-  //     this.executeCommand()
-  //   }
-  // }
+  protected selectLinkText($from: ResolvedPos, $to: ResolvedPos): void {
+    this.executeCommand(selectRange($from.pos - 1, $to.pos + 1));
+  }
+
+  protected createLink(): void {
+    const name = this.nameRef.nativeElement.value.trim();
+    const href = this.hrefRef.nativeElement.value.trim();
+
+    // Create & close
+    if (name && href && this.range.from) {
+      const mark = this.type.create({ href: href, title: name });
+      this.executeCommand(createLink(name, mark, this.range.from, this.range.to));
+      this.closePopup();
+    }
+    // This should not happen, but who knows...
+    else {
+      this.canCreateLink = false;
+    }
+  }
+
+  protected onInput(): void {
+    const name = this.nameRef.nativeElement.value.trim();
+    const href = this.hrefRef.nativeElement.value.trim();
+
+    this.canCreateLink = !!name && !!href;
+  }
 }

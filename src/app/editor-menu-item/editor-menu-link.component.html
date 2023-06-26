@@ -10,12 +10,12 @@
 
   <div #popup [ngClass]="{ 'popup': true, show: isPopupOpen }" tabindex="-1">
     <label>Name</label>
-    <input #linkName type="text" name="link-name">
+    <input #linkName type="text" name="link-name" (input)="onInput()">
 
     <label>Reference</label>
-    <input #linkReference type="text" name="link-reference">
+    <input #linkReference type="text" name="link-reference" (input)="onInput()">
 
-<!--    <button (click)="addLink()">Create</button>-->
+    <button [disabled]="!canCreateLink" (click)="createLink()">Create</button>
   </div>
 
 </div>
