@@ -1,9 +1,8 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {EditorMenuItemComponent} from './editor-menu-item.component';
-import {ResolvedPos} from 'prosemirror-model';
 import {EditorState} from 'prosemirror-state';
 import {ProseMirrorHelper} from '../rich-text-editor/prose-mirror-helper';
-import {createLink, selectRange} from '../rich-text-editor/custom-commands';
+import {createLink, removeMark} from '../rich-text-editor/custom-commands';
 import {EditorMenuMarkComponent} from './editor-menu-mark.component';
 
 @Component({
@@ -21,11 +20,9 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
 
   protected isPopupOpen = false;
   protected canCreateLink = false;
-
-  protected range: {
-    from?: number,
-    to?: number,
-  } = {};
+  protected selection?:
+    { isLink: true, from: number, to: number } |
+    { isLink: false, from: number, to?: number };
 
   protected openPopup(): void {
     this.isPopupOpen = true;
@@ -60,7 +57,7 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
     this.nameRef.nativeElement.value = '';
     this.hrefRef.nativeElement.value = '';
 
-    this.range = {};
+    this.selection = undefined;
   }
 
   private updatePopupText(state: EditorState): void {
@@ -72,25 +69,32 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
 
     // If open when a link is on head
     if (selectedLink && markRange) {
-      this.range.from = markRange.$from.pos - 1;
-      this.range.to = markRange.$to.pos + 1;
+      this.selection = {
+        isLink: true,
+        from: markRange.$from.pos,
+        to: markRange.$to.pos,
+      };
 
-      this.selectLinkText(markRange.$from, markRange.$to);
-
-      link.name = state.doc.textBetween(markRange.start, markRange.end).trim();
+      link.name = ProseMirrorHelper.textAt(state.doc, markRange.start, markRange.end).trim();
       link.href = selectedLink.mark.attrs['href'] as string;
       this.canCreateLink = true;
     }
-    // If a selection is in place
+    // If a selection is in place but does not contain a link
     else if (!selection.empty) {
-      this.range.from = selection.$from.pos - 1;
-      this.range.to = selection.$to.pos + 1;
+      this.selection = {
+        isLink: false,
+        from: selection.$from.pos,
+        to: selection.$to.pos,
+      };
 
-      link.name = state.doc.textBetween(selection.from, selection.to).trim();
+      link.name = ProseMirrorHelper.textAt(state.doc, selection.from, selection.to).trim()
     }
     // Else insert in cursor position
     else {
-      this.range.from = selection.$head.pos;
+      this.selection = {
+        isLink: false,
+        from: selection.$head.pos,
+      };
     }
 
     if (link.name) { // Nullish check (Empty string)
@@ -103,30 +107,36 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
     }
   }
 
-  protected selectLinkText($from: ResolvedPos, $to: ResolvedPos): void {
-    this.executeCommand(selectRange($from.pos - 1, $to.pos + 1));
-  }
-
   protected createLink(): void {
     const name = this.nameRef.nativeElement.value.trim();
     const href = this.hrefRef.nativeElement.value.trim();
 
-    // Create & close
-    if (name && href && this.range.from) {
+    // Create link & close
+    if (this.validLink(name, href) && this.selection) {
       const mark = this.type.create({ href: href, title: name });
-      this.executeCommand(createLink(name, mark, this.range.from, this.range.to));
-      this.closePopup();
+      this.executeCommand(createLink(name, mark, this.selection.from, this.selection.to));
+      this.closePopup(); // Exit popup
+      this.view.focus(); // Focus text editor
     }
-    // This should not happen, but who knows...
-    else {
-      this.canCreateLink = false;
+  }
+
+  protected deleteLink(): void {
+    // Delete link & close
+    if (this.selection?.isLink) {
+      this.executeCommand(removeMark(this.selection.from, this.selection.to, this.type));
+      this.closePopup(); // Exit popup
+      this.view.focus(); // Focus text editor
     }
+  }
+
+  protected validLink(name: string, href: string): boolean {
+    return !!name && !!href;
   }
 
   protected onInput(): void {
     const name = this.nameRef.nativeElement.value.trim();
     const href = this.hrefRef.nativeElement.value.trim();
 
-    this.canCreateLink = !!name && !!href;
+    this.canCreateLink = this.validLink(name, href);
   }
 }

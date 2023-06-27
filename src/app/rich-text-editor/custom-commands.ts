@@ -1,5 +1,5 @@
 import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
-import {Mark} from 'prosemirror-model';
+import {Mark, MarkType} from 'prosemirror-model';
 
 /**
  * Selects the text of the given range
@@ -15,8 +15,8 @@ export function selectRange(from: number, to: number): Command {
   return function(state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
     if (dispatch) {
       const tr = state.tr;
-      tr.setSelection(TextSelection.create(state.doc, from, to));
-      dispatch(tr);
+      tr.setSelection(TextSelection.create(tr.doc, from, to));
+      dispatch(tr.scrollIntoView());
     }
     return true;
   }
@@ -42,18 +42,44 @@ export function createLink(linkName: string, linkMark: Mark, from: number, to?: 
 
       // Update existing link OR add link to selection
       if (to) {
-        tr.setSelection(TextSelection.create(state.doc, from, to));
+        tr.setSelection(TextSelection.create(tr.doc, from, to));
         tr.removeMark(from, to, linkMark.type);
+        tr.addStoredMark(linkMark);
         tr.replaceSelectionWith(state.schema.text(linkName), true);
-        tr.addMark(from, tr.selection.to, linkMark);
       }
       // Insert new text as link
       else {
         tr.addStoredMark(linkMark);
         tr.insertText(linkName, from);
       }
+      tr.setSelection(TextSelection.create(tr.doc, from, tr.selection.to));
 
-      dispatch(tr);
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+/**
+ * Remove marks from inline nodes between from and to
+ * - When mark is a single mark, remove precisely that mark
+ * - When it is a mark type, remove all marks of that type
+ * - When it is null, remove all marks of any type
+ * @param from Start of the selection
+ * @param to End of the selection
+ * @param mark Mark or mark type to remove. All if null or undefined
+ * @returns Command to remove the mark, mark type or all marks in the selection
+ */
+export function removeMark(from: number, to: number, mark?: Mark | MarkType | null): Command {
+  if (from > to) {
+    return removeMark(to, from, mark);
+  }
+
+  return function(state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    if (dispatch) {
+      const tr = state.tr;
+      tr.removeMark(from, to, mark);
+      dispatch(tr.scrollIntoView());
     }
     return true;
   }

@@ -108,10 +108,7 @@ export class ProseMirrorHelper {
     else {
       const $head = state.selection.$head; // Dynamic end of the selection
       const $anchor = state.selection.$anchor; // Static end of the selection
-
-      const $range = $anchor.blockRange($head) as NodeRange; // It will not be null because it is checked beforehand
-
-      return this.activeMarksInRange(state.doc, $range.start, $range.end);
+      return this.activeMarksInRange(state.doc, $head.pos, $anchor.pos);
     }
   }
 
@@ -129,10 +126,7 @@ export class ProseMirrorHelper {
     else {
       const $head = state.selection.$head; // Dynamic end of the selection
       const $anchor = state.selection.$anchor; // Static end of the selection
-
-      const $range = $anchor.blockRange($head) as NodeRange; // It will not be null because it is checked beforehand
-
-      return this.parentNodesInRange(state.doc, $range.start, $range.end);
+      return this.parentNodesInRange(state.doc, $head.pos, $anchor.pos);
     }
   }
 
@@ -188,22 +182,22 @@ export class ProseMirrorHelper {
     // Start position
     let start = position;
     while (start > 0) {
-      if (!hasMark(start - 1)) { break; }
       start--;
+      if (!hasMark(start)) { break; }
     }
 
     // End position
     let end = position;
     const docEnd = node.nodeSize - 1;
     while (end < docEnd) {
-      if (!hasMark(end + 1)) { break; }
       end++;
+      if (!hasMark(end)) { break; }
     }
 
     // Mark expanded range
     const startPos = node.resolve(start);
     const endPos = node.resolve(end);
-    return startPos.blockRange(endPos);
+    return new NodeRange(startPos, endPos, 1);
   }
 
   /**
@@ -330,6 +324,25 @@ export class ProseMirrorHelper {
     // Equality check for non object types
     else {
       return a === b;
+    }
+  }
+
+  /**
+   * Returns the text contained in the node
+   * - If from and to are given, the text between these positions is returned
+   * - If only from is given, the text between from and the end of the node is returned
+   * - If none are given, all the text from the node is returned
+   * @param node Node to get the text from
+   * @param from Start of the range
+   * @param to End of the range
+   * @returns Text contained in the range specified or all the text from the node if no range given
+   */
+  static textAt(node: ProseNode, from?: number, to?: number): string {
+    if (from) {
+      return to ? node.textBetween(from, to, '\n') : node.textBetween(from, node.content.size);
+    }
+    else {
+      return node.textBetween(0, node.content.size, '\n');
     }
   }
 

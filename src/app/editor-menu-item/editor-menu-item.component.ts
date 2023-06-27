@@ -24,7 +24,7 @@ export class EditorMenuItemComponent<T = MarkType | NodeType> implements OnInit 
 
   @Input({ required: true }) view!: EditorView;
   @Input({ required: true }) type!: T;
-  @Input() attrs?: Attrs;
+  @Input() attrs: Attrs = {}; // Empty object to compare to schema nodes & marks because they have empty object if no Attrs
   @Output() execute = new EventEmitter<Command>();
 
   currentStatus = EditorMenuItemStatus.ENABLED;

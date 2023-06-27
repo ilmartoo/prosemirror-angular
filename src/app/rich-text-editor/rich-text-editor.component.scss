@@ -39,11 +39,16 @@ app-editor-menu {
       font-weight: bold;
     }
 
+    code {
+      font-size: 14px;
+      font-family: 'Courier New', 'Courier', 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+    }
+
     *:not(pre) > code {
-      padding: 0.1rem;
+      padding: 0.1rem 0;
 
       color: #d04437;
-      background-color: #091e4214;
+      background-color: #172b4d14;
     }
 
     pre:has(> code) {
@@ -79,6 +84,7 @@ app-editor-menu {
     h1,
     h2,
     h3 {
+      font-weight: bold;
       margin-top: 0.4375rem;
     }
 
@@ -95,6 +101,11 @@ app-editor-menu {
     h3 {
       font-size: medium;
       margin-bottom: 0.5rem;
+    }
+
+    a {
+      color: #172b4d;
+      cursor: pointer;
     }
   }
 }
