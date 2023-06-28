@@ -9,6 +9,7 @@ import {EditorMenuWrapperComponent} from './editor-menu-item/editor-menu-wrapper
 import {EditorMenuTextblockComponent} from './editor-menu-item/editor-menu-textblock.component';
 import {EditorMenuItemComponent} from './editor-menu-item/editor-menu-item.component';
 import {EditorMenuLinkComponent} from './editor-menu-item/editor-menu-link.component';
+import {EditorMenuImageComponent} from './editor-menu-item/editor-menu-image.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import {EditorMenuLinkComponent} from './editor-menu-item/editor-menu-link.compo
     EditorMenuLinkComponent,
     EditorMenuTextblockComponent,
     EditorMenuWrapperComponent,
+    EditorMenuImageComponent,
   ],
 	imports: [
 		BrowserModule,

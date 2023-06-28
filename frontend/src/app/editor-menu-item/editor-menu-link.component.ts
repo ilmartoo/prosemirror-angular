@@ -32,9 +32,7 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
 
     this.resetPopup();
 
-    const state = this.view.state;
-    this.updatePopupText(state);
-
+    this.updatePopupText(this.view.state);
   }
 
   protected closePopup(): void {

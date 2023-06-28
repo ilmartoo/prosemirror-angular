@@ -38,6 +38,15 @@
 
   <div class="separator"></div>
 
+  <app-editor-menu-image [view]="view"
+                         [type]="view.state.schema.nodes['ordered_list']"
+                         (execute)="executeCommand($event, view)"
+                         icon="image"
+                         tooltip="Add image"
+  ></app-editor-menu-image>
+
+  <div class="separator"></div>
+
   <app-editor-menu-textblock [view]="view"
                              [type]="view.state.schema.nodes['paragraph']"
                              (execute)="executeCommand($event, view)"
