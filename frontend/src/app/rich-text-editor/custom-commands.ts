@@ -1,10 +1,10 @@
 import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
-import {Mark, MarkType} from 'prosemirror-model';
+import {Fragment, Mark, MarkType, Node as ProseNode} from 'prosemirror-model';
 
 /**
  * Selects the text of the given range
- * @param from Start of the range (exclusive)
- * @param to End of the range (exclusive)
+ * @param from Start of the range
+ * @param to End of the range
  * @returns Command to select the text between the given positions
  */
 export function selectRange(from: number, to: number): Command {
@@ -23,35 +23,38 @@ export function selectRange(from: number, to: number): Command {
 }
 
 /**
- * Creates a link in the given selection or inserts a link at the given position
- * @param linkName Link name & title
- * @param linkMark Link mark to apply
- * @param from Start of the range (exclusive)
- * @param to End of the range (exclusive)
- * @returns Command to create a link
+ * Replaces the text in the given selection with the text provided activating the passed marks.
+ * If no end position is passed, the text will be inserted
+ * @param text Text to replace
+ * @param marks Marks to apply to the selection. Any mark types contained in the array
+ *              that are currently active will be removed and replaced with these
+ * @param from Start of the range
+ * @param to End of the range
+ * @param inheritMarks When a selection is passed, if the new text should inherit replaced text's marks
+ * @returns Command to replace the text
  */
-export function createLink(linkName: string, linkMark: Mark, from: number, to?: number): Command {
+export function replaceWithMarkedText(text: string, marks: Mark[], from: number, to?: number, inheritMarks = true): Command {
   if (to && from > to) {
-    return createLink(linkName, linkMark, to, from);
+    return replaceWithMarkedText(text, marks, to, from);
   }
 
   return function(state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
-    if (!linkName || !linkMark.attrs['href']) { return false; } // Name or Href may not be empty
+    if (!text) { return false; } // Text must not be empty
     if (dispatch) {
       const tr = state.tr;
 
-      // Update existing link OR add link to selection
+      // Replace existing text
       if (to) {
         tr.setSelection(TextSelection.create(tr.doc, from, to));
-        tr.removeMark(from, to, linkMark.type);
-        tr.addStoredMark(linkMark);
-        tr.replaceSelectionWith(state.schema.text(linkName), true);
+        marks.forEach(mark => tr.removeMark(from, to, mark.type));
+        tr.replaceSelectionWith(state.schema.text(text), inheritMarks);
       }
-      // Insert new text as link
+      // Insert new text
       else {
-        tr.addStoredMark(linkMark);
-        tr.insertText(linkName, from);
+        marks.forEach(mark => tr.removeStoredMark(mark.type));
+        tr.insertText(text, from);
       }
+      marks.forEach(mark => tr.addMark(from, tr.selection.to, mark));
       tr.setSelection(TextSelection.create(tr.doc, from, tr.selection.to));
 
       dispatch(tr.scrollIntoView());
@@ -79,6 +82,17 @@ export function removeMark(from: number, to: number, mark?: Mark | MarkType | nu
     if (dispatch) {
       const tr = state.tr;
       tr.removeMark(from, to, mark);
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+export function insertContent(at: number, content: ProseNode | Fragment | readonly ProseNode[]): Command {
+  return function(state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    if (dispatch) {
+      const tr = state.tr;
+      tr.insert(at, content);
       dispatch(tr.scrollIntoView());
     }
     return true;

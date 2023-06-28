@@ -15,7 +15,7 @@ export class AppComponent {
     '<p><u>Underline</u></p>' +
     '<p><s>Strikethrough</s></p>' +
     '<p><code>Inline code</code></p>' +
-    '<p><a href="example.com">Link</a></p>' +
+    '<p><a href="https://example.com" title="Link">Link</a></p>' +
     '<h1>Header 1</h1>' +
     '<h2>Header 2</h2>' +
     '<h3>Header 3</h3>' +
@@ -24,7 +24,7 @@ export class AppComponent {
     '<ul><li>Unordered list</li></ul>' +
     '<pre><code>Code block</code></pre>' +
     '<blockquote>Quote</blockquote>' +
-    '<p><img alt="Example image" src="https://picsum.photos/seed/picsum/200/300"></p>' +
+    '<p><img alt="Example image" title="Example image" src="https://picsum.photos/seed/picsum/200/300"></p>' +
   '';
 }
 

@@ -9,16 +9,16 @@
   </button>
 
   <div #popup [ngClass]="{ 'popup': true, show: isPopupOpen }" tabindex="-1">
-    <label>Select the image: </label>
-    <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg">
 
-<!--    <label>Reference</label>-->
-<!--    <input #linkReference name="link-reference" (input)="onInput()">-->
+    <label>Image URL</label>
+    <input #imageReference name="link-reference" (input)="validateInput()">
 
-<!--    <div class="popup-actions">-->
-<!--      <button [disabled]="!canCreateLink" (click)="createLink()">Create</button>-->
-<!--      <button [disabled]="!selection?.isLink" (click)="deleteLink()">Delete</button>-->
-<!--    </div>-->
+    <label>Title</label>
+    <input #imageTitle name="link-reference">
+
+    <div class="popup-actions">
+      <button [disabled]="!canInsertImage" (click)="createImage()">Create</button>
+    </div>
   </div>
 
 </div>

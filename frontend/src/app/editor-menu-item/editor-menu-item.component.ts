@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Attrs, MarkType, NodeType} from 'prosemirror-model';
-import {Command} from 'prosemirror-state';
-import {EditorView} from 'prosemirror-view';
+import {Command, EditorState} from 'prosemirror-state';
 
 /**
  * Possible statuses of the menu item
@@ -17,21 +16,21 @@ export enum EditorMenuItemStatus {
   templateUrl: './editor-menu-item.component.html',
   styleUrls: ['./editor-menu-item.component.scss'],
 })
-export class EditorMenuItemComponent<T = MarkType | NodeType> implements OnInit {
+export class EditorMenuItemComponent<T extends NodeType | MarkType = NodeType | MarkType> implements OnInit {
 
   @Input({ required: true }) icon!: string;
   @Input() tooltip?: string;
 
-  @Input({ required: true }) view!: EditorView;
+  @Input({ required: true }) state!: EditorState;
   @Input({ required: true }) type!: T;
   @Input() attrs: Attrs = {}; // Empty object to compare to schema nodes & marks because they have empty object if no Attrs
   @Output() execute = new EventEmitter<Command>();
+  @Output() focusView = new EventEmitter<void>();
 
+  command: Command = (): boolean => false;
   currentStatus = EditorMenuItemStatus.ENABLED;
-  command: Command = (): boolean => { return false };
 
   protected filePath = '';
-
   protected readonly EditorMenuItemStatus = EditorMenuItemStatus;
 
   constructor() { }
@@ -46,6 +45,10 @@ export class EditorMenuItemComponent<T = MarkType | NodeType> implements OnInit 
     this.currentStatus = newStatus;
   }
 
+  get status(): EditorMenuItemStatus {
+    return this.currentStatus;
+  }
+
   // Override this method in child editor-menu-item to represent its functionality
   protected initCommand(): void { };
 
@@ -54,9 +57,14 @@ export class EditorMenuItemComponent<T = MarkType | NodeType> implements OnInit 
     this.execute.emit(command ?? this.command);
   }
 
+  // Sends a signal to parent to focus the editor view
+  protected focusEditor(): void {
+    this.focusView.emit();
+  }
+
   // Prevents losing editor focus when clicking on an editor item
   protected preventLosingEditorFocus(event: MouseEvent): void {
     event.preventDefault();
-    this.view.focus();
+    this.focusEditor();
   }
 }

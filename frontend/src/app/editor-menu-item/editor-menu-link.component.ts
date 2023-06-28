@@ -1,9 +1,9 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {EditorMenuItemComponent} from './editor-menu-item.component';
-import {EditorState} from 'prosemirror-state';
 import {ProseMirrorHelper} from '../rich-text-editor/prose-mirror-helper';
-import {createLink, removeMark} from '../rich-text-editor/custom-commands';
+import {removeMark, replaceWithMarkedText} from '../rich-text-editor/custom-commands';
 import {EditorMenuMarkComponent} from './editor-menu-mark.component';
+import {customSchema} from '../rich-text-editor/custom-schema';
 
 @Component({
   selector: 'app-editor-menu-link',
@@ -12,6 +12,8 @@ import {EditorMenuMarkComponent} from './editor-menu-mark.component';
   providers: [{ provide: EditorMenuItemComponent, useExisting: EditorMenuLinkComponent }],
 })
 export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
+
+  @Input({ required: false }) override type = customSchema.marks.link;
 
   @ViewChild('base') baseRef!: ElementRef<HTMLDivElement>;
   @ViewChild('popup') popupRef!: ElementRef<HTMLDivElement>;
@@ -31,8 +33,7 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
     setTimeout(() => this.popupRef.nativeElement.focus());
 
     this.resetPopup();
-
-    this.updatePopupText(this.view.state);
+    this.updatePopup();
   }
 
   protected closePopup(): void {
@@ -51,17 +52,18 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
   private resetPopup(): void {
     this.canCreateLink = false;
 
-    this.nameRef.nativeElement.readOnly = false;
     this.nameRef.nativeElement.value = '';
     this.hrefRef.nativeElement.value = '';
 
     this.selection = undefined;
   }
 
-  private updatePopupText(state: EditorState): void {
+  private updatePopup(): void {
     const link: { name?: string, href?: string } = { };
 
+    const state = this.state;
     const selection = state.selection;
+
     const selectedLink = ProseMirrorHelper.searchForMarkTypeInSelection(this.type, state);
     const markRange = selectedLink ? ProseMirrorHelper.expandMarkActiveRange(state.doc, selectedLink.mark, selectedLink.resolvedPos.pos) : null;
 
@@ -110,11 +112,11 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
     const href = this.hrefRef.nativeElement.value.trim();
 
     // Create link & close
-    if (this.validLink(name, href) && this.selection) {
-      const mark = this.type.create({ href: href, title: name });
-      this.executeCommand(createLink(name, mark, this.selection.from, this.selection.to));
+    if (this.isValidLink(name, href) && this.selection) {
+      const linkMark = this.type.create({ href: href, title: name });
+      this.executeCommand(replaceWithMarkedText(name, [linkMark], this.selection.from, this.selection.to));
       this.closePopup(); // Exit popup
-      this.view.focus(); // Focus text editor
+      this.focusEditor(); // Focus text editor
     }
   }
 
@@ -123,18 +125,18 @@ export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
     if (this.selection?.isLink) {
       this.executeCommand(removeMark(this.selection.from, this.selection.to, this.type));
       this.closePopup(); // Exit popup
-      this.view.focus(); // Focus text editor
+      this.focusEditor(); // Focus text editor
     }
   }
 
-  protected validLink(name: string, href: string): boolean {
+  protected isValidLink(name: string, href: string): boolean {
     return !!name && !!href;
   }
 
-  protected onInput(): void {
+  protected validateInput(): void {
     const name = this.nameRef.nativeElement.value.trim();
     const href = this.hrefRef.nativeElement.value.trim();
 
-    this.canCreateLink = this.validLink(name, href);
+    this.canCreateLink = this.isValidLink(name, href);
   }
 }

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {EditorMenuItemComponent} from './editor-menu-item.component';
-import {MarkType} from 'prosemirror-model';
 import {toggleMark} from 'prosemirror-commands';
+import {MarkType} from 'prosemirror-model';
 
 @Component({
   selector: 'app-editor-menu-mark',

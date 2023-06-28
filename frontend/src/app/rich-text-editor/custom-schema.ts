@@ -1,51 +1,98 @@
-import {DOMOutputSpec, MarkSpec, NodeSpec, Schema} from 'prosemirror-model';
+import {Attrs, DOMOutputSpec, MarkSpec, Schema} from 'prosemirror-model';
 import {schema} from 'prosemirror-schema-basic';
 import {addListNodes} from 'prosemirror-schema-list';
 
+
+///
+/// Base schema
+///
 const baseSchema = new Schema({
   nodes: addListNodes(schema.spec.nodes, 'paragraph block*', 'block'),
   marks: schema.spec.marks,
 })
 
-const customNodes = baseSchema.spec.nodes
-  .addToStart('', {} as NodeSpec)
-  .addToStart('', {} as NodeSpec);
+
+///
+/// Custom schema's nodes definition
+///
+type CustomNodeSpec =
+  'blockquote' |
+  'image' |
+  'text' |
+  'doc' |
+  'paragraph' |
+  'horizontal_rule' |
+  'heading' |
+  'code_block' |
+  'hard_break' |
+  'list_item' |
+  'ordered_list' |
+  'bullet_list';
+
+const customNodes = baseSchema.spec.nodes;
 
 
+///
+/// Custom schema's marks definition
+///
 const underlineDOM: DOMOutputSpec = ['u', 0],
   strikethroughDOM: DOMOutputSpec = ['s', 0];
 
-const customMarks = baseSchema.spec.marks
+type CustomMarkSpec =
+  'underline' |
+  'strikethrough' |
+  'link' |
+  'code' |
+  'em' |
+  'strong';
 
-  /* Underline */
+const customMarks = baseSchema.spec.marks
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Underline
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   .addToStart('underline', {
     parseDOM: [
       { tag: 'u' },
       {
         tag: ':not(a)',
-        consuming: false, // If false, node will not be consumed and following ParseRules may also match with this node
-        getAttrs: (dom: HTMLElement) => dom.style.textDecoration.includes("underline") || dom.style.textDecorationLine.includes("underline")
+        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+          if (typeof(dom) === 'string') { return false; } // If string do not parse
+          return (
+            dom.style.textDecoration.includes("underline") ||
+            dom.style.textDecorationLine.includes("underline")
+          ) ? null : false;
+        },
       },
     ],
-    toDOM(): DOMOutputSpec { return underlineDOM },
+    toDOM: (): DOMOutputSpec => underlineDOM,
     } as MarkSpec)
-
-  /* Strikethrough */
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Strikethrough
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   .addToStart('strikethrough', {
     parseDOM: [
       { tag: 's' },
       { tag: 'del' },
       {
-        consuming: false, // If false, node will not be consumed and following ParseRules may also match with this node
-        getAttrs: (dom: HTMLElement) => dom.style.textDecoration.includes("line-through") || dom.style.textDecorationLine.includes("line-through")
+        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+          if (typeof(dom) === 'string') { return false; } // If string do not parse
+          return (
+            dom.style.textDecoration.includes("line-through") ||
+            dom.style.textDecorationLine.includes("line-through")
+          ) ? null : false;
+        },
       },
     ],
-    toDOM(): DOMOutputSpec { return strikethroughDOM },
-  } as MarkSpec);
+    toDOM: (): DOMOutputSpec => strikethroughDOM,
+  });
 
-const customSchema = new Schema({
+
+///
+/// Custom schema definition
+///
+const customSchema = new Schema<CustomNodeSpec, CustomMarkSpec>({
   nodes: customNodes,
   marks: customMarks,
 })
 
-export {customNodes, customMarks, customSchema}
+export {customNodes, customMarks, customSchema, CustomMarkSpec, CustomNodeSpec}

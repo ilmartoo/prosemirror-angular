@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {EditorMenuItemComponent} from './editor-menu-item.component';
-import {NodeType} from 'prosemirror-model';
 import {setBlockType} from 'prosemirror-commands';
+import {NodeType} from 'prosemirror-model';
 
 @Component({
   selector: 'app-editor-menu-textblock',

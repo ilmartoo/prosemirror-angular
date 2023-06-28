@@ -4,6 +4,7 @@ import {EditorView} from 'prosemirror-view';
 import {Command, EditorState, Plugin, PluginView} from 'prosemirror-state';
 import {Mark, MarkType, Node, NodeType} from 'prosemirror-model';
 import {ProseMirrorHelper} from '../rich-text-editor/prose-mirror-helper';
+import {customSchema} from '../rich-text-editor/custom-schema';
 
 @Component({
   selector: 'app-editor-menu',
@@ -15,11 +16,16 @@ export class EditorMenuComponent implements PluginView {
   @ViewChildren(EditorMenuItemComponent) items!: QueryList<EditorMenuItemComponent>;
 
   protected view?: EditorView;
+  protected readonly customSchema = customSchema;
 
   constructor() { }
 
   protected executeCommand(command: Command, view: EditorView): void {
     command(view.state, view.dispatch, this.view);
+  }
+
+  protected focusView(): void {
+    this.view?.focus();
   }
 
   /******************* ProseMirror Plugin creation & PluginView methods *******************/
@@ -102,6 +108,4 @@ export class EditorMenuComponent implements PluginView {
 
     return isActive ? EditorMenuItemStatus.ACTIVE : (isEnabled ? EditorMenuItemStatus.ENABLED : EditorMenuItemStatus.DISABLED);
   }
-
-
 }
