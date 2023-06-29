@@ -1,17 +1,17 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {EditorMenuItemComponent} from './editor-menu-item.component';
-import {ProseMirrorHelper} from '../rich-text-editor/prose-mirror-helper';
-import {removeMark, replaceWithMarkedText} from '../rich-text-editor/custom-commands';
-import {EditorMenuMarkComponent} from './editor-menu-mark.component';
-import {customSchema} from '../rich-text-editor/custom-schema';
+import {MenuItemComponent} from './menu-item.component';
+import {ProseMirrorHelper} from '../utilities/prosemirror-helper';
+import {removeMark, replaceWithMarkedText} from '../utilities/custom-commands';
+import {MenuMarkComponent} from './menu-mark.component';
+import {customSchema} from '../text-editor/custom-schema';
 
 @Component({
-  selector: 'app-editor-menu-link',
-  templateUrl: './editor-menu-link.component.html',
-  styleUrls: ['./editor-menu-item.component.scss', './editor-menu-link.component.scss'],
-  providers: [{ provide: EditorMenuItemComponent, useExisting: EditorMenuLinkComponent }],
+  selector: 'app-menu-link',
+  templateUrl: './menu-link.component.html',
+  styleUrls: ['./menu-item.component.scss', './menu-link.component.scss'],
+  providers: [{ provide: MenuItemComponent, useExisting: MenuLinkComponent }],
 })
-export class EditorMenuLinkComponent extends EditorMenuMarkComponent {
+export class MenuLinkComponent extends MenuMarkComponent {
 
   @Input({ required: false }) override type = customSchema.marks.link;
 

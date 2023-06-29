@@ -1,117 +1,117 @@
-<div class="editor-menu" *ngIf="view">
-  <app-editor-menu-mark [state]="view.state"
+<div class="menu" *ngIf="view">
+  <app-menu-mark [state]="view.state"
                         [type]="customSchema.marks.strong"
                         (execute)="executeCommand($event, view)"
                         (focusView)="focusView()"
                         icon="bold"
                         tooltip="Bold"
-  ></app-editor-menu-mark>
-  <app-editor-menu-mark [state]="view.state"
+  ></app-menu-mark>
+  <app-menu-mark [state]="view.state"
                         [type]="customSchema.marks.em"
                         (execute)="executeCommand($event, view)"
                         (focusView)="focusView()"
                         icon="italic"
                         tooltip="Italic"
-  ></app-editor-menu-mark>
-  <app-editor-menu-mark [state]="view.state"
+  ></app-menu-mark>
+  <app-menu-mark [state]="view.state"
                         [type]="customSchema.marks.underline"
                         (execute)="executeCommand($event, view)"
                         (focusView)="focusView()"
                         icon="underline"
                         tooltip="Underline"
-  ></app-editor-menu-mark>
-  <app-editor-menu-mark [state]="view.state"
+  ></app-menu-mark>
+  <app-menu-mark [state]="view.state"
                         [type]="customSchema.marks.strikethrough"
                         (execute)="executeCommand($event, view)"
                         (focusView)="focusView()"
                         icon="strikethrough"
                         tooltip="Strikethrough"
-  ></app-editor-menu-mark>
-  <app-editor-menu-mark [state]="view.state"
+  ></app-menu-mark>
+  <app-menu-mark [state]="view.state"
                         [type]="customSchema.marks.code"
                         (execute)="executeCommand($event, view)"
                         (focusView)="focusView()"
                         icon="code"
                         tooltip="Inline code"
-  ></app-editor-menu-mark>
-  <app-editor-menu-link [state]="view.state"
+  ></app-menu-mark>
+  <app-menu-link [state]="view.state"
                         (execute)="executeCommand($event, view)"
                         icon="link"
                         tooltip="Hyperlink"
-  ></app-editor-menu-link>
+  ></app-menu-link>
 
   <div class="separator"></div>
 
-  <app-editor-menu-image [state]="view.state"
+  <app-menu-image [state]="view.state"
                          (execute)="executeCommand($event, view)"
                          (focusView)="focusView()"
                          icon="image"
                          tooltip="Add image"
-  ></app-editor-menu-image>
+  ></app-menu-image>
 
   <div class="separator"></div>
 
-  <app-editor-menu-textblock [state]="view.state"
+  <app-menu-textblock [state]="view.state"
                              [type]="customSchema.nodes.paragraph"
                              (execute)="executeCommand($event, view)"
                              (focusView)="focusView()"
                              icon="paragraph"
                              tooltip="Text paragraph"
-  ></app-editor-menu-textblock>
-  <app-editor-menu-textblock [state]="view.state"
+  ></app-menu-textblock>
+  <app-menu-textblock [state]="view.state"
                              [type]="customSchema.nodes.heading"
                              [attrs]="{ level: 1 }"
                              (execute)="executeCommand($event, view)"
                              (focusView)="focusView()"
                              icon="header1"
                              tooltip="Header 1"
-  ></app-editor-menu-textblock>
-  <app-editor-menu-textblock [state]="view.state"
+  ></app-menu-textblock>
+  <app-menu-textblock [state]="view.state"
                              [type]="customSchema.nodes.heading"
                              [attrs]="{ level: 2 }"
                              (execute)="executeCommand($event, view)"
                              (focusView)="focusView()"
                              icon="header2"
                              tooltip="Header 2"
-  ></app-editor-menu-textblock>
-  <app-editor-menu-textblock [state]="view.state"
+  ></app-menu-textblock>
+  <app-menu-textblock [state]="view.state"
                              [type]="customSchema.nodes.heading"
                              [attrs]="{ level: 3 }"
                              (execute)="executeCommand($event, view)"
                              (focusView)="focusView()"
                              icon="header3"
                              tooltip="Header 3"
-  ></app-editor-menu-textblock>
-  <app-editor-menu-wrapper [state]="view.state"
+  ></app-menu-textblock>
+  <app-menu-wrapper [state]="view.state"
                            [type]="customSchema.nodes.blockquote"
                            (execute)="executeCommand($event, view)"
                            (focusView)="focusView()"
                            icon="blockquote"
                            tooltip="Quote text"
-  ></app-editor-menu-wrapper>
-  <app-editor-menu-textblock [state]="view.state"
+  ></app-menu-wrapper>
+  <app-menu-textblock [state]="view.state"
                              [type]="customSchema.nodes.code_block"
                              (execute)="executeCommand($event, view)"
                              (focusView)="focusView()"
                              icon="code_block"
                              tooltip="Code block"
-  ></app-editor-menu-textblock>
-  <app-editor-menu-wrapper [state]="view.state"
+  ></app-menu-textblock>
+  <app-menu-wrapper [state]="view.state"
                            [type]="customSchema.nodes.bullet_list"
                            (execute)="executeCommand($event, view)"
                            (focusView)="focusView()"
                            icon="bullet_list"
                            tooltip="Bullet list"
-  ></app-editor-menu-wrapper>
-  <app-editor-menu-wrapper [state]="view.state"
+  ></app-menu-wrapper>
+  <app-menu-wrapper [state]="view.state"
                            [type]="customSchema.nodes.ordered_list"
                            (execute)="executeCommand($event, view)"
                            icon="ordered_list"
                            tooltip="Ordered list"
-  ></app-editor-menu-wrapper>
-  <!--  <app-editor-menu-item [type]="view.state.schema.nodes['checklist']"-->
+  ></app-menu-wrapper>
+  <!--  <app-menu-item [type]="view.state.schema.nodes['checklist']"-->
   <!--                        [status]="getNodeStatus('checklist')"-->
   <!--                        icon="checklist"-->
   <!--                        tooltip="Checklist"-->
-  <!--  ></app-editor-menu-item>-->
+  <!--  ></app-menu-item>-->
 </div>

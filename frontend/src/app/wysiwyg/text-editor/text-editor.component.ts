@@ -5,9 +5,9 @@ import {history, redo, undo} from 'prosemirror-history';
 import {keymap} from 'prosemirror-keymap';
 import {baseKeymap} from 'prosemirror-commands';
 import {EditorView} from 'prosemirror-view';
-import {EditorMenuComponent} from '../editor-menu/editor-menu.component';
+import {MenuComponent} from '../menu/menu.component';
 import {customSchema} from './custom-schema';
-import {ProseMirrorHelper} from './prose-mirror-helper';
+import {ProseMirrorHelper} from '../utilities/prosemirror-helper';
 
 
 /**
@@ -24,16 +24,16 @@ import {ProseMirrorHelper} from './prose-mirror-helper';
  * - Repo de introducción a ProseMirror que intenta mejorar la docu oficial: https://github.com/PierBover/prosemirror-cookbook
  */
 @Component({
-  selector: 'app-rich-text-editor',
-  templateUrl: './rich-text-editor.component.html',
-  styleUrls: ['./rich-text-editor.component.scss'],
+  selector: 'app-text-editor',
+  templateUrl: './text-editor.component.html',
+  styleUrls: ['./text-editor.component.scss'],
   encapsulation: ViewEncapsulation.None // Needed in order to apply styles to ProseMirror dynamically added editor element
 })
-export class RichTextEditorComponent implements AfterViewInit {
+export class TextEditorComponent implements AfterViewInit {
   @Input() initialData?: string;
 
   @ViewChild('prosemirror') prosemirrorRef!: ElementRef<HTMLDivElement>;
-  @ViewChild('menu') menuRef!: EditorMenuComponent;
+  @ViewChild('menu') menuRef!: MenuComponent;
 
   protected view!: EditorView;
 

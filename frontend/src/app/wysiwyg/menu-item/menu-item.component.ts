@@ -5,18 +5,18 @@ import {Command, EditorState} from 'prosemirror-state';
 /**
  * Possible statuses of the menu item
  */
-export enum EditorMenuItemStatus {
+export enum MenuItemStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',
   ACTIVE = 'ACTIVE',
 }
 
 @Component({
-  selector: 'app-editor-menu-item',
-  templateUrl: './editor-menu-item.component.html',
-  styleUrls: ['./editor-menu-item.component.scss'],
+  selector: 'app-menu-item',
+  templateUrl: './menu-item.component.html',
+  styleUrls: ['./menu-item.component.scss'],
 })
-export class EditorMenuItemComponent<T extends NodeType | MarkType = NodeType | MarkType> implements OnInit {
+export class MenuItemComponent<T extends NodeType | MarkType = NodeType | MarkType> implements OnInit {
 
   @Input({ required: true }) icon!: string;
   @Input() tooltip?: string;
@@ -28,10 +28,10 @@ export class EditorMenuItemComponent<T extends NodeType | MarkType = NodeType | 
   @Output() focusView = new EventEmitter<void>();
 
   command: Command = (): boolean => false;
-  currentStatus = EditorMenuItemStatus.ENABLED;
+  currentStatus = MenuItemStatus.ENABLED;
 
   protected filePath = '';
-  protected readonly EditorMenuItemStatus = EditorMenuItemStatus;
+  protected readonly MenuItemStatus = MenuItemStatus;
 
   constructor() { }
 
@@ -41,15 +41,15 @@ export class EditorMenuItemComponent<T extends NodeType | MarkType = NodeType | 
   }
 
   // Updated by parent editor menu component
-  set status(newStatus: EditorMenuItemStatus) {
+  set status(newStatus: MenuItemStatus) {
     this.currentStatus = newStatus;
   }
 
-  get status(): EditorMenuItemStatus {
+  get status(): MenuItemStatus {
     return this.currentStatus;
   }
 
-  // Override this method in child editor-menu-item to represent its functionality
+  // Override this method in child menu-item to represent its functionality
   protected initCommand(): void { };
 
   // Sends a signal to parent to execute given command or saved command

@@ -1,16 +1,16 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {EditorMenuItemComponent} from './editor-menu-item.component';
-import {insertContent} from '../rich-text-editor/custom-commands';
+import {MenuItemComponent} from './menu-item.component';
+import {insertContent} from '../utilities/custom-commands';
 import {NodeType} from 'prosemirror-model';
-import {customSchema} from '../rich-text-editor/custom-schema';
+import {customSchema} from '../text-editor/custom-schema';
 
 @Component({
-  selector: 'app-editor-menu-image',
-  templateUrl: './editor-menu-image.component.html',
-  styleUrls: ['./editor-menu-item.component.scss', './editor-menu-image.component.scss'],
-  providers: [{ provide: EditorMenuItemComponent, useExisting: EditorMenuImageComponent }],
+  selector: 'app-menu-image',
+  templateUrl: './menu-image.component.html',
+  styleUrls: ['./menu-item.component.scss', './menu-image.component.scss'],
+  providers: [{ provide: MenuItemComponent, useExisting: MenuImageComponent }],
 })
-export class EditorMenuImageComponent extends EditorMenuItemComponent<NodeType> {
+export class MenuImageComponent extends MenuItemComponent<NodeType> {
 
   @Input({ required: false }) override type = customSchema.nodes.image;
 

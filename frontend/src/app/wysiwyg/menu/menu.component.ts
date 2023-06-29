@@ -1,19 +1,19 @@
 import {Component, QueryList, ViewChildren} from '@angular/core';
-import {EditorMenuItemComponent, EditorMenuItemStatus} from '../editor-menu-item/editor-menu-item.component';
+import {MenuItemComponent, MenuItemStatus} from '../menu-item/menu-item.component';
 import {EditorView} from 'prosemirror-view';
 import {Command, EditorState, Plugin, PluginView} from 'prosemirror-state';
 import {Mark, MarkType, Node, NodeType} from 'prosemirror-model';
-import {ProseMirrorHelper} from '../rich-text-editor/prose-mirror-helper';
-import {customSchema} from '../rich-text-editor/custom-schema';
+import {ProseMirrorHelper} from '../utilities/prosemirror-helper';
+import {customSchema} from '../text-editor/custom-schema';
 
 @Component({
-  selector: 'app-editor-menu',
-  templateUrl: './editor-menu.component.html',
-  styleUrls: ['./editor-menu.component.scss']
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.scss']
 })
-export class EditorMenuComponent implements PluginView {
+export class MenuComponent implements PluginView {
 
-  @ViewChildren(EditorMenuItemComponent) items!: QueryList<EditorMenuItemComponent>;
+  @ViewChildren(MenuItemComponent) items!: QueryList<MenuItemComponent>;
 
   protected view?: EditorView;
   protected readonly customSchema = customSchema;
@@ -35,7 +35,7 @@ export class EditorMenuComponent implements PluginView {
    * @return Plugin with current component as a PluginView
    */
   public asPlugin(): Plugin {
-    const editorMenu: EditorMenuComponent = this;
+    const editorMenu: MenuComponent = this;
 
     return new Plugin({
       view(view: EditorView): PluginView {
@@ -71,11 +71,11 @@ export class EditorMenuComponent implements PluginView {
     for (const item of this.items) {
       const type = item.type.name;
       if (!!marks.values[type]) {
-        const markItem = item as EditorMenuItemComponent<MarkType>;
+        const markItem = item as MenuItemComponent<MarkType>;
         markItem.status = this.calculateMarkStatus(markItem, marks.active, state);
       }
       else if (nodes.values[type]) {
-        const nodeItem = item as EditorMenuItemComponent<NodeType>;
+        const nodeItem = item as MenuItemComponent<NodeType>;
         nodeItem.status = this.calculateNodeStatus(nodeItem, nodes.active, state);
       }
     }
@@ -88,11 +88,11 @@ export class EditorMenuComponent implements PluginView {
    * @param state State of the editor
    * @private
    */
-  private calculateMarkStatus(item: EditorMenuItemComponent<MarkType>, activeMarks: Mark[], state: EditorState): EditorMenuItemStatus {
+  private calculateMarkStatus(item: MenuItemComponent<MarkType>, activeMarks: Mark[], state: EditorState): MenuItemStatus {
     const isActive = !!activeMarks.find(mark => ProseMirrorHelper.areMarkTypesEquals(mark.type, item.type));
     const isEnabled = item.command(state, undefined, this.view);
 
-    return isActive ? EditorMenuItemStatus.ACTIVE : (isEnabled ? EditorMenuItemStatus.ENABLED : EditorMenuItemStatus.DISABLED);
+    return isActive ? MenuItemStatus.ACTIVE : (isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
   }
 
   /**
@@ -102,10 +102,10 @@ export class EditorMenuComponent implements PluginView {
    * @param state State of the editor
    * @private
    */
-  private calculateNodeStatus(item: EditorMenuItemComponent<NodeType>, activeNodes: Node[], state: EditorState): EditorMenuItemStatus {
+  private calculateNodeStatus(item: MenuItemComponent<NodeType>, activeNodes: Node[], state: EditorState): MenuItemStatus {
     const isActive = !!activeNodes.find(node => ProseMirrorHelper.areNodesEquals(node, item));
     const isEnabled = item.command(state, undefined, this.view);
 
-    return isActive ? EditorMenuItemStatus.ACTIVE : (isEnabled ? EditorMenuItemStatus.ENABLED : EditorMenuItemStatus.DISABLED);
+    return isActive ? MenuItemStatus.ACTIVE : (isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
   }
 }

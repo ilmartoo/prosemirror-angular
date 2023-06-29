@@ -1,8 +1,8 @@
 <div class="base" #base (focusout)="itemFocusLost($event)">
   <button [ngClass]="{
     item: true,
-    active: EditorMenuItemStatus.ACTIVE === currentStatus || isPopupOpen
-  }"      [disabled]="EditorMenuItemStatus.DISABLED === currentStatus"
+    active: MenuItemStatus.ACTIVE === currentStatus || isPopupOpen
+  }"      [disabled]="MenuItemStatus.DISABLED === currentStatus"
           (click)="isPopupOpen ? closePopup() : openPopup()">
     <img class="icon" [src]="filePath" [alt]="tooltip ?? ''">
     <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>
