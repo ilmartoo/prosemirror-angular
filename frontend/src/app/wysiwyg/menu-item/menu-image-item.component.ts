@@ -1,16 +1,17 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {MenuItemComponent} from './menu-item.component';
 import {insertContent} from '../utilities/custom-commands';
-import {NodeType} from 'prosemirror-model';
 import {customSchema} from '../text-editor/custom-schema';
+import {MenuNodeItemComponent} from './menu-node-item.component';
+import {EditorView} from 'prosemirror-view';
 
 @Component({
-  selector: 'app-menu-image',
-  templateUrl: './menu-image.component.html',
-  styleUrls: ['./menu-item.component.scss', './menu-image.component.scss'],
-  providers: [{ provide: MenuItemComponent, useExisting: MenuImageComponent }],
+  selector: 'app-menu-image-item',
+  templateUrl: './menu-image-item.component.html',
+  styleUrls: ['./menu-item.component.scss', './menu-image-item.component.scss'],
+  providers: [{ provide: MenuItemComponent, useExisting: MenuImageItemComponent }],
 })
-export class MenuImageComponent extends MenuItemComponent<NodeType> {
+export class MenuImageItemComponent extends MenuNodeItemComponent {
 
   @Input({ required: false }) override type = customSchema.nodes.image;
 
@@ -28,14 +29,15 @@ export class MenuImageComponent extends MenuItemComponent<NodeType> {
   }
 
   protected openPopup(): void {
-    this.isPopupOpen = true;
+    if (this.view) {
+      this.isPopupOpen = true;
 
-    // Display: none is active, so we wait until this style is overwritten
-    setTimeout(() => this.popupRef.nativeElement.focus());
+      // Display: none is active, so we wait until this style is overwritten
+      setTimeout(() => this.popupRef.nativeElement.focus());
 
-    this.resetPopup();
-    this.updatePopup();
-
+      this.resetPopup();
+      this.updatePopup(this.view);
+    }
   }
 
   protected closePopup(): void {
@@ -60,9 +62,8 @@ export class MenuImageComponent extends MenuItemComponent<NodeType> {
     this.insertPos = 0;
   }
 
-  private updatePopup(): void {
-    const state = this.state;
-    this.insertPos = state.selection.head;
+  private updatePopup(view: EditorView): void {
+    this.insertPos = view.state.selection.head;
   }
 
   protected createImage(): void {
@@ -71,7 +72,7 @@ export class MenuImageComponent extends MenuItemComponent<NodeType> {
     title = title ? title : undefined;
 
     // Create link & close
-    if (this.isValidImage(src) && this.insertPos != null) {
+    if (this.view && this.isValidImage(src) && this.insertPos != null) {
       const imageNode = this.type.create({ src: src, alt: title, title: title });
       this.executeCommand(insertContent(this.insertPos, imageNode));
       this.closePopup(); // Exit popup

@@ -1,17 +1,18 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {MenuItemComponent} from './menu-item.component';
-import {ProseMirrorHelper} from '../utilities/prosemirror-helper';
+import {expandMarkActiveRange, searchForMarkTypeInSelection, textAt} from '../utilities/prosemirror-helper';
 import {removeMark, replaceWithMarkedText} from '../utilities/custom-commands';
-import {MenuMarkComponent} from './menu-mark.component';
+import {MenuMarkItemComponent} from './menu-mark-item.component';
 import {customSchema} from '../text-editor/custom-schema';
+import {EditorView} from 'prosemirror-view';
 
 @Component({
-  selector: 'app-menu-link',
-  templateUrl: './menu-link.component.html',
-  styleUrls: ['./menu-item.component.scss', './menu-link.component.scss'],
-  providers: [{ provide: MenuItemComponent, useExisting: MenuLinkComponent }],
+  selector: 'app-menu-link-item',
+  templateUrl: './menu-link-item.component.html',
+  styleUrls: ['./menu-item.component.scss', './menu-link-item.component.scss'],
+  providers: [{ provide: MenuItemComponent, useExisting: MenuLinkItemComponent }],
 })
-export class MenuLinkComponent extends MenuMarkComponent {
+export class MenuLinkItemComponent extends MenuMarkItemComponent {
 
   @Input({ required: false }) override type = customSchema.marks.link;
 
@@ -27,13 +28,15 @@ export class MenuLinkComponent extends MenuMarkComponent {
     { isLink: false, from: number, to?: number };
 
   protected openPopup(): void {
-    this.isPopupOpen = true;
+    if (this.view) {
+      this.isPopupOpen = true;
 
-    // Display: none is active, so we wait until this style is overwritten
-    setTimeout(() => this.popupRef.nativeElement.focus());
+      // Display: none is active, so we wait until this style is overwritten
+      setTimeout(() => this.popupRef.nativeElement.focus());
 
-    this.resetPopup();
-    this.updatePopup();
+      this.resetPopup();
+      this.updatePopup(this.view);
+    }
   }
 
   protected closePopup(): void {
@@ -58,14 +61,14 @@ export class MenuLinkComponent extends MenuMarkComponent {
     this.selection = undefined;
   }
 
-  private updatePopup(): void {
+  private updatePopup(view: EditorView): void {
     const link: { name?: string, href?: string } = { };
 
-    const state = this.state;
+    const state = view.state;
     const selection = state.selection;
 
-    const selectedLink = ProseMirrorHelper.searchForMarkTypeInSelection(this.type, state);
-    const markRange = selectedLink ? ProseMirrorHelper.expandMarkActiveRange(state.doc, selectedLink.mark, selectedLink.resolvedPos.pos) : null;
+    const selectedLink = searchForMarkTypeInSelection(this.type, state);
+    const markRange = selectedLink ? expandMarkActiveRange(state.doc, selectedLink, selectedLink.pos) : null;
 
     // If open when a link is on head
     if (selectedLink && markRange) {
@@ -75,8 +78,8 @@ export class MenuLinkComponent extends MenuMarkComponent {
         to: markRange.$to.pos,
       };
 
-      link.name = ProseMirrorHelper.textAt(state.doc, markRange.start, markRange.end).trim();
-      link.href = selectedLink.mark.attrs['href'] as string;
+      link.name = textAt(state.doc, markRange.start, markRange.end).trim();
+      link.href = selectedLink.attrs['href'] as string;
       this.canCreateLink = true;
     }
     // If a selection is in place but does not contain a link
@@ -87,7 +90,7 @@ export class MenuLinkComponent extends MenuMarkComponent {
         to: selection.$to.pos,
       };
 
-      link.name = ProseMirrorHelper.textAt(state.doc, selection.from, selection.to).trim()
+      link.name = textAt(state.doc, selection.from, selection.to).trim()
     }
     // Else insert in cursor position
     else {
@@ -112,7 +115,7 @@ export class MenuLinkComponent extends MenuMarkComponent {
     const href = this.hrefRef.nativeElement.value.trim();
 
     // Create link & close
-    if (this.isValidLink(name, href) && this.selection) {
+    if (this.view && this.isValidLink(name, href) && this.selection) {
       const linkMark = this.type.create({ href: href, title: name });
       this.executeCommand(replaceWithMarkedText(name, [linkMark], this.selection.from, this.selection.to));
       this.closePopup(); // Exit popup
@@ -122,7 +125,7 @@ export class MenuLinkComponent extends MenuMarkComponent {
 
   protected deleteLink(): void {
     // Delete link & close
-    if (this.selection?.isLink) {
+    if (this.view && this.selection?.isLink) {
       this.executeCommand(removeMark(this.selection.from, this.selection.to, this.type));
       this.closePopup(); // Exit popup
       this.focusEditor(); // Focus text editor

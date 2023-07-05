@@ -1,117 +1,88 @@
 <div class="menu" *ngIf="view">
-  <app-menu-mark [state]="view.state"
-                        [type]="customSchema.marks.strong"
-                        (execute)="executeCommand($event, view)"
-                        (focusView)="focusView()"
-                        icon="bold"
-                        tooltip="Bold"
-  ></app-menu-mark>
-  <app-menu-mark [state]="view.state"
-                        [type]="customSchema.marks.em"
-                        (execute)="executeCommand($event, view)"
-                        (focusView)="focusView()"
-                        icon="italic"
-                        tooltip="Italic"
-  ></app-menu-mark>
-  <app-menu-mark [state]="view.state"
-                        [type]="customSchema.marks.underline"
-                        (execute)="executeCommand($event, view)"
-                        (focusView)="focusView()"
-                        icon="underline"
-                        tooltip="Underline"
-  ></app-menu-mark>
-  <app-menu-mark [state]="view.state"
-                        [type]="customSchema.marks.strikethrough"
-                        (execute)="executeCommand($event, view)"
-                        (focusView)="focusView()"
-                        icon="strikethrough"
-                        tooltip="Strikethrough"
-  ></app-menu-mark>
-  <app-menu-mark [state]="view.state"
-                        [type]="customSchema.marks.code"
-                        (execute)="executeCommand($event, view)"
-                        (focusView)="focusView()"
-                        icon="code"
-                        tooltip="Inline code"
-  ></app-menu-mark>
-  <app-menu-link [state]="view.state"
-                        (execute)="executeCommand($event, view)"
-                        icon="link"
-                        tooltip="Hyperlink"
-  ></app-menu-link>
+  <app-menu-mark-item [type]="customSchema.marks.strong"
+                      icon="bold"
+                      tooltip="Bold"
+  ></app-menu-mark-item>
+  <app-menu-mark-item [type]="customSchema.marks.em"
+                      icon="italic"
+                      tooltip="Italic"
+  ></app-menu-mark-item>
+  <app-menu-mark-item [type]="customSchema.marks.underline"
+                      icon="underline"
+                      tooltip="Underline"
+  ></app-menu-mark-item>
+  <app-menu-mark-item [type]="customSchema.marks.strikethrough"
+                      icon="strikethrough"
+                      tooltip="Strikethrough"
+  ></app-menu-mark-item>
+  <app-menu-mark-item [type]="customSchema.marks.code"
+                      icon="code"
+                      tooltip="Inline code"
+  ></app-menu-mark-item>
+  <app-menu-link-item icon="link"
+                      tooltip="Hyperlink"
+  ></app-menu-link-item>
 
   <div class="separator"></div>
 
-  <app-menu-image [state]="view.state"
-                         (execute)="executeCommand($event, view)"
-                         (focusView)="focusView()"
-                         icon="image"
-                         tooltip="Add image"
-  ></app-menu-image>
+  <app-menu-image-item icon="image"
+                       tooltip="Add image"
+  ></app-menu-image-item>
 
   <div class="separator"></div>
 
-  <app-menu-textblock [state]="view.state"
-                             [type]="customSchema.nodes.paragraph"
-                             (execute)="executeCommand($event, view)"
-                             (focusView)="focusView()"
-                             icon="paragraph"
-                             tooltip="Text paragraph"
-  ></app-menu-textblock>
-  <app-menu-textblock [state]="view.state"
-                             [type]="customSchema.nodes.heading"
-                             [attrs]="{ level: 1 }"
-                             (execute)="executeCommand($event, view)"
-                             (focusView)="focusView()"
-                             icon="header1"
-                             tooltip="Header 1"
-  ></app-menu-textblock>
-  <app-menu-textblock [state]="view.state"
-                             [type]="customSchema.nodes.heading"
-                             [attrs]="{ level: 2 }"
-                             (execute)="executeCommand($event, view)"
-                             (focusView)="focusView()"
-                             icon="header2"
-                             tooltip="Header 2"
-  ></app-menu-textblock>
-  <app-menu-textblock [state]="view.state"
-                             [type]="customSchema.nodes.heading"
-                             [attrs]="{ level: 3 }"
-                             (execute)="executeCommand($event, view)"
-                             (focusView)="focusView()"
-                             icon="header3"
-                             tooltip="Header 3"
-  ></app-menu-textblock>
-  <app-menu-wrapper [state]="view.state"
-                           [type]="customSchema.nodes.blockquote"
-                           (execute)="executeCommand($event, view)"
-                           (focusView)="focusView()"
-                           icon="blockquote"
-                           tooltip="Quote text"
-  ></app-menu-wrapper>
-  <app-menu-textblock [state]="view.state"
-                             [type]="customSchema.nodes.code_block"
-                             (execute)="executeCommand($event, view)"
-                             (focusView)="focusView()"
-                             icon="code_block"
-                             tooltip="Code block"
-  ></app-menu-textblock>
-  <app-menu-wrapper [state]="view.state"
-                           [type]="customSchema.nodes.bullet_list"
-                           (execute)="executeCommand($event, view)"
-                           (focusView)="focusView()"
-                           icon="bullet_list"
-                           tooltip="Bullet list"
-  ></app-menu-wrapper>
-  <app-menu-wrapper [state]="view.state"
-                           [type]="customSchema.nodes.ordered_list"
-                           (execute)="executeCommand($event, view)"
-                           icon="ordered_list"
-                           tooltip="Ordered list"
-  ></app-menu-wrapper>
+  <app-menu-node-item [type]="customSchema.nodes.paragraph"
+                      icon="paragraph"
+                      tooltip="Text paragraph"
+  ></app-menu-node-item>
+  <app-menu-node-item [type]="customSchema.nodes.heading"
+                      [attrs]="{ level: 1 }"
+                      icon="header1"
+                      tooltip="Header 1"
+  ></app-menu-node-item>
+  <app-menu-node-item [type]="customSchema.nodes.heading"
+                      [attrs]="{ level: 2 }"
+                      icon="header2"
+                      tooltip="Header 2"
+  ></app-menu-node-item>
+  <app-menu-node-item [type]="customSchema.nodes.heading"
+                      [attrs]="{ level: 3 }"
+                      icon="header3"
+                      tooltip="Header 3"
+  ></app-menu-node-item>
+  <app-menu-list-item [type]="customSchema.nodes.blockquote"
+                      icon="blockquote"
+                      tooltip="Quote text"
+  ></app-menu-list-item>
+  <app-menu-node-item [type]="customSchema.nodes.code_block"
+                      icon="code_block"
+                      tooltip="Code block"
+  ></app-menu-node-item>
+
+  <div class="separator"></div>
+
+  <app-menu-list-item [type]="customSchema.nodes.bullet_list"
+                      icon="bullet_list"
+                      tooltip="Bullet list"
+  ></app-menu-list-item>
+  <app-menu-list-item [type]="customSchema.nodes.ordered_list"
+                      icon="ordered_list"
+                      tooltip="Ordered list"
+  ></app-menu-list-item>
   <!--  <app-menu-item [type]="view.state.schema.nodes['checklist']"-->
   <!--                        [status]="getNodeStatus('checklist')"-->
   <!--                        icon="checklist"-->
   <!--                        tooltip="Checklist"-->
   <!--  ></app-menu-item>-->
+
+  <div class="separator"></div>
+
+  <app-menu-indent-item [isIncrease]="false"
+                        icon="indent_decrease"
+                        tooltip="Decrease indent"
+  ></app-menu-indent-item>
+  <app-menu-indent-item [isIncrease]="true"
+                        icon="indent_increase"
+                        tooltip="Increase indent"
+  ></app-menu-indent-item>
 </div>

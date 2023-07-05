@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Attrs, MarkType, NodeType} from 'prosemirror-model';
-import {Command, EditorState} from 'prosemirror-state';
+import {Component, Input, OnInit} from '@angular/core';
+import {Command} from 'prosemirror-state';
+import {EditorView} from 'prosemirror-view';
+import {EditorSelectionActiveElements} from '../menu/menu.component';
 
 /**
  * Possible statuses of the menu item
@@ -11,58 +12,86 @@ export enum MenuItemStatus {
   ACTIVE = 'ACTIVE',
 }
 
+const createIconPath = (iconName: string): string => `./assets/${iconName}.svg`;
+
 @Component({
   selector: 'app-menu-item',
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.scss'],
 })
-export class MenuItemComponent<T extends NodeType | MarkType = NodeType | MarkType> implements OnInit {
+export class MenuItemComponent implements OnInit {
 
   @Input({ required: true }) icon!: string;
   @Input() tooltip?: string;
+  @Input() command: Command = (): boolean => false;
 
-  @Input({ required: true }) state!: EditorState;
-  @Input({ required: true }) type!: T;
-  @Input() attrs: Attrs = {}; // Empty object to compare to schema nodes & marks because they have empty object if no Attrs
-  @Output() execute = new EventEmitter<Command>();
-  @Output() focusView = new EventEmitter<void>();
-
-  command: Command = (): boolean => false;
-  currentStatus = MenuItemStatus.ENABLED;
-
+  protected view?: EditorView;
+  protected status = MenuItemStatus.ENABLED;
   protected filePath = '';
   protected readonly MenuItemStatus = MenuItemStatus;
 
   constructor() { }
 
   public ngOnInit() {
-    this.filePath = `./assets/${this.icon}.svg`
+    this.filePath = createIconPath(this.icon);
     this.initCommand();
   }
 
-  // Updated by parent editor menu component
-  set status(newStatus: MenuItemStatus) {
-    this.currentStatus = newStatus;
+
+  public update(view: EditorView, activeElements: EditorSelectionActiveElements): void {
+    this.view = view; // Update to the current view
+    this.status = this.calculateStatus(view, activeElements);
+    this.updateData(view, activeElements);
   }
 
-  get status(): MenuItemStatus {
-    return this.currentStatus;
+  /**
+   * Override when needed to calculate the status based on the new view & active elements
+   * @param view Current editor view
+   * @param activeElements Active marks & nodes of the selection
+   * @protected
+   */
+  protected calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+    return MenuItemStatus.ENABLED;
   }
 
-  // Override this method in child menu-item to represent its functionality
+  /**
+   * Override when needed to update other data based on the new view & active elements
+   * @param view Current editor view
+   * @param activeElements Active marks & nodes of the selection
+   * @protected
+   */
+  protected updateData(view: EditorView, activeElements: EditorSelectionActiveElements): void { }
+
+  /**
+   * Initialize this item's command if not passed on input (Override this method if needed when extending this or a child class)
+   * @protected
+   */
   protected initCommand(): void { };
 
-  // Sends a signal to parent to execute given command or saved command
+  /**
+   * Executes this given command or saved command if no command is specified
+   * @param command Command to execute
+   * @protected
+   */
   protected executeCommand(command?: Command): void {
-    this.execute.emit(command ?? this.command);
+    if (this.view) {
+      const commandToExecute = command ?? this.command;
+      commandToExecute(this.view.state, this.view.dispatch, this.view);
+    }
   }
 
-  // Sends a signal to parent to focus the editor view
+  /**
+   * Focus the editor view
+   * @protected
+   */
   protected focusEditor(): void {
-    this.focusView.emit();
+    this.view?.focus();
   }
 
-  // Prevents losing editor focus when clicking on an editor item
+  /**
+   * Prevents losing editor focus when clicking on an editor item
+   * @protected
+   */
   protected preventLosingEditorFocus(event: MouseEvent): void {
     event.preventDefault();
     this.focusEditor();

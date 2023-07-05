@@ -1,10 +1,17 @@
 import {Component, QueryList, ViewChildren} from '@angular/core';
-import {MenuItemComponent, MenuItemStatus} from '../menu-item/menu-item.component';
+import {MenuItemComponent} from '../menu-item/menu-item.component';
 import {EditorView} from 'prosemirror-view';
-import {Command, EditorState, Plugin, PluginView} from 'prosemirror-state';
-import {Mark, MarkType, Node, NodeType} from 'prosemirror-model';
-import {ProseMirrorHelper} from '../utilities/prosemirror-helper';
+import {Plugin, PluginView} from 'prosemirror-state';
+import {Mark, Node as ProseNode} from 'prosemirror-model';
+import {activeMarksInSelection, ancestorNodesInSelection} from '../utilities/prosemirror-helper';
 import {customSchema} from '../text-editor/custom-schema';
+
+
+export type EditorSelectionActiveElements = {
+  marks: Mark[],
+  nodes: ProseNode[],
+};
+
 
 @Component({
   selector: 'app-menu',
@@ -17,16 +24,6 @@ export class MenuComponent implements PluginView {
 
   protected view?: EditorView;
   protected readonly customSchema = customSchema;
-
-  constructor() { }
-
-  protected executeCommand(command: Command, view: EditorView): void {
-    command(view.state, view.dispatch, this.view);
-  }
-
-  protected focusView(): void {
-    this.view?.focus();
-  }
 
   /******************* ProseMirror Plugin creation & PluginView methods *******************/
 
@@ -45,9 +42,9 @@ export class MenuComponent implements PluginView {
     })
   }
 
-  public update(view: EditorView, _: EditorState): void {
+  public update(view: EditorView): void {
     this.view = view;
-    this.updateItemStatuses(view.state);
+    this.updateItemStatuses(view);
   }
 
   public destroy(): void { }
@@ -55,57 +52,16 @@ export class MenuComponent implements PluginView {
   /******************* Editor Items management *******************/
 
   /**
-   * Updates the editor items statuses given the current view state
-   * @param state State of the editor
+   * Updates the editor items given the current view
+   * @param view View of the editor
    */
-  public updateItemStatuses(state: EditorState): void {
-    const marks = {
-      values: state.schema.marks,
-      active: ProseMirrorHelper.activeMarksInSelection(state),
-    };
-    const nodes = {
-      values: state.schema.nodes,
-      active: ProseMirrorHelper.parentNodesInSelection(state),
+  public updateItemStatuses(view: EditorView): void {
+    const state = view.state;
+    const updateData: EditorSelectionActiveElements = {
+      marks: activeMarksInSelection(state),
+      nodes: ancestorNodesInSelection(state),
     };
 
-    for (const item of this.items) {
-      const type = item.type.name;
-      if (!!marks.values[type]) {
-        const markItem = item as MenuItemComponent<MarkType>;
-        markItem.status = this.calculateMarkStatus(markItem, marks.active, state);
-      }
-      else if (nodes.values[type]) {
-        const nodeItem = item as MenuItemComponent<NodeType>;
-        nodeItem.status = this.calculateNodeStatus(nodeItem, nodes.active, state);
-      }
-    }
-  }
-
-  /**
-   * Calculates mark item status given current active & available marks
-   * @param item Mark item
-   * @param activeMarks Active marks
-   * @param state State of the editor
-   * @private
-   */
-  private calculateMarkStatus(item: MenuItemComponent<MarkType>, activeMarks: Mark[], state: EditorState): MenuItemStatus {
-    const isActive = !!activeMarks.find(mark => ProseMirrorHelper.areMarkTypesEquals(mark.type, item.type));
-    const isEnabled = item.command(state, undefined, this.view);
-
-    return isActive ? MenuItemStatus.ACTIVE : (isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
-  }
-
-  /**
-   * Calculates node item status given current active & available nodes
-   * @param item Node item
-   * @param activeNodes Active nodes
-   * @param state State of the editor
-   * @private
-   */
-  private calculateNodeStatus(item: MenuItemComponent<NodeType>, activeNodes: Node[], state: EditorState): MenuItemStatus {
-    const isActive = !!activeNodes.find(node => ProseMirrorHelper.areNodesEquals(node, item));
-    const isEnabled = item.command(state, undefined, this.view);
-
-    return isActive ? MenuItemStatus.ACTIVE : (isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
+    this.items.forEach(item => item.update(view, updateData));
   }
 }

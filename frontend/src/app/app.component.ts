@@ -19,9 +19,19 @@ export class AppComponent {
     '<h1>Header 1</h1>' +
     '<h2>Header 2</h2>' +
     '<h3>Header 3</h3>' +
-    '<p>Paragraph</p>' +
-    '<ol><li>Ordered list</li></ol>' +
-    '<ul><li>Unordered list</li></ul>' +
+    '<div class="indent"><div class="indent"><p>Paragraph</p></div></div>' +
+    '<ol>' +
+      '<li>Ordered list</li>' +
+      '<ol>' +
+        '<li>Ordered sublist</li>' +
+      '</ol>' +
+    '</ol>' +
+    '<ul>' +
+      '<li>Unordered list</li>' +
+      '<ul>' +
+        '<li>Unordered sublist</li>' +
+      '</ul>' +
+    '</ul>' +
     '<pre><code>Code block</code></pre>' +
     '<blockquote>Quote</blockquote>' +
     '<p><img alt="Example image" title="Example image" src="https://picsum.photos/seed/picsum/200/300"></p>' +
