@@ -182,7 +182,7 @@ export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
     const tr = extendTransaction(state.tr);
 
     tr.wrap(range, wrapping);
-    tr.setSelection(new TextSelection(tr.mapAndResolveResolvedPos($anchor), tr.mapAndResolveResolvedPos($head)));
+    tr.mapAndSelect($anchor.pos, $head.pos);
 
     dispatch(tr.scrollIntoView());
   }
@@ -254,7 +254,7 @@ export const increaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
     const tr = extendTransaction(state.tr);
 
     tr.wrap(range, wrapping);
-    tr.setSelection(new TextSelection(tr.mapAndResolveResolvedPos($anchor), tr.mapAndResolveResolvedPos($head)));
+    tr.mapAndSelect($anchor.pos, $head.pos);
 
     dispatch(tr.scrollIntoView());
   }
