@@ -536,6 +536,7 @@ export function mapAndResolvePos(tr: Transaction | ExtendedTransaction, pos: num
   return tr.doc.resolve(tr.mapping.map(pos));
 }
 
+// TODO: Replace this with a custom step representing this function to correctly map the positions?
 /**
  * Unwraps the content of the given node, mapping the selection accordingly
  * @param tr Transaction
