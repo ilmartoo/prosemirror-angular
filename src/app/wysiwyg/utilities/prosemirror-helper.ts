@@ -503,6 +503,11 @@ export type ExtendedTransaction = Transaction & {
   unwrapNode: (node: ExtendedNode) => ExtendedTransaction;
 }
 
+/**
+ * Creates an extended transaction from a basic transaction
+ * @param tr Transaction to extend
+ * @returns Reference to the given transaction with the extended props
+ */
 export function extendTransaction(tr: Transaction): ExtendedTransaction {
   return addProps<ExtendedTransaction>(tr, {
     mapAndResolveResolvedPos: ($pos: ResolvedPos): ResolvedPos => mapAndResolveResolvedPos(tr, $pos),
