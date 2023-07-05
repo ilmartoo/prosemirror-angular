@@ -1,6 +1,6 @@
 {
-  "name": "markdown-test",
-  "version": "0.0.0",
+  "name": "prosemirror-angular",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
