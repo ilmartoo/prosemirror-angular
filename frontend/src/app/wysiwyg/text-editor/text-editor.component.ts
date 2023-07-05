@@ -7,7 +7,8 @@ import {baseKeymap} from 'prosemirror-commands';
 import {EditorView} from 'prosemirror-view';
 import {MenuComponent} from '../menu/menu.component';
 import {customSchema} from './custom-schema';
-import {ProseMirrorHelper} from '../utilities/prosemirror-helper';
+import {currentElementDecorator, selectedNodesDecorator} from '../utilities/prosemirror-helper';
+import {decreaseIndent, increaseIndent, newBlock, newLine} from '../utilities/custom-commands';
 
 
 /**
@@ -63,12 +64,21 @@ export class TextEditorComponent implements AfterViewInit {
       doc: ProseDOMParser.fromSchema(customSchema).parse(this.initialDataNode()),
       // Plugins that add functionality to the editor - Can be edited in future states
       plugins: [
-        history(),                                       // Command history
-        keymap({"Mod-z": undo, "Mod-y": redo}), // Undo/Redo functionality
-        keymap(baseKeymap),                              // Base keymap for the editor
-        this.menuRef.asPlugin(),                         // Menu bar
-        ProseMirrorHelper.currentElementDecorator(),     // Decorator marking the current element
-        ProseMirrorHelper.selectedNodesDecorator(),      // Decorator marking the selected nodes
+        history(), // Command history
+        keymap({
+          ...baseKeymap, // Base keymap for the editor
+          'Enter': newBlock,
+          'Mod-Enter': newLine,
+          'Shift-Enter': newLine,
+          'Mod-z': undo,
+          'Mod-y': redo,
+          'Mod-Shift-z': redo,
+          'Tab': increaseIndent,
+          'Shift-Tab': decreaseIndent,
+        }),
+        this.menuRef.asPlugin(),   // Menu bar
+        currentElementDecorator(), // Decorator marking the current element
+        selectedNodesDecorator(),  // Decorator marking the selected nodes
       ],
     })
 

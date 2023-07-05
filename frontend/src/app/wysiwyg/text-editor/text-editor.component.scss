@@ -27,6 +27,11 @@ app-menu {
 
     * {
       line-height: 1.5;
+      margin: 0.5rem 0;
+    }
+
+    div.indent {
+      margin-left: 1rem;
     }
 
     em,
@@ -45,8 +50,6 @@ app-menu {
     }
 
     *:not(pre) > code {
-      padding: 0.1rem 0;
-
       color: #d04437;
       background-color: #172b4d14;
     }
@@ -84,22 +87,21 @@ app-menu {
     h1,
     h2,
     h3 {
-      font-weight: bold;
-      margin-top: 0.4375rem;
+      margin-top: 0.75rem;
     }
 
     h1 {
-      font-size: x-large;
+      font-size: xx-large;
       margin-bottom: 1rem;
     }
 
     h2 {
-      font-size: large;
+      font-size: x-large;
       margin-bottom: 0.75rem;
     }
 
     h3 {
-      font-size: medium;
+      font-size: large;
       margin-bottom: 0.5rem;
     }
 

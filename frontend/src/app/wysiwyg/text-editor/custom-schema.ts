@@ -1,13 +1,15 @@
-import {Attrs, DOMOutputSpec, MarkSpec, Schema} from 'prosemirror-model';
+import {Attrs, DOMOutputSpec, Schema} from 'prosemirror-model';
 import {schema} from 'prosemirror-schema-basic';
-import {addListNodes} from 'prosemirror-schema-list';
+import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
+import {groupChain, groupOr, groupRange} from '../utilities/prosemirror-helper';
 
 
 ///
 /// Base schema
 ///
 const baseSchema = new Schema({
-  nodes: addListNodes(schema.spec.nodes, 'paragraph block*', 'block'),
+  // nodes: addListNodes(schema.spec.nodes, 'block+', 'block'),
+  nodes: schema.spec.nodes,
   marks: schema.spec.marks,
 })
 
@@ -15,6 +17,17 @@ const baseSchema = new Schema({
 ///
 /// Custom schema's nodes definition
 ///
+const indentDOM: DOMOutputSpec = ['div', { class: 'indent' }, 0];
+
+// Node groups
+const blockGroup = 'block';
+const listGroup = 'list';
+const listGroups = groupChain(blockGroup, listGroup);
+
+// Node contents
+const listContent = groupRange(groupOr('list_item', listGroup), 0);
+const indentContent = groupRange(blockGroup, 0);
+
 type CustomNodeSpec =
   'blockquote' |
   'image' |
@@ -27,9 +40,50 @@ type CustomNodeSpec =
   'hard_break' |
   'list_item' |
   'ordered_list' |
-  'bullet_list';
+  'bullet_list' |
+  'indent';
 
-const customNodes = baseSchema.spec.nodes;
+const customNodes = baseSchema.spec.nodes
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Ordered list
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  .update('ordered_list', {
+    ...orderedList,
+    content: listContent,
+    group: listGroups,
+  })
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Bullet list
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  .update('bullet_list', {
+    ...bulletList,
+    content: listContent,
+    group: listGroups,
+  })
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // List item
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  .update('list_item', {
+    ...listItem,
+    content: 'paragraph',
+  })
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Indent
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  .update('indent', {
+    content: indentContent,
+    group: blockGroup,
+    parseDOM: [
+      {
+        tag: 'div',
+        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+          if (typeof(dom) === 'string') { return false; } // If string do not parse
+          return dom.classList.contains('indent') ? null : false;
+        },
+      },
+    ],
+    toDOM: (): DOMOutputSpec => indentDOM,
+  });
 
 
 ///
@@ -58,14 +112,14 @@ const customMarks = baseSchema.spec.marks
         getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
           if (typeof(dom) === 'string') { return false; } // If string do not parse
           return (
-            dom.style.textDecoration.includes("underline") ||
-            dom.style.textDecorationLine.includes("underline")
+            dom.style.textDecoration.includes('underline') ||
+            dom.style.textDecorationLine.includes('underline')
           ) ? null : false;
         },
       },
     ],
     toDOM: (): DOMOutputSpec => underlineDOM,
-    } as MarkSpec)
+  })
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Strikethrough
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,8 +131,8 @@ const customMarks = baseSchema.spec.marks
         getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
           if (typeof(dom) === 'string') { return false; } // If string do not parse
           return (
-            dom.style.textDecoration.includes("line-through") ||
-            dom.style.textDecorationLine.includes("line-through")
+            dom.style.textDecoration.includes('line-through') ||
+            dom.style.textDecorationLine.includes('line-through')
           ) ? null : false;
         },
       },
@@ -95,4 +149,7 @@ const customSchema = new Schema<CustomNodeSpec, CustomMarkSpec>({
   marks: customMarks,
 })
 
+// Schema
 export {customNodes, customMarks, customSchema, CustomMarkSpec, CustomNodeSpec}
+// Groups
+export {blockGroup, listGroup, listGroups}
