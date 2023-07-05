@@ -1,7 +1,8 @@
 import {Attrs, DOMOutputSpec, Schema} from 'prosemirror-model';
 import {schema} from 'prosemirror-schema-basic';
 import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
-import {groupChain, groupOr, groupRange} from '../utilities/prosemirror-helper';
+
+import {groupChain, groupOr, groupRange} from "../utilities/node-groups-helper";
 
 
 ///

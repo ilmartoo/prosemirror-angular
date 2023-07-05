@@ -5,7 +5,8 @@ import {NodeType} from 'prosemirror-model';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
 import {EditorView} from 'prosemirror-view';
 import {EditorSelectionActiveElements} from '../menu/menu.component';
-import {areNodesEquals} from '../utilities/prosemirror-helper';
+
+import {areNodesEquals} from "../utilities/nodes-helper";
 
 @Component({
   selector: 'app-menu-node-item',

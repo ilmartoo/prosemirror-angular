@@ -1,12 +1,9 @@
+/**
+ * Custom ProseMirror custom functions
+ */
+
 import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
 import {Attrs, Fragment, Mark, MarkType, Node as ProseNode, NodeRange, NodeType} from 'prosemirror-model';
-import {
-  areNodeTypesEquals,
-  extendTransaction,
-  findAllAncestors,
-  findAncestor,
-  isValidContent
-} from './prosemirror-helper';
 import {customSchema} from '../text-editor/custom-schema';
 import {
   chainCommands,
@@ -17,6 +14,9 @@ import {
   splitBlock
 } from 'prosemirror-commands';
 import {findWrapping} from 'prosemirror-transform';
+import {extendTransaction} from "./transactions-helper";
+import {areNodeTypesEquals, findAllAncestors, findAncestor} from "./nodes-helper";
+import {isValidContent} from "./node-content-helper";
 
 /**
  * Selects the text of the given range

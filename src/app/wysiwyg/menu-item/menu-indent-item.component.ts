@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
 import {EditorView} from 'prosemirror-view';
 import {EditorSelectionActiveElements} from '../menu/menu.component';
-import {decreaseIndent, increaseIndent} from '../utilities/custom-commands';
+import {decreaseIndent, increaseIndent} from '../utilities/commands';
 
 @Component({
   selector: 'app-menu-indent-item',

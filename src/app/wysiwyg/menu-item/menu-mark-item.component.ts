@@ -5,7 +5,8 @@ import {MarkType} from 'prosemirror-model';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
 import {EditorView} from 'prosemirror-view';
 import {EditorSelectionActiveElements} from '../menu/menu.component';
-import {areMarkTypesEquals} from '../utilities/prosemirror-helper';
+
+import {areMarkTypesEquals} from "../utilities/marks-helper";
 
 @Component({
   selector: 'app-menu-mark-item',

@@ -7,8 +7,8 @@ import {baseKeymap} from 'prosemirror-commands';
 import {EditorView} from 'prosemirror-view';
 import {MenuComponent} from '../menu/menu.component';
 import {customSchema} from './custom-schema';
-import {currentElementDecorator, selectedNodesDecorator} from '../utilities/prosemirror-helper';
-import {decreaseIndent, increaseIndent, newBlock, newLine} from '../utilities/custom-commands';
+import {decreaseIndent, increaseIndent, newBlock, newLine} from '../utilities/commands';
+import {currentElementDecorator, selectedNodesDecorator} from "../utilities/decorators";
 
 
 /**

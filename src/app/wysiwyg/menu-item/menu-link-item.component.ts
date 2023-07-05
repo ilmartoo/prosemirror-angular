@@ -1,10 +1,11 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {MenuItemComponent} from './menu-item.component';
-import {expandMarkActiveRange, searchForMarkTypeInSelection, textAt} from '../utilities/prosemirror-helper';
-import {removeMark, replaceWithMarkedText} from '../utilities/custom-commands';
+import {removeMark, replaceWithMarkedText} from '../utilities/commands';
 import {MenuMarkItemComponent} from './menu-mark-item.component';
 import {customSchema} from '../text-editor/custom-schema';
 import {EditorView} from 'prosemirror-view';
+import {expandMarkActiveRange, searchForMarkTypeInSelection} from "../utilities/marks-helper";
+import {textAt} from "../utilities/node-content-helper";
 
 @Component({
   selector: 'app-menu-link-item',

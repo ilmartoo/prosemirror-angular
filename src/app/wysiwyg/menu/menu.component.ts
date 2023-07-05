@@ -3,8 +3,9 @@ import {MenuItemComponent} from '../menu-item/menu-item.component';
 import {EditorView} from 'prosemirror-view';
 import {Plugin, PluginView} from 'prosemirror-state';
 import {Mark, Node as ProseNode} from 'prosemirror-model';
-import {activeMarksInSelection, ancestorNodesInSelection} from '../utilities/prosemirror-helper';
 import {customSchema} from '../text-editor/custom-schema';
+import {activeMarksInSelection} from "../utilities/marks-helper";
+import {ancestorNodesInSelection} from "../utilities/nodes-helper";
 
 
 export type EditorSelectionActiveElements = {

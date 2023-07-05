@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {MenuItemComponent} from './menu-item.component';
-import {insertContent} from '../utilities/custom-commands';
+import {insertContent} from '../utilities/commands';
 import {customSchema} from '../text-editor/custom-schema';
 import {MenuNodeItemComponent} from './menu-node-item.component';
 import {EditorView} from 'prosemirror-view';

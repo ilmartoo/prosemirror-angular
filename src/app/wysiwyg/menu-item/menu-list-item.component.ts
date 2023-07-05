@@ -3,10 +3,11 @@ import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
 import {wrapInList} from 'prosemirror-schema-list';
 import {MenuNodeItemComponent} from './menu-node-item.component';
 import {chainCommands} from 'prosemirror-commands';
-import {changeListType} from '../utilities/custom-commands';
+import {changeListType} from '../utilities/commands';
 import {EditorView} from 'prosemirror-view';
 import {EditorSelectionActiveElements} from '../menu/menu.component';
-import {areNodeTypesEquals} from '../utilities/prosemirror-helper';
+
+import {areNodeTypesEquals} from "../utilities/nodes-helper";
 
 @Component({
   selector: 'app-menu-list-item',
