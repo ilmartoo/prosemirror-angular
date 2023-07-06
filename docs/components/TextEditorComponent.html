@@ -1,0 +1,840 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>prosemirror-angular documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">prosemirror-angular documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  TextEditorComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/wysiwyg/text-editor/text-editor.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Datos a tener en cuenta:</p>
+<ul>
+<li><p>El estilado de los elementos introducidos dinamicamente (Menu y otros elementos introducidos por los plugins)
+necesita ser estilado globalmente debido a la encapsulación realizada por Angular</p>
+</li>
+<li><p>Componente realizado según el ejemplo de <a href="https://prosemirror.net/examples/menu/">https://prosemirror.net/examples/menu/</a></p>
+</li>
+<li><p>Revisar el código de <a href="https://github.com/prosemirror/prosemirror-menu">https://github.com/prosemirror/prosemirror-menu</a> para hacer que funcionen los botones d
+bloque (headers, blockquote, paragraph...)</p>
+</li>
+<li><p>Repo de introducción a ProseMirror que intenta mejorar la docu oficial: <a href="https://github.com/PierBover/prosemirror-cookbook">https://github.com/PierBover/prosemirror-cookbook</a></p>
+</li>
+</ul>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>AfterViewInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+            <tr>
+                <td class="col-md-3">encapsulation</td>
+                <td class="col-md-9"><code>ViewEncapsulation.None</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-text-editor</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./text-editor.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./text-editor.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#menuRef" >menuRef</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#prosemirrorRef" >prosemirrorRef</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#view" >view</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createEditor" >createEditor</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#initialDataNode" >initialDataNode</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#initialData" >initialData</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:39</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="initialData"></a>
+                        <b>initialData</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:34</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createEditor"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>createEditor</b></span>
+                        <a href="#createEditor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createEditor()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:58</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Crea el editor de ProseMirror</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initialDataNode"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>initialDataNode</b></span>
+                        <a href="#initialDataNode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>initialDataNode()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="47"
+                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:47</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>HTMLElement</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="43"
+                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:43</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="menuRef"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>menuRef</b></span>
+                        <a href="#menuRef"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/MenuComponent.html" target="_self" >MenuComponent</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;menu&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prosemirrorRef"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>prosemirrorRef</b></span>
+                        <a href="#prosemirrorRef"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLDivElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;prosemirror&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="view"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>view</b></span>
+                        <a href="#view"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EditorView</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {AfterViewInit, Component, ElementRef, Input, ViewChild, ViewEncapsulation} from &#x27;@angular/core&#x27;;
+import {DOMParser as ProseDOMParser} from &#x27;prosemirror-model&#x27;;
+import {EditorState} from &#x27;prosemirror-state&#x27;;
+import {history, redo, undo} from &#x27;prosemirror-history&#x27;;
+import {keymap} from &#x27;prosemirror-keymap&#x27;;
+import {baseKeymap} from &#x27;prosemirror-commands&#x27;;
+import {EditorView} from &#x27;prosemirror-view&#x27;;
+import {MenuComponent} from &#x27;../menu/menu.component&#x27;;
+import {customSchema} from &#x27;./custom-schema&#x27;;
+import {decreaseIndent, increaseIndent, newBlock, newLine} from &#x27;../utilities/commands&#x27;;
+import {currentElementDecorator, selectedNodesDecorator} from &quot;../utilities/decorators&quot;;
+
+
+/**
+ * Datos a tener en cuenta:
+ *
+ * - El estilado de los elementos introducidos dinamicamente (Menu y otros elementos introducidos por los plugins)
+ *   necesita ser estilado globalmente debido a la encapsulación realizada por Angular
+ *
+ * - Componente realizado según el ejemplo de https://prosemirror.net/examples/menu/
+ *
+ * - Revisar el código de https://github.com/prosemirror/prosemirror-menu para hacer que funcionen los botones d
+ *   bloque (headers, blockquote, paragraph...)
+ *
+ * - Repo de introducción a ProseMirror que intenta mejorar la docu oficial: https://github.com/PierBover/prosemirror-cookbook
+ */
+@Component({
+  selector: &#x27;app-text-editor&#x27;,
+  templateUrl: &#x27;./text-editor.component.html&#x27;,
+  styleUrls: [&#x27;./text-editor.component.scss&#x27;],
+  encapsulation: ViewEncapsulation.None // Needed in order to apply styles to ProseMirror dynamically added editor element
+})
+export class TextEditorComponent implements AfterViewInit {
+  @Input() initialData?: string;
+
+  @ViewChild(&#x27;prosemirror&#x27;) prosemirrorRef!: ElementRef&lt;HTMLDivElement&gt;;
+  @ViewChild(&#x27;menu&#x27;) menuRef!: MenuComponent;
+
+  protected view!: EditorView;
+
+  constructor() { }
+
+  ngAfterViewInit(): void {
+    this.createEditor();
+  }
+
+  private initialDataNode(): HTMLElement {
+    const parser &#x3D; new DOMParser();
+    return parser.parseFromString(
+      &#x60;&lt;div&gt;${this.initialData ?? &#x27;&#x27;}&lt;/div&gt;&#x60;,
+      &#x27;text/html&#x27;
+    ).body.firstChild as HTMLElement;
+  }
+
+  /**
+   * Crea el editor de ProseMirror
+   */
+  private createEditor(): void {
+    // Initial state of the editor.
+    const initialState &#x3D; EditorState.create({
+      // Schema: declares how nodes &amp; marks will be parsed
+      schema: customSchema,
+      // Initial data (formatted text) of the state
+      doc: ProseDOMParser.fromSchema(customSchema).parse(this.initialDataNode()),
+      // Plugins that add functionality to the editor - Can be edited in future states
+      plugins: [
+        history(), // Command history
+        keymap({
+          ...baseKeymap, // Base keymap for the editor
+          &#x27;Enter&#x27;: newBlock,
+          &#x27;Mod-Enter&#x27;: newLine,
+          &#x27;Shift-Enter&#x27;: newLine,
+          &#x27;Mod-z&#x27;: undo,
+          &#x27;Mod-y&#x27;: redo,
+          &#x27;Mod-Shift-z&#x27;: redo,
+          &#x27;Tab&#x27;: increaseIndent,
+          &#x27;Shift-Tab&#x27;: decreaseIndent,
+        }),
+        this.menuRef.asPlugin(),   // Menu bar
+        currentElementDecorator(), // Decorator marking the current element
+        selectedNodesDecorator(),  // Decorator marking the selected nodes
+      ],
+    })
+
+    setTimeout(() &#x3D;&gt; {
+      // View - Referencia al elemento introducido en el DOM
+      this.view &#x3D; new EditorView(this.prosemirrorRef.nativeElement, {
+        state: initialState,
+      });
+    });
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- Editor menu --&gt;
+&lt;app-menu #menu&gt;&lt;/app-menu&gt;
+
+&lt;!-- Editor ProseMirror --&gt;
+&lt;div class&#x3D;&quot;__rich-text-editor&quot; #prosemirror&gt;&lt;/div&gt;
+
+&lt;!-- ProseMirror document --&gt;
+&lt;!--&lt;div *ngIf&#x3D;&quot;view?.state&quot;&gt;{{ view.state.doc }}&lt;/div&gt;--&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./text-editor.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">app-menu {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+*:focus-visible {
+  outline: none;
+}
+
+.__rich-text-editor {
+
+  &amp; &gt; .ProseMirror {
+    $color: #000;
+    color: $color;
+
+    &amp;.ProseMirror-focused {
+      border: inherit;
+    }
+
+    .selection {
+      text-decoration: wavy lightgrey;
+    }
+
+    .current-element {
+      text-decoration: wavy #ff8080;
+    }
+
+    * {
+      line-height: 1.5;
+      margin: 0.5rem 0;
+    }
+
+    div.indent {
+      margin-left: 1rem;
+    }
+
+    em,
+    i {
+      font-style: italic;
+    }
+
+    b,
+    strong {
+      font-weight: bold;
+    }
+
+    code {
+      font-size: 14px;
+      font-family: &#x27;Courier New&#x27;, &#x27;Courier&#x27;, &#x27;Lucida Sans Typewriter&#x27;, &#x27;Lucida Typewriter&#x27;, monospace;
+    }
+
+    *:not(pre) &gt; code {
+      color: #d04437;
+      background-color: #172b4d14;
+    }
+
+    pre:has(&gt; code) {
+      padding: 0.25rem 0.4rem;
+
+      background-color: #f5f5f5;
+    }
+
+    blockquote {
+      border-left: 0.25rem solid #EBECF0;
+      padding: 0.25rem 0 0.25rem 0.5rem;
+      color: rgba($color, 0.75);
+
+      *:not(pre) &gt; code {
+        color: rgba(#d04437, 0.75);
+      }
+    }
+
+    pre:has(&gt; code),
+    blockquote {
+      margin: 0.5rem 0;
+    }
+
+    ol,
+    ul {
+      margin: 1rem 0 1rem 1.125rem;
+    }
+
+    img {
+      max-height: 20rem;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0.75rem;
+    }
+
+    h1 {
+      font-size: xx-large;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: x-large;
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: large;
+      margin-bottom: 0.5rem;
+    }
+
+    a {
+      color: #172b4d;
+      cursor: pointer;
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Editor menu --><app-menu #menu></app-menu><!-- Editor ProseMirror --><div class="__rich-text-editor" #prosemirror></div><!-- ProseMirror document --><!--<div *ngIf="view?.state">{{ view.state.doc }}</div>--></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'TextEditorComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'TextEditorComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

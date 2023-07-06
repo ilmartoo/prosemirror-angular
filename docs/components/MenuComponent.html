@@ -1,0 +1,826 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>prosemirror-angular documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">prosemirror-angular documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  MenuComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/wysiwyg/menu/menu.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>PluginView</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-menu</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./menu.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./menu.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#customSchema" >customSchema</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#items" >items</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#view" >view</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#asPlugin" >asPlugin</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#destroy" >destroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#update" >update</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#updateItemStatuses" >updateItemStatuses</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="asPlugin"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>asPlugin</b></span>
+                        <a href="#asPlugin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>asPlugin()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="35"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:35</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Create a plugin for ProseMirror containing the current component</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Plugin</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="destroy"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>destroy</b></span>
+                        <a href="#destroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>destroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="51"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:51</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>update</b></span>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(view: EditorView)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="46"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:46</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>view</td>
+                                    <td>
+                                            <code>EditorView</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateItemStatuses"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>updateItemStatuses</b></span>
+                        <a href="#updateItemStatuses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateItemStatuses(view: EditorView)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Updates the editor items given the current view</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>view</td>
+                                    <td>
+                                            <code>EditorView</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="customSchema"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>customSchema</b></span>
+                        <a href="#customSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>customSchema</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="items"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>items</b></span>
+                        <a href="#items"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/MenuItemComponent.html" target="_self" >QueryList&lt;MenuItemComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChildren(MenuItemComponent)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="view"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>view</b></span>
+                        <a href="#view"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EditorView</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, QueryList, ViewChildren} from &#x27;@angular/core&#x27;;
+import {MenuItemComponent} from &#x27;../menu-item/menu-item.component&#x27;;
+import {EditorView} from &#x27;prosemirror-view&#x27;;
+import {Plugin, PluginView} from &#x27;prosemirror-state&#x27;;
+import {Mark, Node as ProseNode} from &#x27;prosemirror-model&#x27;;
+import {customSchema} from &#x27;../text-editor/custom-schema&#x27;;
+import {activeMarksInSelection} from &quot;../utilities/marks-helper&quot;;
+import {ancestorNodesInSelection} from &quot;../utilities/nodes-helper&quot;;
+
+
+export type EditorSelectionActiveElements &#x3D; {
+  marks: Mark[],
+  nodes: ProseNode[],
+};
+
+
+@Component({
+  selector: &#x27;app-menu&#x27;,
+  templateUrl: &#x27;./menu.component.html&#x27;,
+  styleUrls: [&#x27;./menu.component.scss&#x27;]
+})
+export class MenuComponent implements PluginView {
+
+  @ViewChildren(MenuItemComponent) items!: QueryList&lt;MenuItemComponent&gt;;
+
+  protected view?: EditorView;
+  protected readonly customSchema &#x3D; customSchema;
+
+  /******************* ProseMirror Plugin creation &amp; PluginView methods *******************/
+
+  /**
+   * Create a plugin for ProseMirror containing the current component
+   * @return Plugin with current component as a PluginView
+   */
+  public asPlugin(): Plugin {
+    const editorMenu: MenuComponent &#x3D; this;
+
+    return new Plugin({
+      view(view: EditorView): PluginView {
+        editorMenu.view &#x3D; view;
+        return editorMenu;
+      },
+    })
+  }
+
+  public update(view: EditorView): void {
+    this.view &#x3D; view;
+    this.updateItemStatuses(view);
+  }
+
+  public destroy(): void { }
+
+  /******************* Editor Items management *******************/
+
+  /**
+   * Updates the editor items given the current view
+   * @param view View of the editor
+   */
+  public updateItemStatuses(view: EditorView): void {
+    const state &#x3D; view.state;
+    const updateData: EditorSelectionActiveElements &#x3D; {
+      marks: activeMarksInSelection(state),
+      nodes: ancestorNodesInSelection(state),
+    };
+
+    this.items.forEach(item &#x3D;&gt; item.update(view, updateData));
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;menu&quot; *ngIf&#x3D;&quot;view&quot;&gt;
+  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.strong&quot;
+                      icon&#x3D;&quot;bold&quot;
+                      tooltip&#x3D;&quot;Bold&quot;
+  &gt;&lt;/app-menu-mark-item&gt;
+  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.em&quot;
+                      icon&#x3D;&quot;italic&quot;
+                      tooltip&#x3D;&quot;Italic&quot;
+  &gt;&lt;/app-menu-mark-item&gt;
+  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.underline&quot;
+                      icon&#x3D;&quot;underline&quot;
+                      tooltip&#x3D;&quot;Underline&quot;
+  &gt;&lt;/app-menu-mark-item&gt;
+  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.strikethrough&quot;
+                      icon&#x3D;&quot;strikethrough&quot;
+                      tooltip&#x3D;&quot;Strikethrough&quot;
+  &gt;&lt;/app-menu-mark-item&gt;
+  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.code&quot;
+                      icon&#x3D;&quot;code&quot;
+                      tooltip&#x3D;&quot;Inline code&quot;
+  &gt;&lt;/app-menu-mark-item&gt;
+  &lt;app-menu-link-item icon&#x3D;&quot;link&quot;
+                      tooltip&#x3D;&quot;Hyperlink&quot;
+  &gt;&lt;/app-menu-link-item&gt;
+
+  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
+
+  &lt;app-menu-image-item icon&#x3D;&quot;image&quot;
+                       tooltip&#x3D;&quot;Add image&quot;
+  &gt;&lt;/app-menu-image-item&gt;
+
+  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
+
+  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.paragraph&quot;
+                      icon&#x3D;&quot;paragraph&quot;
+                      tooltip&#x3D;&quot;Text paragraph&quot;
+  &gt;&lt;/app-menu-node-item&gt;
+  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
+                      [attrs]&#x3D;&quot;{ level: 1 }&quot;
+                      icon&#x3D;&quot;header1&quot;
+                      tooltip&#x3D;&quot;Header 1&quot;
+  &gt;&lt;/app-menu-node-item&gt;
+  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
+                      [attrs]&#x3D;&quot;{ level: 2 }&quot;
+                      icon&#x3D;&quot;header2&quot;
+                      tooltip&#x3D;&quot;Header 2&quot;
+  &gt;&lt;/app-menu-node-item&gt;
+  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
+                      [attrs]&#x3D;&quot;{ level: 3 }&quot;
+                      icon&#x3D;&quot;header3&quot;
+                      tooltip&#x3D;&quot;Header 3&quot;
+  &gt;&lt;/app-menu-node-item&gt;
+  &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.blockquote&quot;
+                      icon&#x3D;&quot;blockquote&quot;
+                      tooltip&#x3D;&quot;Quote text&quot;
+  &gt;&lt;/app-menu-list-item&gt;
+  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.code_block&quot;
+                      icon&#x3D;&quot;code_block&quot;
+                      tooltip&#x3D;&quot;Code block&quot;
+  &gt;&lt;/app-menu-node-item&gt;
+
+  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
+
+  &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.bullet_list&quot;
+                      icon&#x3D;&quot;bullet_list&quot;
+                      tooltip&#x3D;&quot;Bullet list&quot;
+  &gt;&lt;/app-menu-list-item&gt;
+  &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.ordered_list&quot;
+                      icon&#x3D;&quot;ordered_list&quot;
+                      tooltip&#x3D;&quot;Ordered list&quot;
+  &gt;&lt;/app-menu-list-item&gt;
+  &lt;!--  &lt;app-menu-item [type]&#x3D;&quot;view.state.schema.nodes[&#x27;checklist&#x27;]&quot;--&gt;
+  &lt;!--                        [status]&#x3D;&quot;getNodeStatus(&#x27;checklist&#x27;)&quot;--&gt;
+  &lt;!--                        icon&#x3D;&quot;checklist&quot;--&gt;
+  &lt;!--                        tooltip&#x3D;&quot;Checklist&quot;--&gt;
+  &lt;!--  &gt;&lt;/app-menu-item&gt;--&gt;
+
+  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
+
+  &lt;app-menu-indent-item [isIncrease]&#x3D;&quot;false&quot;
+                        icon&#x3D;&quot;indent_decrease&quot;
+                        tooltip&#x3D;&quot;Decrease indent&quot;
+  &gt;&lt;/app-menu-indent-item&gt;
+  &lt;app-menu-indent-item [isIncrease]&#x3D;&quot;true&quot;
+                        icon&#x3D;&quot;indent_increase&quot;
+                        tooltip&#x3D;&quot;Increase indent&quot;
+  &gt;&lt;/app-menu-indent-item&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./menu.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.menu {
+  display: flex;
+  align-items: center;
+  gap: 0.075rem;
+
+  .separator {
+    height: 0.25rem;
+    width: 0.25rem;
+
+    margin: 0 1rem;
+
+    border-radius: 100%;
+    background-color: #172b4d;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="menu" *ngIf="view">  <app-menu-mark-item [type]="customSchema.marks.strong"                      icon="bold"                      tooltip="Bold"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.em"                      icon="italic"                      tooltip="Italic"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.underline"                      icon="underline"                      tooltip="Underline"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.strikethrough"                      icon="strikethrough"                      tooltip="Strikethrough"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.code"                      icon="code"                      tooltip="Inline code"  ></app-menu-mark-item>  <app-menu-link-item icon="link"                      tooltip="Hyperlink"  ></app-menu-link-item>  <div class="separator"></div>  <app-menu-image-item icon="image"                       tooltip="Add image"  ></app-menu-image-item>  <div class="separator"></div>  <app-menu-node-item [type]="customSchema.nodes.paragraph"                      icon="paragraph"                      tooltip="Text paragraph"  ></app-menu-node-item>  <app-menu-node-item [type]="customSchema.nodes.heading"                      [attrs]="{ level: 1 }"                      icon="header1"                      tooltip="Header 1"  ></app-menu-node-item>  <app-menu-node-item [type]="customSchema.nodes.heading"                      [attrs]="{ level: 2 }"                      icon="header2"                      tooltip="Header 2"  ></app-menu-node-item>  <app-menu-node-item [type]="customSchema.nodes.heading"                      [attrs]="{ level: 3 }"                      icon="header3"                      tooltip="Header 3"  ></app-menu-node-item>  <app-menu-list-item [type]="customSchema.nodes.blockquote"                      icon="blockquote"                      tooltip="Quote text"  ></app-menu-list-item>  <app-menu-node-item [type]="customSchema.nodes.code_block"                      icon="code_block"                      tooltip="Code block"  ></app-menu-node-item>  <div class="separator"></div>  <app-menu-list-item [type]="customSchema.nodes.bullet_list"                      icon="bullet_list"                      tooltip="Bullet list"  ></app-menu-list-item>  <app-menu-list-item [type]="customSchema.nodes.ordered_list"                      icon="ordered_list"                      tooltip="Ordered list"  ></app-menu-list-item>  <!--  <app-menu-item [type]="view.state.schema.nodes[\'checklist\']"-->  <!--                        [status]="getNodeStatus(\'checklist\')"-->  <!--                        icon="checklist"-->  <!--                        tooltip="Checklist"-->  <!--  ></app-menu-item>-->  <div class="separator"></div>  <app-menu-indent-item [isIncrease]="false"                        icon="indent_decrease"                        tooltip="Decrease indent"  ></app-menu-indent-item>  <app-menu-indent-item [isIncrease]="true"                        icon="indent_increase"                        tooltip="Increase indent"  ></app-menu-indent-item></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'MenuComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'MenuComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
