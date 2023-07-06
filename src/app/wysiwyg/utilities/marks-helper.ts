@@ -164,6 +164,48 @@ export function expandMarkActiveRange(node: ProseNode, mark: MarkForLookup, posi
 }
 
 /**
+ * Calculates the active range of a mark type inside a node by expanding both sides starting from a given position
+ * @param node Node in which the search will be done
+ * @param mark Mark to look for
+ * @param position Start position from which the range will be expanded
+ * @returns Active range of the given mark in the given node including the given position
+ */
+export function expandMarkTypeActiveRange(node: ProseNode, mark: MarkTypeForLookup, position: number): NodeRange | null {
+  const hasMarkType = (pos: number): boolean => !!isMarkTypeActiveInNodeAt(mark, node, pos);
+
+  // Check if
+  if (!hasMarkType(position)) {
+    return null;
+  }
+
+  // Start position
+  let start = position;
+  while (start > 0) {
+    start--;
+    if (!hasMarkType(start)) {
+      break;
+    }
+  }
+
+  // End position
+  let end = position;
+  const docEnd = node.nodeSize - 1;
+  while (end < docEnd) {
+    end++;
+    if (!hasMarkType(end)) {
+      break;
+    }
+  }
+
+  // Mark expanded range
+  const startPos = node.resolve(start);
+  const endPos = node.resolve(end);
+  const range = new NodeRange(startPos, endPos, 1);
+  console.log(range);
+  return range;
+}
+
+/**
  * Retrieves mark if is active at a position of a node
  * @param type Mark type to check
  * @param node Node on which the check will be performed

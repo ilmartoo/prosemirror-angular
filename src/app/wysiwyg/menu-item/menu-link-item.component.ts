@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {MenuItemComponent} from './menu-item.component';
-import {removeMark, replaceWithMarkedText} from '../utilities/commands';
+import {replaceWithMarkedText} from '../utilities/commands';
 import {MenuMarkItemComponent} from './menu-mark-item.component';
 import {customSchema} from '../text-editor/custom-schema';
 import {EditorView} from 'prosemirror-view';
@@ -24,9 +24,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
 
   protected isPopupOpen = false;
   protected canCreateLink = false;
-  protected selection?:
-    { isLink: true, from: number, to: number } |
-    { isLink: false, from: number, to?: number };
+  protected selection?: { from: number, to?: number };
 
   protected openPopup(): void {
     if (this.view) {
@@ -42,8 +40,8 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
 
   protected closePopup(): void {
     this.isPopupOpen = false;
-
     this.resetPopup();
+    this.focusEditor(); // Focus text editor
   }
 
   protected itemFocusLost(event: FocusEvent): void {
@@ -74,7 +72,6 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     // If open when a link is on head
     if (selectedLink && markRange) {
       this.selection = {
-        isLink: true,
         from: markRange.$from.pos,
         to: markRange.$to.pos,
       };
@@ -86,7 +83,6 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     // If a selection is in place but does not contain a link
     else if (!selection.empty) {
       this.selection = {
-        isLink: false,
         from: selection.$from.pos,
         to: selection.$to.pos,
       };
@@ -96,13 +92,11 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     // Else insert in cursor position
     else {
       this.selection = {
-        isLink: false,
         from: selection.$head.pos,
       };
     }
 
     if (link.name) { // Nullish check (Empty string)
-      // this.nameRef.nativeElement.readOnly = true;
       this.nameRef.nativeElement.value = link.name;
 
       if (link.href) { // Nullish check (Empty string)
@@ -119,15 +113,6 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     if (this.view && this.isValidLink(name, href) && this.selection) {
       const linkMark = this.type.create({ href: href, title: name });
       this.executeCommand(replaceWithMarkedText(name, [linkMark], this.selection.from, this.selection.to));
-      this.closePopup(); // Exit popup
-      this.focusEditor(); // Focus text editor
-    }
-  }
-
-  protected deleteLink(): void {
-    // Delete link & close
-    if (this.view && this.selection?.isLink) {
-      this.executeCommand(removeMark(this.selection.from, this.selection.to, this.type));
       this.closePopup(); // Exit popup
       this.focusEditor(); // Focus text editor
     }

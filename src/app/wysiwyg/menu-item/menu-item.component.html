@@ -2,7 +2,7 @@
   <button [ngClass]="{
     item: true,
     active: MenuItemStatus.ACTIVE === status
-  }" [disabled]="MenuItemStatus.DISABLED === status" (click)="executeCommand()">
+  }" [disabled]="MenuItemStatus.DISABLED === status" (click)="onClick()">
     <img class="icon" [src]="filePath" [alt]="tooltip ?? ''">
     <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>
   </button>

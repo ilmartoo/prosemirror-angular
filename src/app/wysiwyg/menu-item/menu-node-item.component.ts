@@ -7,6 +7,7 @@ import {EditorView} from 'prosemirror-view';
 import {EditorSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodesEquals} from "../utilities/nodes-helper";
+import {Command} from 'prosemirror-state';
 
 @Component({
   selector: 'app-menu-node-item',
@@ -16,8 +17,8 @@ import {areNodesEquals} from "../utilities/nodes-helper";
 })
 export class MenuNodeItemComponent extends MenuSchemaItemComponent<NodeType> {
 
-  protected override initCommand(): void {
-    this.command = setBlockType(this.type, this.attrs);
+  protected override updateCommand(view: EditorView): Command {
+    return setBlockType(this.type, this.attrs);
   }
 
   protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {

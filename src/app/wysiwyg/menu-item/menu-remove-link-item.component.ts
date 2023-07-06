@@ -1,22 +1,24 @@
 import {Component, Input} from '@angular/core';
 import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
+import {MenuMarkItemComponent} from './menu-mark-item.component';
+import {customSchema} from '../text-editor/custom-schema';
+import {Command} from 'prosemirror-state';
+import {expandAndRemoveMarks} from '../utilities/commands';
 import {EditorView} from 'prosemirror-view';
 import {EditorSelectionActiveElements} from '../menu/menu.component';
-import {decreaseIndent, increaseIndent} from '../utilities/commands';
-import {Command} from 'prosemirror-state';
 
 @Component({
-  selector: 'app-menu-indent-item',
+  selector: 'app-menu-remove-link-item',
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.scss'],
-  providers: [{ provide: MenuItemComponent, useExisting: MenuIndentItemComponent }],
+  providers: [{ provide: MenuItemComponent, useExisting: MenuRemoveLinkItemComponent }],
 })
-export class MenuIndentItemComponent extends MenuItemComponent {
+export class MenuRemoveLinkItemComponent extends MenuMarkItemComponent {
 
-  @Input({ required: true }) isIncrease!: boolean;
+  @Input({ required: false }) override type = customSchema.marks.link;
 
   protected override updateCommand(view: EditorView): Command {
-    return this.isIncrease ? increaseIndent : decreaseIndent;
+    return expandAndRemoveMarks(view.state.selection.head, [this.type]);
   }
 
   protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {

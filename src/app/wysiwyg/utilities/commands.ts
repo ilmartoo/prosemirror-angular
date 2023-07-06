@@ -17,6 +17,7 @@ import {findWrapping} from 'prosemirror-transform';
 import {extendTransaction} from "./transactions-helper";
 import {areNodeTypesEquals, findAllAncestors, findAncestor} from "./nodes-helper";
 import {isValidContent} from "./node-content-helper";
+import {expandMarkActiveRange, expandMarkTypeActiveRange} from './marks-helper';
 
 /**
  * Selects the text of the given range
@@ -89,18 +90,55 @@ export function replaceWithMarkedText(text: string, marks: Mark[], from: number,
  * - When it is null, remove all marks of any type
  * @param from Start of the selection
  * @param to End of the selection
- * @param mark Mark or mark type to remove. All if null or undefined
+ * @param marks Array of marks or mark types to remove. All if null or undefined
  * @returns Command to remove the mark, mark type or all marks in the selection
  */
-export function removeMark(from: number, to: number, mark?: Mark | MarkType | null): Command {
+export function removeMarks(from: number, to: number, marks?: (Mark | MarkType)[] | null): Command {
   if (from > to) {
-    return removeMark(to, from, mark);
+    return removeMarks(to, from, marks);
   }
 
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
     if (dispatch) {
       const tr = state.tr;
-      tr.removeMark(from, to, mark);
+
+      if (marks) {
+        marks.forEach(mark => tr.removeMark(from, to, mark));
+      }
+      else {
+        tr.removeMark(from, to);
+      }
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+export function expandAndRemoveMarks(pos: number, marks: (Mark | MarkType)[]) {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    if (marks.length === 0) { return false; } // Cancel if no marks to expand
+
+    const expansions: { mark: Mark | MarkType, range: NodeRange }[] = [];
+
+    for (const mark of marks) {
+      let range = mark instanceof Mark
+        ? expandMarkActiveRange(state.doc, mark, pos)
+        : expandMarkTypeActiveRange(state.doc, mark, pos);
+
+      if (range) {
+        expansions.push({ mark, range });
+      }
+    }
+    if (expansions.length === 0) { return false; } // Cancel if no expansions are found
+
+
+
+    if (dispatch) {
+      const tr = state.tr;
+
+      expansions.forEach(exp => tr.removeMark(exp.range.start, exp.range.end, exp.mark));
+
       dispatch(tr.scrollIntoView());
     }
     return true;

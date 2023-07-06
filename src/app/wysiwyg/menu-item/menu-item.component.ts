@@ -23,7 +23,9 @@ export class MenuItemComponent implements OnInit {
 
   @Input({ required: true }) icon!: string;
   @Input() tooltip?: string;
-  @Input() command: Command = (): boolean => false;
+  @Input() command!: Command;
+
+  protected isCommandFromInput = false;
 
   protected view?: EditorView;
   protected status = MenuItemStatus.ENABLED;
@@ -34,12 +36,18 @@ export class MenuItemComponent implements OnInit {
 
   public ngOnInit() {
     this.filePath = createIconPath(this.icon);
-    this.initCommand();
+    this.isCommandFromInput = !!this.command;
+    if (!this.isCommandFromInput) {
+      this.command = () => false; // Default command, to be updated
+    }
   }
 
 
   public update(view: EditorView, activeElements: EditorSelectionActiveElements): void {
     this.view = view; // Update to the current view
+    if (!this.isCommandFromInput) {
+      this.command = this.updateCommand(view);
+    }
     this.status = this.calculateStatus(view, activeElements);
     this.updateData(view, activeElements);
   }
@@ -63,10 +71,14 @@ export class MenuItemComponent implements OnInit {
   protected updateData(view: EditorView, activeElements: EditorSelectionActiveElements): void { }
 
   /**
-   * Initialize this item's command if not passed on input (Override this method if needed when extending this or a child class)
+   * Returns the updated command (Override this method if needed when extending this or a child class).
+   * The command will only be updated if no command is passed through input params.
+   * @param view Updated editor view
    * @protected
    */
-  protected initCommand(): void { };
+  protected updateCommand(view: EditorView): Command {
+    return (): boolean => false;
+  };
 
   /**
    * Executes this given command or saved command if no command is specified
@@ -95,5 +107,13 @@ export class MenuItemComponent implements OnInit {
   protected preventLosingEditorFocus(event: MouseEvent): void {
     event.preventDefault();
     this.focusEditor();
+  }
+
+  /**
+   * Callback to execute when the item is clicked
+   * @protected
+   */
+  protected onClick(): void {
+    this.executeCommand();
   }
 }

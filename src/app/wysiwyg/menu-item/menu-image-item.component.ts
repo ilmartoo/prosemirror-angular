@@ -4,6 +4,7 @@ import {insertContent} from '../utilities/commands';
 import {customSchema} from '../text-editor/custom-schema';
 import {MenuNodeItemComponent} from './menu-node-item.component';
 import {EditorView} from 'prosemirror-view';
+import {Command} from 'prosemirror-state';
 
 @Component({
   selector: 'app-menu-image-item',
@@ -24,8 +25,8 @@ export class MenuImageItemComponent extends MenuNodeItemComponent {
   protected canInsertImage = false;
   protected insertPos = 0;
 
-  override initCommand(): void {
-    this.command = (): boolean => true;
+  override updateCommand(view: EditorView): Command {
+    return (): boolean => true;
   }
 
   protected openPopup(): void {
@@ -42,8 +43,8 @@ export class MenuImageItemComponent extends MenuNodeItemComponent {
 
   protected closePopup(): void {
     this.isPopupOpen = false;
-
     this.resetPopup();
+    this.focusEditor(); // Focus text editor
   }
 
   protected itemFocusLost(event: FocusEvent): void {

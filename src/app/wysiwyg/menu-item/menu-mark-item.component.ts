@@ -7,6 +7,7 @@ import {EditorView} from 'prosemirror-view';
 import {EditorSelectionActiveElements} from '../menu/menu.component';
 
 import {areMarkTypesEquals} from "../utilities/marks-helper";
+import {Command} from 'prosemirror-state';
 
 @Component({
   selector: 'app-menu-mark-item',
@@ -16,8 +17,8 @@ import {areMarkTypesEquals} from "../utilities/marks-helper";
 })
 export class MenuMarkItemComponent extends MenuSchemaItemComponent<MarkType> {
 
-  protected override initCommand(): void {
-    this.command = toggleMark(this.type, this.attrs);
+  protected override updateCommand(view: EditorView): Command {
+    return toggleMark(this.type, this.attrs);
   }
 
   protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {

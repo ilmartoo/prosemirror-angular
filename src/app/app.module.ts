@@ -12,6 +12,7 @@ import {MenuLinkItemComponent} from './wysiwyg/menu-item/menu-link-item.componen
 import {MenuImageItemComponent} from './wysiwyg/menu-item/menu-image-item.component';
 import {MenuSchemaItemComponent} from './wysiwyg/menu-item/menu-schema-item.component';
 import {MenuIndentItemComponent} from './wysiwyg/menu-item/menu-indent-item.component';
+import {MenuRemoveLinkItemComponent} from './wysiwyg/menu-item/menu-remove-link-item.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {MenuIndentItemComponent} from './wysiwyg/menu-item/menu-indent-item.comp
     MenuSchemaItemComponent,
     MenuMarkItemComponent,
     MenuLinkItemComponent,
+    MenuRemoveLinkItemComponent,
     MenuNodeItemComponent,
     MenuListItemComponent,
     MenuIndentItemComponent,
