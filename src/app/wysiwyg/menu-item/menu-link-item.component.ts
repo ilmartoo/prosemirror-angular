@@ -5,7 +5,7 @@ import {MenuMarkItemComponent} from './menu-mark-item.component';
 import {customSchema} from '../text-editor/custom-schema';
 import {EditorView} from 'prosemirror-view';
 import {expandMarkActiveRange, searchForMarkTypeInSelection} from "../utilities/marks-helper";
-import {textAt} from "../utilities/node-content-helper";
+import {textBetween} from "../utilities/node-content-helper";
 
 @Component({
   selector: 'app-menu-link-item',
@@ -79,7 +79,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
         to: markRange.$to.pos,
       };
 
-      link.name = textAt(state.doc, markRange.start, markRange.end).trim();
+      link.name = textBetween(state.doc, markRange.start, markRange.end).trim();
       link.href = selectedLink.attrs['href'] as string;
       this.canCreateLink = true;
     }
@@ -91,7 +91,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
         to: selection.$to.pos,
       };
 
-      link.name = textAt(state.doc, selection.from, selection.to).trim()
+      link.name = textBetween(state.doc, selection.from, selection.to).trim()
     }
     // Else insert in cursor position
     else {
