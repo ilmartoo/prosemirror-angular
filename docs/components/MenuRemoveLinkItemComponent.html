@@ -38,7 +38,7 @@
   <li class="breadcrumb-item">Components</li>
   <li class="breadcrumb-item"
   >
-  MenuItemComponent</li>
+  MenuRemoveLinkItemComponent</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -69,18 +69,18 @@
     <h3>File</h3>
 </p>
 <p class="comment">
-    <code>src/app/wysiwyg/menu-item/menu-item.component.ts</code>
+    <code>src/app/wysiwyg/menu-item/menu-remove-link-item.component.ts</code>
 </p>
 
 
 
+    <p class="comment">
+        <h3>Extends</h3>
+    </p>
+    <p class="comment">
+                <code><a href="../components/MenuMarkItemComponent.html" target="_self" >MenuMarkItemComponent</a></code>
+    </p>
 
-    <p class="comment">
-        <h3>Implements</h3>
-    </p>
-    <p class="comment">
-                <code>OnInit</code>
-    </p>
 
 
 <section data-compodoc="block-metadata">
@@ -97,11 +97,17 @@
 
 
 
+            <tr>
+                <td class="col-md-3">providers</td>
+                <td class="col-md-9">
+                            <code>{ provide: MenuItemComponent, useExisting: MenuRemoveLinkItemComponent }</code>
+                </td>
+            </tr>
 
 
             <tr>
                 <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>app-menu-item</code></td>
+                <td class="col-md-9"><code>app-menu-remove-link-item</code></td>
             </tr>
 
 
@@ -177,7 +183,13 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Protected</span>
+                                    <span class="modifier"></span>
                                 <a href="#calculateStatus" >calculateStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                    <span class="modifier"></span>
+                                <a href="#updateCommand" >updateCommand</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -205,10 +217,6 @@
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
-                                <a href="#updateCommand" >updateCommand</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
                                 <a href="#updateData" >updateData</a>
                             </li>
                         </ul>
@@ -223,6 +231,12 @@
                 <tr>
                     <td class="col-md-4">
                         <ul class="index-list">
+                            <li>
+                                <a href="#type" >type</a>
+                            </li>
+                            <li>
+                                <a href="#attrs" >attrs</a>
+                            </li>
                             <li>
                                 <a href="#command" >command</a>
                             </li>
@@ -243,27 +257,80 @@
     </table>
 </section>
 
-    <section data-compodoc="block-constructor">
-    <h3 id="constructor">Constructor</h3>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor()</code>
+                        <a name="type"></a>
+                        <b>type</b>
                     </td>
                 </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Required : </i>&nbsp;<b>true</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>customSchema.marks.link</code>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/MenuSchemaItemComponent.html" target="_self" >MenuSchemaItemComponent</a></code>
+</div>
+                                </td>
+                            </tr>
                         <tr>
-                            <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:33</a></div>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in         <code><a href="../components/MenuSchemaItemComponent.html#source" target="_self" >MenuSchemaItemComponent:18</a></code>
+</div>
                             </td>
                         </tr>
-
             </tbody>
         </table>
-</section>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="attrs"></a>
+                        <b>attrs</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Attrs</code>
 
-    <section data-compodoc="block-inputs">
-    <h3 id="inputs">Inputs</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{}</code>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/MenuSchemaItemComponent.html" target="_self" >MenuSchemaItemComponent</a></code>
+</div>
+                                </td>
+                            </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in         <code><a href="../components/MenuSchemaItemComponent.html#source" target="_self" >MenuSchemaItemComponent:13</a></code>
+</div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
@@ -278,9 +345,16 @@
 
                     </td>
                 </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                                </td>
+                            </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:26</a></div>
+                                    <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:26</a></code>
+</div>
                             </td>
                         </tr>
             </tbody>
@@ -304,9 +378,16 @@
                         <i>Required : </i>&nbsp;<b>true</b>
                     </td>
                 </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                                </td>
+                            </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:24</a></div>
+                                    <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:24</a></code>
+</div>
                             </td>
                         </tr>
             </tbody>
@@ -325,9 +406,16 @@
 
                     </td>
                 </tr>
+                            <tr>
+                                <td class="col-md-4" colspan="2">
+                                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                                </td>
+                            </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:25</a></div>
+                                    <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:25</a></code>
+</div>
                             </td>
                         </tr>
             </tbody>
@@ -348,6 +436,7 @@
                     <a name="calculateStatus"></a>
                     <span class="name">
                         <span class="modifier">Protected</span>
+                        <span class="modifier"></span>
                         <span ><b>calculateStatus</b></span>
                         <a href="#calculateStatus"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -363,16 +452,20 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:61</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:24</a></code>
+</div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Override when needed to calculate the status based on the new view &amp; active elements</p>
-</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -383,7 +476,6 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -398,10 +490,6 @@
                                     </td>
 
 
-                                    <td>
-                                        <p>Current editor view</p>
-
-                                    </td>
                                 </tr>
                                 <tr>
                                     <td>activeElements</td>
@@ -414,10 +502,6 @@
                                     </td>
 
 
-                                    <td>
-                                        <p>Active marks &amp; nodes of the selection</p>
-
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -426,6 +510,84 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#MenuItemStatus" target="_self" >MenuItemStatus</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateCommand"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span class="modifier"></span>
+                        <span ><b>updateCommand</b></span>
+                        <a href="#updateCommand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateCommand(view: EditorView)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:20</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>view</td>
+                                    <td>
+                                            <code>EditorView</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Command</code>
 
                     </div>
                     <div class="io-description">
@@ -457,8 +619,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="88"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:88</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:88</a></code>
+</div>
                 </td>
             </tr>
 
@@ -535,8 +703,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="99"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:99</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:99</a></code>
+</div>
                 </td>
             </tr>
 
@@ -576,8 +750,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="37"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:37</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:37</a></code>
+</div>
                 </td>
             </tr>
 
@@ -615,8 +795,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="116"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:116</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:116</a></code>
+</div>
                 </td>
             </tr>
 
@@ -656,8 +842,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:107</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:107</a></code>
+</div>
                 </td>
             </tr>
 
@@ -729,8 +921,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="46"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:46</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:46</a></code>
+</div>
                 </td>
             </tr>
 
@@ -794,85 +992,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="updateCommand"></a>
-                    <span class="name">
-                        <span class="modifier">Protected</span>
-                        <span ><b>updateCommand</b></span>
-                        <a href="#updateCommand"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>updateCommand(view: EditorView)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="79"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:79</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Returns the updated command (Override this method if needed when extending this or a child class).
-The command will only be updated if no command is passed through input params.</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>view</td>
-                                    <td>
-                                            <code>EditorView</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>Updated editor view</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Command</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="updateData"></a>
                     <span class="name">
                         <span class="modifier">Protected</span>
@@ -891,8 +1010,14 @@ The command will only be updated if no command is passed through input params.</
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:71</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:71</a></code>
+</div>
                 </td>
             </tr>
 
@@ -992,9 +1117,16 @@ The command will only be updated if no command is passed through input params.</
                         <i>Default value : </i><code>&#x27;&#x27;</code>
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:32</a></div>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:32</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -1018,9 +1150,16 @@ The command will only be updated if no command is passed through input params.</
                         <i>Default value : </i><code>false</code>
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:28</a></div>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:28</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -1045,9 +1184,16 @@ The command will only be updated if no command is passed through input params.</
                         <i>Default value : </i><code>MenuItemStatus</code>
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:33</a></div>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:33</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -1071,9 +1217,16 @@ The command will only be updated if no command is passed through input params.</
                         <i>Default value : </i><code>MenuItemStatus.ENABLED</code>
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:31</a></div>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:31</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -1099,9 +1252,16 @@ The command will only be updated if no command is passed through input params.</
 
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/wysiwyg/menu-item/menu-item.component.ts:30</a></div>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:30</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -1114,123 +1274,32 @@ The command will only be updated if no command is passed through input params.</
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, Input, OnInit} from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, Input} from &#x27;@angular/core&#x27;;
+import {MenuItemComponent, MenuItemStatus} from &#x27;./menu-item.component&#x27;;
+import {MenuMarkItemComponent} from &#x27;./menu-mark-item.component&#x27;;
+import {customSchema} from &#x27;../text-editor/custom-schema&#x27;;
 import {Command} from &#x27;prosemirror-state&#x27;;
+import {expandAndRemoveMarks} from &#x27;../utilities/commands&#x27;;
 import {EditorView} from &#x27;prosemirror-view&#x27;;
 import {EditorSelectionActiveElements} from &#x27;../menu/menu.component&#x27;;
 
-/**
- * Possible statuses of the menu item
- */
-export enum MenuItemStatus {
-  ENABLED &#x3D; &#x27;ENABLED&#x27;,
-  DISABLED &#x3D; &#x27;DISABLED&#x27;,
-  ACTIVE &#x3D; &#x27;ACTIVE&#x27;,
-}
-
-const createIconPath &#x3D; (iconName: string): string &#x3D;&gt; &#x60;./assets/${iconName}.svg&#x60;;
-
 @Component({
-  selector: &#x27;app-menu-item&#x27;,
+  selector: &#x27;app-menu-remove-link-item&#x27;,
   templateUrl: &#x27;./menu-item.component.html&#x27;,
   styleUrls: [&#x27;./menu-item.component.scss&#x27;],
+  providers: [{ provide: MenuItemComponent, useExisting: MenuRemoveLinkItemComponent }],
 })
-export class MenuItemComponent implements OnInit {
+export class MenuRemoveLinkItemComponent extends MenuMarkItemComponent {
 
-  @Input({ required: true }) icon!: string;
-  @Input() tooltip?: string;
-  @Input() command!: Command;
+  @Input({ required: false }) override type &#x3D; customSchema.marks.link;
 
-  protected isCommandFromInput &#x3D; false;
-
-  protected view?: EditorView;
-  protected status &#x3D; MenuItemStatus.ENABLED;
-  protected filePath &#x3D; &#x27;&#x27;;
-  protected readonly MenuItemStatus &#x3D; MenuItemStatus;
-
-  constructor() { }
-
-  public ngOnInit() {
-    this.filePath &#x3D; createIconPath(this.icon);
-    this.isCommandFromInput &#x3D; !!this.command;
-    if (!this.isCommandFromInput) {
-      this.command &#x3D; () &#x3D;&gt; false; // Default command, to be updated
-    }
+  protected override updateCommand(view: EditorView): Command {
+    return expandAndRemoveMarks(view.state.selection.head, [this.type]);
   }
 
-
-  public update(view: EditorView, activeElements: EditorSelectionActiveElements): void {
-    this.view &#x3D; view; // Update to the current view
-    if (!this.isCommandFromInput) {
-      this.command &#x3D; this.updateCommand(view);
-    }
-    this.status &#x3D; this.calculateStatus(view, activeElements);
-    this.updateData(view, activeElements);
-  }
-
-  /**
-   * Override when needed to calculate the status based on the new view &amp; active elements
-   * @param view Current editor view
-   * @param activeElements Active marks &amp; nodes of the selection
-   * @protected
-   */
-  protected calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
-    return MenuItemStatus.ENABLED;
-  }
-
-  /**
-   * Override when needed to update other data based on the new view &amp; active elements
-   * @param view Current editor view
-   * @param activeElements Active marks &amp; nodes of the selection
-   * @protected
-   */
-  protected updateData(view: EditorView, activeElements: EditorSelectionActiveElements): void { }
-
-  /**
-   * Returns the updated command (Override this method if needed when extending this or a child class).
-   * The command will only be updated if no command is passed through input params.
-   * @param view Updated editor view
-   * @protected
-   */
-  protected updateCommand(view: EditorView): Command {
-    return (): boolean &#x3D;&gt; false;
-  };
-
-  /**
-   * Executes this given command or saved command if no command is specified
-   * @param command Command to execute
-   * @protected
-   */
-  protected executeCommand(command?: Command): void {
-    if (this.view) {
-      const commandToExecute &#x3D; command ?? this.command;
-      commandToExecute(this.view.state, this.view.dispatch, this.view);
-    }
-  }
-
-  /**
-   * Focus the editor view
-   * @protected
-   */
-  protected focusEditor(): void {
-    this.view?.focus();
-  }
-
-  /**
-   * Prevents losing editor focus when clicking on an editor item
-   * @protected
-   */
-  protected preventLosingEditorFocus(event: MouseEvent): void {
-    event.preventDefault();
-    this.focusEditor();
-  }
-
-  /**
-   * Callback to execute when the item is clicked
-   * @protected
-   */
-  protected onClick(): void {
-    this.executeCommand();
+  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+    const isEnabled &#x3D; this.command(view.state, undefined, view);
+    return isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
   }
 }
 </code></pre>
@@ -1359,7 +1428,7 @@ export class MenuItemComponent implements OnInit {
         var COMPONENT_TEMPLATE = '<div><div class="base" (mousedown)="preventLosingEditorFocus($event)">  <button [ngClass]="{    item: true,    active: MenuItemStatus.ACTIVE === status  }" [disabled]="MenuItemStatus.DISABLED === status" (click)="onClick()">    <img class="icon" [src]="filePath" [alt]="tooltip ?? \'\'">    <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>  </button></div></div>'
     var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveLinkItemComponent', 'selector': 'app-menu-remove-link-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
     var DIRECTIVES = [];
-    var ACTUAL_COMPONENT = {'name': 'MenuItemComponent'};
+    var ACTUAL_COMPONENT = {'name': 'MenuRemoveLinkItemComponent'};
 </script>
 <script src="../js/tree.js"></script>
 
@@ -1405,7 +1474,7 @@ export class MenuItemComponent implements OnInit {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
-            var COMPODOC_CURRENT_PAGE_URL = 'MenuItemComponent.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'MenuRemoveLinkItemComponent.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

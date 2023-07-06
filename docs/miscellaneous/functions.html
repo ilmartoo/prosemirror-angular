@@ -106,7 +106,13 @@
                             <a href="#currentElementDecorator" title="src/app/wysiwyg/utilities/decorators.ts" ><b>currentElementDecorator</b>&nbsp;&nbsp;&nbsp;(src/.../decorators.ts)</a>
                         </li>
                         <li>
+                            <a href="#expandAndRemoveMarks" title="src/app/wysiwyg/utilities/commands.ts" ><b>expandAndRemoveMarks</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
+                        </li>
+                        <li>
                             <a href="#expandMarkActiveRange" title="src/app/wysiwyg/utilities/marks-helper.ts" ><b>expandMarkActiveRange</b>&nbsp;&nbsp;&nbsp;(src/.../marks-helper.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#expandMarkTypeActiveRange" title="src/app/wysiwyg/utilities/marks-helper.ts" ><b>expandMarkTypeActiveRange</b>&nbsp;&nbsp;&nbsp;(src/.../marks-helper.ts)</a>
                         </li>
                         <li>
                             <a href="#extendTransaction" title="src/app/wysiwyg/utilities/transactions-helper.ts" ><b>extendTransaction</b>&nbsp;&nbsp;&nbsp;(src/.../transactions-helper.ts)</a>
@@ -157,7 +163,7 @@
                             <a href="#mapAndSelect" title="src/app/wysiwyg/utilities/transactions-helper.ts" ><b>mapAndSelect</b>&nbsp;&nbsp;&nbsp;(src/.../transactions-helper.ts)</a>
                         </li>
                         <li>
-                            <a href="#removeMark" title="src/app/wysiwyg/utilities/commands.ts" ><b>removeMark</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
+                            <a href="#removeMarks" title="src/app/wysiwyg/utilities/commands.ts" ><b>removeMarks</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
                         </li>
                         <li>
                             <a href="#replaceWithMarkedText" title="src/app/wysiwyg/utilities/commands.ts" ><b>replaceWithMarkedText</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
@@ -669,6 +675,109 @@
                                     <td>mark</td>
                                     <td>
                                                 <code><a href="../miscellaneous/typealiases.html#MarkForLookup" target="_self" >MarkForLookup</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Mark to look for</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>position</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Start position from which the range will be expanded</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>NodeRange | null</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Active range of the given mark in the given node including the given position</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expandMarkTypeActiveRange"></a>
+                    <span class="name">
+                        <span ><b>expandMarkTypeActiveRange</b></span>
+                        <a href="#expandMarkTypeActiveRange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expandMarkTypeActiveRange(node: ProseNode, mark: <a href="../undefineds/MarkTypeForLookup.html" target="_self">MarkTypeForLookup</a>, position: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Calculates the active range of a mark type inside a node by expanding both sides starting from a given position</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>node</td>
+                                    <td>
+                                            <code>ProseNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Node in which the search will be done</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>mark</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#MarkTypeForLookup" target="_self" >MarkTypeForLookup</a></code>
                                     </td>
 
                                     <td>
@@ -2247,6 +2356,73 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="expandAndRemoveMarks"></a>
+                    <span class="name">
+                        <span ><b>expandAndRemoveMarks</b></span>
+                        <a href="#expandAndRemoveMarks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expandAndRemoveMarks(pos: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, marks)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>pos</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>marks</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="insertContent"></a>
                     <span class="name">
                         <span ><b>insertContent</b></span>
@@ -2333,16 +2509,16 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="removeMark"></a>
+                    <a name="removeMarks"></a>
                     <span class="name">
-                        <span ><b>removeMark</b></span>
-                        <a href="#removeMark"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>removeMarks</b></span>
+                        <a href="#removeMarks"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>removeMark(from: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, to: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, mark?)</code>
+<code>removeMarks(from: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, to: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, marks?)</code>
                 </td>
             </tr>
 
@@ -2405,7 +2581,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>mark</td>
+                                    <td>marks</td>
                                     <td>
                                     </td>
 
@@ -2415,7 +2591,7 @@
 
 
                                     <td>
-                                        <p>Mark or mark type to remove. All if null or undefined</p>
+                                        <p>Array of marks or mark types to remove. All if null or undefined</p>
 
                                     </td>
                                 </tr>

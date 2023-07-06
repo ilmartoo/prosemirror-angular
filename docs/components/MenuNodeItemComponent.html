@@ -153,6 +153,10 @@
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
+                                <a href="#isCommandFromInput" >isCommandFromInput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#MenuItemStatus" >MenuItemStatus</a>
                             </li>
@@ -185,7 +189,7 @@
                             <li>
                                     <span class="modifier">Protected</span>
                                     <span class="modifier"></span>
-                                <a href="#initCommand" >initCommand</a>
+                                <a href="#updateCommand" >updateCommand</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -198,6 +202,10 @@
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#onClick" >onClick</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -332,11 +340,6 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(): boolean &#x3D;&gt; false</code>
-                    </td>
-                </tr>
                             <tr>
                                 <td class="col-md-4" colspan="2">
                                     <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
@@ -450,7 +453,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:23</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:24</a></code>
 </div>
                 </td>
             </tr>
@@ -515,19 +518,19 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="initCommand"></a>
+                    <a name="updateCommand"></a>
                     <span class="name">
                         <span class="modifier">Protected</span>
                         <span class="modifier"></span>
-                        <span ><b>initCommand</b></span>
-                        <a href="#initCommand"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>updateCommand</b></span>
+                        <a href="#updateCommand"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>initCommand()</code>
+                    <code>updateCommand(view: EditorView)</code>
                 </td>
             </tr>
 
@@ -540,7 +543,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:19</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:20</a></code>
 </div>
                 </td>
             </tr>
@@ -550,8 +553,40 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>view</td>
+                                    <td>
+                                            <code>EditorView</code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Command</code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -585,7 +620,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:76</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:88</a></code>
 </div>
                 </td>
             </tr>
@@ -669,7 +704,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:87</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:99</a></code>
 </div>
                 </td>
             </tr>
@@ -716,7 +751,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:35</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:37</a></code>
 </div>
                 </td>
             </tr>
@@ -724,6 +759,53 @@
 
             <tr>
                 <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onClick"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>onClick</b></span>
+                        <a href="#onClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onClick()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:116</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Callback to execute when the item is clicked</p>
+</div>
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -761,7 +843,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:95</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:107</a></code>
 </div>
                 </td>
             </tr>
@@ -840,7 +922,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:41</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:46</a></code>
 </div>
                 </td>
             </tr>
@@ -929,7 +1011,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:63</a></code>
+                        <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:71</a></code>
 </div>
                 </td>
             </tr>
@@ -1038,7 +1120,40 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:30</a></code>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:32</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isCommandFromInput"></a>
+                    <span class="name">
+                            <span class="modifier">Protected</span>
+                        <span ><b>isCommandFromInput</b></span>
+                        <a href="#isCommandFromInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../components/MenuItemComponent.html" target="_self" >MenuItemComponent</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:28</a></code>
 </div>
                         </td>
                     </tr>
@@ -1072,7 +1187,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:31</a></code>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:33</a></code>
 </div>
                         </td>
                     </tr>
@@ -1105,7 +1220,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:29</a></code>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:31</a></code>
 </div>
                         </td>
                     </tr>
@@ -1140,7 +1255,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:28</a></code>
+                                <div class="io-line">Defined in         <code><a href="../components/MenuItemComponent.html#source" target="_self" >MenuItemComponent:30</a></code>
 </div>
                         </td>
                     </tr>
@@ -1163,6 +1278,7 @@ import {EditorView} from &#x27;prosemirror-view&#x27;;
 import {EditorSelectionActiveElements} from &#x27;../menu/menu.component&#x27;;
 
 import {areNodesEquals} from &quot;../utilities/nodes-helper&quot;;
+import {Command} from &#x27;prosemirror-state&#x27;;
 
 @Component({
   selector: &#x27;app-menu-node-item&#x27;,
@@ -1172,8 +1288,8 @@ import {areNodesEquals} from &quot;../utilities/nodes-helper&quot;;
 })
 export class MenuNodeItemComponent extends MenuSchemaItemComponent&lt;NodeType&gt; {
 
-  protected override initCommand(): void {
-    this.command &#x3D; setBlockType(this.type, this.attrs);
+  protected override updateCommand(view: EditorView): Command {
+    return setBlockType(this.type, this.attrs);
   }
 
   protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
@@ -1191,7 +1307,7 @@ export class MenuNodeItemComponent extends MenuSchemaItemComponent&lt;NodeType&g
   &lt;button [ngClass]&#x3D;&quot;{
     item: true,
     active: MenuItemStatus.ACTIVE &#x3D;&#x3D;&#x3D; status
-  }&quot; [disabled]&#x3D;&quot;MenuItemStatus.DISABLED &#x3D;&#x3D;&#x3D; status&quot; (click)&#x3D;&quot;executeCommand()&quot;&gt;
+  }&quot; [disabled]&#x3D;&quot;MenuItemStatus.DISABLED &#x3D;&#x3D;&#x3D; status&quot; (click)&#x3D;&quot;onClick()&quot;&gt;
     &lt;img class&#x3D;&quot;icon&quot; [src]&#x3D;&quot;filePath&quot; [alt]&#x3D;&quot;tooltip ?? &#x27;&#x27;&quot;&gt;
     &lt;div class&#x3D;&quot;tooltip&quot; *ngIf&#x3D;&quot;tooltip&quot;&gt;{{ tooltip }}&lt;/div&gt;
   &lt;/button&gt;
@@ -1306,8 +1422,8 @@ export class MenuNodeItemComponent extends MenuSchemaItemComponent&lt;NodeType&g
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="base" (mousedown)="preventLosingEditorFocus($event)">  <button [ngClass]="{    item: true,    active: MenuItemStatus.ACTIVE === status  }" [disabled]="MenuItemStatus.DISABLED === status" (click)="executeCommand()">    <img class="icon" [src]="filePath" [alt]="tooltip ?? \'\'">    <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>  </button></div></div>'
-    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
+        var COMPONENT_TEMPLATE = '<div><div class="base" (mousedown)="preventLosingEditorFocus($event)">  <button [ngClass]="{    item: true,    active: MenuItemStatus.ACTIVE === status  }" [disabled]="MenuItemStatus.DISABLED === status" (click)="onClick()">    <img class="icon" [src]="filePath" [alt]="tooltip ?? \'\'">    <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>  </button></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveLinkItemComponent', 'selector': 'app-menu-remove-link-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
     var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'MenuNodeItemComponent'};
 </script>
