@@ -16,7 +16,7 @@
     <input #linkReference type="text" name="link-reference" (input)="validateInput()">
 
     <div class="popup-actions">
-      <button [disabled]="!canCreateLink" (click)="createLink()">Create</button>
+      <button [disabled]="!canCreateLink" (click)="createLink()">{{ getButtonLabel() }}</button>
     </div>
   </div>
 

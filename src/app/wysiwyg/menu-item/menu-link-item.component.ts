@@ -24,7 +24,9 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
 
   protected isPopupOpen = false;
   protected canCreateLink = false;
-  protected selection?: { from: number, to?: number };
+  protected selection?:
+    { isLink: true, from: number, to: number } |
+    { isLink: false, from: number, to?: number };
 
   protected openPopup(): void {
     if (this.view) {
@@ -72,6 +74,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     // If open when a link is on head
     if (selectedLink && markRange) {
       this.selection = {
+        isLink: true,
         from: markRange.$from.pos,
         to: markRange.$to.pos,
       };
@@ -83,6 +86,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     // If a selection is in place but does not contain a link
     else if (!selection.empty) {
       this.selection = {
+        isLink: false,
         from: selection.$from.pos,
         to: selection.$to.pos,
       };
@@ -92,6 +96,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     // Else insert in cursor position
     else {
       this.selection = {
+        isLink: false,
         from: selection.$head.pos,
       };
     }
@@ -127,5 +132,9 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
     const href = this.hrefRef.nativeElement.value.trim();
 
     this.canCreateLink = this.isValidLink(name, href);
+  }
+
+  protected getButtonLabel(): string {
+    return this.selection?.isLink ? 'Modify' : 'Create';
   }
 }
