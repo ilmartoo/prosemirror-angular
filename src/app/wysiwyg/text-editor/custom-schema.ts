@@ -3,13 +3,16 @@ import {schema} from 'prosemirror-schema-basic';
 import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
 
 import {groupChain, groupOr, groupRange} from "../utilities/node-groups-helper";
+import {tableNodes} from 'prosemirror-tables';
 
 
 ///
 /// Base schema
 ///
 const baseSchema = new Schema({
-  nodes: schema.spec.nodes,
+  nodes:
+    schema.spec.nodes ||
+    tableNodes({ tableGroup: 'block', cellContent: 'block', cellAttributes: {} }),
   marks: schema.spec.marks,
 })
 
@@ -17,7 +20,7 @@ const baseSchema = new Schema({
 ///
 /// Custom schema's nodes definition
 ///
-const indentDOM: DOMOutputSpec = ['div', { class: 'indent' }, 0];
+const indentDOM: DOMOutputSpec = ['indent', 0];
 
 // Node groups
 const blockGroup = 'block';
@@ -28,55 +31,63 @@ const listGroups = groupChain(blockGroup, listGroup);
 const listContent = groupRange(groupOr('list_item', listGroup), 0);
 const indentContent = groupRange(blockGroup, 0);
 
-type CustomNodeSpec =
-  'blockquote' |
-  'image' |
-  'text' |
-  'doc' |
-  'paragraph' |
-  'horizontal_rule' |
-  'heading' |
-  'code_block' |
-  'hard_break' |
-  'list_item' |
-  'ordered_list' |
-  'bullet_list' |
-  'indent';
+// Node specs
+enum SpecialNodeSpecs {
+  DOC = 'doc',
+  TEXT = 'text',
+  IMAGE = 'image',
+  BLOCKQUOTE = 'blockquote',
+  HARD_BREAK = 'hard_break',
+  HORIZONTAL_RULE = 'horizontal_rule',
+  INDENT = 'indent',
+}
+enum TextContainerNodeSpecs {
+  PARAGRAPH = 'paragraph',
+  HEADING = 'heading',
+  CODE_BLOCK = 'code_block',
+}
+enum ListNodeSpecs {
+  LIST_ITEM = 'list_item',
+  ORDERED_LIST = 'ordered_list',
+  BULLET_LIST = 'bullet_list',
+  CHECK_LIST = 'check_list',
+}
+enum TableNodeSpecs {
+  TABLE = 'table',
+  ROW = 'table_row',
+  CELL = 'table_cell',
+  HEADER = 'table_header',
+}
+type CustomNodeSpec = SpecialNodeSpecs | TextContainerNodeSpecs | ListNodeSpecs | TableNodeSpecs;
 
 const customNodes = baseSchema.spec.nodes
 
   /// Ordered list
-  .update('ordered_list', {
+  .update(ListNodeSpecs.ORDERED_LIST, {
     ...orderedList,
     content: listContent,
     group: listGroups,
   })
 
   /// Bullet list
-  .update('bullet_list', {
+  .update(ListNodeSpecs.BULLET_LIST, {
     ...bulletList,
     content: listContent,
     group: listGroups,
   })
 
   /// List item
-  .update('list_item', {
+  .update(ListNodeSpecs.LIST_ITEM, {
     ...listItem,
     content: 'paragraph',
   })
 
   /// Indent
-  .update('indent', {
+  .update(SpecialNodeSpecs.INDENT, {
     content: indentContent,
     group: blockGroup,
     parseDOM: [
-      {
-        tag: 'div',
-        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
-          if (typeof(dom) === 'string') { return false; } // If string do not parse
-          return dom.classList.contains('indent') ? null : false;
-        },
-      },
+      { tag: 'indent' },
     ],
     toDOM: (): DOMOutputSpec => indentDOM,
   });
@@ -88,18 +99,27 @@ const customNodes = baseSchema.spec.nodes
 const underlineDOM: DOMOutputSpec = ['u', 0],
   strikethroughDOM: DOMOutputSpec = ['s', 0];
 
-type CustomMarkSpec =
-  'underline' |
-  'strikethrough' |
-  'link' |
-  'code' |
-  'em' |
-  'strong';
+// Mark specs
+enum SpecialMarkSpecs {
+  LINK = 'link',
+  INLINE_CODE = 'code',
+}
+enum DecorationMarkSpecs {
+  UNDERLINE = 'underline',
+  STRIKETHROUGH = 'strikethrough',
+}
+enum StyleMarkSpecs {
+  COLOR = 'color',
+  BACKGROUND = 'bg',
+  ITALIC = 'em',
+  BOLD = 'strong',
+}
+type CustomMarkSpec = SpecialMarkSpecs | DecorationMarkSpecs | StyleMarkSpecs;
 
 const customMarks = baseSchema.spec.marks
 
   /// Underline
-  .update('underline', {
+  .update(DecorationMarkSpecs.UNDERLINE, {
     parseDOM: [
       { tag: 'u' },
       {
@@ -117,7 +137,7 @@ const customMarks = baseSchema.spec.marks
   })
 
   /// Strikethrough
-  .update('strikethrough', {
+  .update(DecorationMarkSpecs.STRIKETHROUGH, {
     parseDOM: [
       { tag: 's' },
       { tag: 'del' },
@@ -134,9 +154,9 @@ const customMarks = baseSchema.spec.marks
     toDOM: (): DOMOutputSpec => strikethroughDOM,
   })
 
-  .update('link',  {
+  .update(SpecialMarkSpecs.LINK,  {
     ...baseSchema.spec.marks.get('link'),
-    excludes: 'link underline', // Excludes underline of being active when a link mark is
+    excludes: groupChain(SpecialMarkSpecs.LINK, DecorationMarkSpecs.UNDERLINE), // Excludes underline of being active when a link mark is
   });
 
 
@@ -149,6 +169,9 @@ const customSchema = new Schema<CustomNodeSpec, CustomMarkSpec>({
 })
 
 // Schema
-export {customNodes, customMarks, customSchema, CustomMarkSpec, CustomNodeSpec}
+export { customNodes, customMarks, customSchema }
+// Specs
+export { CustomNodeSpec, SpecialNodeSpecs, TextContainerNodeSpecs, ListNodeSpecs, TableNodeSpecs }
+export { CustomMarkSpec, SpecialMarkSpecs, DecorationMarkSpecs, StyleMarkSpecs }
 // Groups
-export {blockGroup, listGroup, listGroups}
+export { blockGroup, listGroup, listGroups }
