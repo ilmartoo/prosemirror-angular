@@ -12,7 +12,10 @@ import {MenuLinkItemComponent} from './wysiwyg/menu-item/menu-link-item.componen
 import {MenuImageItemComponent} from './wysiwyg/menu-item/menu-image-item.component';
 import {MenuSchemaItemComponent} from './wysiwyg/menu-item/menu-schema-item.component';
 import {MenuIndentItemComponent} from './wysiwyg/menu-item/menu-indent-item.component';
-import {MenuRemoveLinkItemComponent} from './wysiwyg/menu-item/menu-remove-link-item.component';
+import {MenuRemoveElementItemComponent} from './wysiwyg/menu-item/menu-remove-element-item.component';
+import {MenuCreateTableItemComponent} from './wysiwyg/menu-item/menu-create-table-item.component';
+import {MenuDeleteTableElementItemComponent} from './wysiwyg/menu-item/menu-delete-table-element-item.component';
+import {MenuCreateTableElementItemComponent} from './wysiwyg/menu-item/menu-create-table-element-item.component';
 
 @NgModule({
   declarations: [
@@ -23,11 +26,14 @@ import {MenuRemoveLinkItemComponent} from './wysiwyg/menu-item/menu-remove-link-
     MenuSchemaItemComponent,
     MenuMarkItemComponent,
     MenuLinkItemComponent,
-    MenuRemoveLinkItemComponent,
+    MenuRemoveElementItemComponent,
     MenuNodeItemComponent,
     MenuListItemComponent,
     MenuIndentItemComponent,
     MenuImageItemComponent,
+    MenuCreateTableItemComponent,
+    MenuCreateTableElementItemComponent,
+    MenuDeleteTableElementItemComponent,
   ],
 	imports: [
 		BrowserModule,

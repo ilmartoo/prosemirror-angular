@@ -1,94 +1,136 @@
-<div class="menu" *ngIf="view">
-  <app-menu-mark-item [type]="customSchema.marks.strong"
-                      icon="bold"
-                      tooltip="Bold"
-  ></app-menu-mark-item>
-  <app-menu-mark-item [type]="customSchema.marks.em"
-                      icon="italic"
-                      tooltip="Italic"
-  ></app-menu-mark-item>
-  <app-menu-mark-item [type]="customSchema.marks.underline"
-                      icon="underline"
-                      tooltip="Underline"
-  ></app-menu-mark-item>
-  <app-menu-mark-item [type]="customSchema.marks.strikethrough"
-                      icon="strikethrough"
-                      tooltip="Strikethrough"
-  ></app-menu-mark-item>
-  <app-menu-mark-item [type]="customSchema.marks.code"
-                      icon="code"
-                      tooltip="Inline code"
-  ></app-menu-mark-item>
+<div class="menu">
+  <ng-container *ngIf="view">
+    <app-menu-mark-item [type]="customSchema.marks.strong"
+                        icon="bold"
+                        tooltip="Bold"
+    ></app-menu-mark-item>
+    <app-menu-mark-item [type]="customSchema.marks.em"
+                        icon="italic"
+                        tooltip="Italic"
+    ></app-menu-mark-item>
+    <app-menu-mark-item [type]="customSchema.marks.underline"
+                        icon="underline"
+                        tooltip="Underline"
+    ></app-menu-mark-item>
+    <app-menu-mark-item [type]="customSchema.marks.strikethrough"
+                        icon="strikethrough"
+                        tooltip="Strikethrough"
+    ></app-menu-mark-item>
+    <app-menu-mark-item [type]="customSchema.marks.code"
+                        icon="code"
+                        tooltip="Inline code"
+    ></app-menu-mark-item>
 
-  <div class="separator"></div>
+    <div class="separator"></div>
 
-  <app-menu-link-item icon="link"
-                      tooltip="Hyperlink"
-  ></app-menu-link-item>
-  <app-menu-remove-link-item icon="remove_link"
-                             tooltip="Delete hyperlink"
-  ></app-menu-remove-link-item>
+    <app-menu-link-item icon="link"
+                        tooltip="Hyperlink"
+    ></app-menu-link-item>
+    <app-menu-remove-element-item [type]="customSchema.marks.link"
+                                  icon="link-remove"
+                                  tooltip="Delete hyperlink"
+    ></app-menu-remove-element-item>
 
-  <div class="separator"></div>
+    <div class="separator"></div>
 
-  <app-menu-image-item icon="image"
-                       tooltip="Add image"
-  ></app-menu-image-item>
+    <app-menu-image-item icon="image"
+                         tooltip="Add image"
+    ></app-menu-image-item>
 
-  <div class="separator"></div>
+    <div class="separator"></div>
 
-  <app-menu-node-item [type]="customSchema.nodes.paragraph"
-                      icon="paragraph"
-                      tooltip="Text paragraph"
-  ></app-menu-node-item>
-  <app-menu-node-item [type]="customSchema.nodes.heading"
-                      [attrs]="{ level: 1 }"
-                      icon="header1"
-                      tooltip="Header 1"
-  ></app-menu-node-item>
-  <app-menu-node-item [type]="customSchema.nodes.heading"
-                      [attrs]="{ level: 2 }"
-                      icon="header2"
-                      tooltip="Header 2"
-  ></app-menu-node-item>
-  <app-menu-node-item [type]="customSchema.nodes.heading"
-                      [attrs]="{ level: 3 }"
-                      icon="header3"
-                      tooltip="Header 3"
-  ></app-menu-node-item>
-  <app-menu-list-item [type]="customSchema.nodes.blockquote"
-                      icon="blockquote"
-                      tooltip="Quote text"
-  ></app-menu-list-item>
-  <app-menu-node-item [type]="customSchema.nodes.code_block"
-                      icon="code_block"
-                      tooltip="Code block"
-  ></app-menu-node-item>
+    <app-menu-create-table-item icon="table-plus"
+                                tooltip="Create table"
+    ></app-menu-create-table-item>
+    <app-menu-remove-element-item [type]="customSchema.nodes.table"
+                                  icon="table-remove"
+                                  tooltip="Delete table"
+    ></app-menu-remove-element-item>
+    <app-menu-create-table-element-item [isColumn]="true"
+                                        [isAfter]="false"
+                                        icon="table-column-plus-before"
+                                        tooltip="Add column before"
+    ></app-menu-create-table-element-item>
+    <app-menu-create-table-element-item [isColumn]="true"
+                                        [isAfter]="true"
+                                        icon="table-column-plus-after"
+                                        tooltip="Add column after"
+    ></app-menu-create-table-element-item>
+    <app-menu-delete-table-element-item [isColumn]="true"
+                                        icon="table-column-remove"
+                                        tooltip="Delete column"
+    ></app-menu-delete-table-element-item>
+    <app-menu-create-table-element-item [isColumn]="false"
+                                        [isAfter]="false"
+                                        icon="table-row-plus-before"
+                                        tooltip="Add row before"
+    ></app-menu-create-table-element-item>
+    <app-menu-create-table-element-item [isColumn]="false"
+                                        [isAfter]="true"
+                                        icon="table-row-plus-after"
+                                        tooltip="Add row after"
+    ></app-menu-create-table-element-item>
+    <app-menu-delete-table-element-item [isColumn]="false"
+                                        icon="table-row-remove"
+                                        tooltip="Delete row"
+    ></app-menu-delete-table-element-item>
 
-  <div class="separator"></div>
+    <div class="separator"></div>
 
-  <app-menu-list-item [type]="customSchema.nodes.bullet_list"
-                      icon="bullet_list"
-                      tooltip="Bullet list"
-  ></app-menu-list-item>
-  <app-menu-list-item [type]="customSchema.nodes.ordered_list"
-                      icon="ordered_list"
-                      tooltip="Ordered list"
-  ></app-menu-list-item>
-  <!--  <app-menu-item [type]="view.state.schema.nodes['checklist']"-->
-  <!--                        [status]="getNodeStatus('checklist')"-->
-  <!--                        icon="checklist"-->
-  <!--                        tooltip="Checklist"-->
-  <!--  ></app-menu-item>-->
+    <app-menu-node-item [type]="customSchema.nodes.paragraph"
+                        icon="paragraph"
+                        tooltip="Text paragraph"
+    ></app-menu-node-item>
+    <app-menu-node-item [type]="customSchema.nodes.heading"
+                        [attrs]="{ level: 1 }"
+                        icon="header1"
+                        tooltip="Header 1"
+    ></app-menu-node-item>
+    <app-menu-node-item [type]="customSchema.nodes.heading"
+                        [attrs]="{ level: 2 }"
+                        icon="header2"
+                        tooltip="Header 2"
+    ></app-menu-node-item>
+    <app-menu-node-item [type]="customSchema.nodes.heading"
+                        [attrs]="{ level: 3 }"
+                        icon="header3"
+                        tooltip="Header 3"
+    ></app-menu-node-item>
+    <app-menu-node-item [type]="customSchema.nodes.blockquote"
+                        icon="blockquote"
+                        tooltip="Quote text"
+    ></app-menu-node-item>
+    <app-menu-node-item [type]="customSchema.nodes.code_block"
+                        icon="code-block"
+                        tooltip="Code block"
+    ></app-menu-node-item>
 
-  <div class="separator"></div>
+    <div class="separator"></div>
 
-  <app-menu-indent-item [isIncrease]="false"
-                        icon="indent_decrease"
-                        tooltip="Decrease indent"
-  ></app-menu-indent-item>
-  <app-menu-indent-item [isIncrease]="true"
-                        icon="indent_increase"
-                        tooltip="Increase indent"
-  ></app-menu-indent-item>
+    <app-menu-list-item [type]="customSchema.nodes.bullet_list"
+                        icon="list-bullet"
+                        tooltip="Bullet list"
+    ></app-menu-list-item>
+    <app-menu-list-item [type]="customSchema.nodes.ordered_list"
+                        icon="list-ordered"
+                        tooltip="Ordered list"
+    ></app-menu-list-item>
+    <!--  <app-menu-item [type]="view.state.schema.nodes['checklist']"-->
+    <!--                        [status]="getNodeStatus('checklist')"-->
+    <!--                        icon="list-check"-->
+    <!--                        tooltip="Checklist"-->
+    <!--  ></app-menu-item>-->
+
+    <div class="separator"></div>
+
+    <app-menu-indent-item [isIncrease]="false"
+                          icon="indent-decrease"
+                          tooltip="Decrease indent"
+    ></app-menu-indent-item>
+    <app-menu-indent-item [isIncrease]="true"
+                          icon="indent-increase"
+                          tooltip="Increase indent"
+    ></app-menu-indent-item>
+  </ng-container>
 </div>
+

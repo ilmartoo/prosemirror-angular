@@ -17,7 +17,7 @@ import {Command} from 'prosemirror-state';
 })
 export class MenuNodeItemComponent extends MenuSchemaItemComponent<NodeType> {
 
-  protected override updateCommand(view: EditorView): Command {
+  protected override updatedCommand(view: EditorView): Command {
     return setBlockType(this.type, this.attrs);
   }
 

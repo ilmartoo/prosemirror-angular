@@ -6,6 +6,7 @@ import {customSchema} from '../text-editor/custom-schema';
 import {EditorView} from 'prosemirror-view';
 import {expandMarkActiveRange, searchForMarkTypeInSelection} from "../utilities/marks-helper";
 import {textBetween} from "../utilities/node-content-helper";
+import {executeAfter} from '../utilities/multipurpose-helper';
 
 @Component({
   selector: 'app-menu-link-item',
@@ -33,7 +34,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
       this.isPopupOpen = true;
 
       // Display: none is active, so we wait until this style is overwritten
-      setTimeout(() => this.popupRef.nativeElement.focus());
+      executeAfter(() => this.popupRef.nativeElement.focus());
 
       this.resetPopup();
       this.updatePopup(this.view);

@@ -15,7 +15,7 @@ export class MenuIndentItemComponent extends MenuItemComponent {
 
   @Input({ required: true }) isIncrease!: boolean;
 
-  protected override updateCommand(view: EditorView): Command {
+  protected override updatedCommand(view: EditorView): Command {
     return this.isIncrease ? increaseIndent : decreaseIndent;
   }
 

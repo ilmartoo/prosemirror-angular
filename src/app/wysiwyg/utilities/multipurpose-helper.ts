@@ -59,3 +59,26 @@ export function areEquals<T = any>(a?: T, b?: T): boolean {
     return a === b;
   }
 }
+
+/**
+ * Repeats an array the given times. It creates a new array.
+ * @param arr Array to repeat
+ * @param n Times to repeat
+ * @returns New array contained the elements from arr repeated n times
+ */
+export function repeat<T = any>(arr: T | T[], n: number): T[] {
+  const newArr = [];
+  const oldArr = arr instanceof Array ? arr : [arr];
+  for (let i = 0; i < n; i++) {
+    newArr.push(...oldArr);
+  }
+  return newArr;
+}
+
+/**
+ * Delays the execution of the function to the next possible time frame
+ * @param func Function to execute
+ */
+export function executeAfter(func: () => void): void {
+  setTimeout(func);
+}

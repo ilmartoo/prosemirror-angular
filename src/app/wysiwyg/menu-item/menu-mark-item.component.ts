@@ -17,7 +17,7 @@ import {Command} from 'prosemirror-state';
 })
 export class MenuMarkItemComponent extends MenuSchemaItemComponent<MarkType> {
 
-  protected override updateCommand(view: EditorView): Command {
+  protected override updatedCommand(view: EditorView): Command {
     return toggleMark(this.type, this.attrs);
   }
 

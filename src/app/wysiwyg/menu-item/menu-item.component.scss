@@ -30,6 +30,10 @@
     }
   }
 
+  &.hidden {
+    display: none;
+  }
+
   $tooltip-bottom-from: 90%;
   $tooltip-bottom-to: 110%;
   $tooltip-transition-duration: 200ms;

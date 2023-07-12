@@ -18,7 +18,7 @@ import {Command} from 'prosemirror-state';
 })
 export class MenuListItemComponent extends MenuNodeItemComponent {
 
-  protected override updateCommand(view: EditorView): Command {
+  protected override updatedCommand(view: EditorView): Command {
     return chainCommands(wrapInList(this.type, this.attrs), changeListType(this.type, this.attrs));
   }
 

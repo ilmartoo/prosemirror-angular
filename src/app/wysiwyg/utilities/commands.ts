@@ -18,6 +18,7 @@ import {extendTransaction} from "./transactions-helper";
 import {areNodeTypesEquals, findAllAncestors, findAncestor} from "./nodes-helper";
 import {isValidContent} from "./node-content-helper";
 import {expandMarkActiveRange, expandMarkTypeActiveRange} from './marks-helper';
+import {createTable} from './table-helper';
 
 /**
  * Selects the text of the given range
@@ -115,7 +116,13 @@ export function removeMarks(from: number, to: number, marks?: (Mark | MarkType)[
   }
 }
 
-export function expandAndRemoveMarks(pos: number, marks: (Mark | MarkType)[]) {
+/**
+ * Expands the selected marks and mark types into individual ranges and removes them from the expanded ranges
+ * @param pos Position to start the range expansion
+ * @param marks Marks and mark types to expand and remove
+ * @returns Command remove the marks and mark types from the expanded ranges
+ */
+export function expandAndRemoveMarks(pos: number, marks: (Mark | MarkType)[]): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
     if (marks.length === 0) { return false; } // Cancel if no marks to expand
 
@@ -153,12 +160,33 @@ export function expandAndRemoveMarks(pos: number, marks: (Mark | MarkType)[]) {
  */
 export function insertContent(at: number, content: ProseNode | Fragment | readonly ProseNode[]): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const fragment = Fragment.from(content);
+    const $at = state.doc.resolve(at);
+    // Cancel if content cannot be inserted at the position specified
+    if ($at.node().type.validContent(fragment)) { return false; }
+
     if (dispatch) {
       const tr = state.tr;
-      tr.insert(at, content);
+      tr.insert(at, fragment);
       dispatch(tr.scrollIntoView());
     }
     return true;
+  }
+}
+
+/**
+ * Creates a table at a specified position
+ * @param at Position to insert the table at
+ * @param rows Number of rows of the table
+ * @param cols Number of columns of the table
+ * @returns Command to insert a table with the given dimensions at the specified position of the document
+ */
+export function insertTable(at: number, rows: number, cols: number): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    if (rows < 1 || cols < 1) { return false; } // Cancel if dimensions of the table are not valid
+
+    const table = createTable(rows, cols);
+    return insertContent(at, table)(state, dispatch);
   }
 }
 

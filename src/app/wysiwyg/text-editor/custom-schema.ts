@@ -10,9 +10,9 @@ import {tableNodes} from 'prosemirror-tables';
 /// Base schema
 ///
 const baseSchema = new Schema({
-  nodes:
-    schema.spec.nodes ||
-    tableNodes({ tableGroup: 'block', cellContent: 'block', cellAttributes: {} }),
+  nodes: schema.spec.nodes.append(
+    tableNodes({ tableGroup: 'block', cellContent: 'block', cellAttributes: {} })
+  ),
   marks: schema.spec.marks,
 })
 
@@ -63,6 +63,14 @@ type CustomNodeSpec = SpecialNodeSpecs | TextContainerNodeSpecs | ListNodeSpecs 
 const customNodes = baseSchema.spec.nodes
 
   /// Ordered list
+  .update(SpecialNodeSpecs.IMAGE, {
+    ...baseSchema.spec.nodes.get(SpecialNodeSpecs.IMAGE),
+    inline: false,
+    content: TextContainerNodeSpecs.PARAGRAPH,
+    group: blockGroup,
+  })
+
+  /// Ordered list
   .update(ListNodeSpecs.ORDERED_LIST, {
     ...orderedList,
     content: listContent,
@@ -79,7 +87,7 @@ const customNodes = baseSchema.spec.nodes
   /// List item
   .update(ListNodeSpecs.LIST_ITEM, {
     ...listItem,
-    content: 'paragraph',
+    content: TextContainerNodeSpecs.PARAGRAPH,
   })
 
   /// Indent
@@ -155,7 +163,7 @@ const customMarks = baseSchema.spec.marks
   })
 
   .update(SpecialMarkSpecs.LINK,  {
-    ...baseSchema.spec.marks.get('link'),
+    ...baseSchema.spec.marks.get(SpecialMarkSpecs.LINK),
     excludes: groupChain(SpecialMarkSpecs.LINK, DecorationMarkSpecs.UNDERLINE), // Excludes underline of being active when a link mark is
   });
 

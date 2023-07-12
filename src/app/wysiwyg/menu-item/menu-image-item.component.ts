@@ -5,6 +5,7 @@ import {customSchema} from '../text-editor/custom-schema';
 import {MenuNodeItemComponent} from './menu-node-item.component';
 import {EditorView} from 'prosemirror-view';
 import {Command} from 'prosemirror-state';
+import {executeAfter} from '../utilities/multipurpose-helper';
 
 @Component({
   selector: 'app-menu-image-item',
@@ -23,10 +24,10 @@ export class MenuImageItemComponent extends MenuNodeItemComponent {
 
   protected isPopupOpen = false;
   protected canInsertImage = false;
-  protected insertPos = 0;
+  protected insertPos?: number;
 
-  override updateCommand(view: EditorView): Command {
-    return (): boolean => true;
+  protected override updatedCommand(view: EditorView): Command {
+    return insertContent(view.state.selection.head, this.type.create({ src: '' }))
   }
 
   protected openPopup(): void {
@@ -34,7 +35,7 @@ export class MenuImageItemComponent extends MenuNodeItemComponent {
       this.isPopupOpen = true;
 
       // Display: none is active, so we wait until this style is overwritten
-      setTimeout(() => this.popupRef.nativeElement.focus());
+      executeAfter(() => this.popupRef.nativeElement.focus());
 
       this.resetPopup();
       this.updatePopup(this.view);
@@ -60,7 +61,7 @@ export class MenuImageItemComponent extends MenuNodeItemComponent {
     this.srcRef.nativeElement.value = '';
     this.titleRef.nativeElement.value = '';
 
-    this.insertPos = 0;
+    this.insertPos = undefined;
   }
 
   private updatePopup(view: EditorView): void {

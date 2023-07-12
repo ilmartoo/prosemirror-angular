@@ -9,6 +9,8 @@ import {MenuComponent} from '../menu/menu.component';
 import {customSchema} from './custom-schema';
 import {decreaseIndent, increaseIndent, newBlock, newLine} from '../utilities/commands';
 import {currentElementDecorator, selectedNodesDecorator} from "../utilities/decorators";
+import {tableEditing} from 'prosemirror-tables';
+import {executeAfter} from '../utilities/multipurpose-helper';
 
 
 /**
@@ -79,10 +81,11 @@ export class TextEditorComponent implements AfterViewInit {
         this.menuRef.asPlugin(),   // Menu bar
         currentElementDecorator(), // Decorator marking the current element
         selectedNodesDecorator(),  // Decorator marking the selected nodes
+        tableEditing(),            // Table management
       ],
     })
 
-    setTimeout(() => {
+    executeAfter(() => {
       // View - Referencia al elemento introducido en el DOM
       this.view = new EditorView(this.prosemirrorRef.nativeElement, {
         state: initialState,

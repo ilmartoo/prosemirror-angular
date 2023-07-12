@@ -10,6 +10,7 @@ export enum MenuItemStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',
   ACTIVE = 'ACTIVE',
+  HIDDEN = 'HIDDEN',
 }
 
 const createIconPath = (iconName: string): string => `./assets/${iconName}.svg`;
@@ -46,7 +47,7 @@ export class MenuItemComponent implements OnInit {
   public update(view: EditorView, activeElements: EditorSelectionActiveElements): void {
     this.view = view; // Update to the current view
     if (!this.isCommandFromInput) {
-      this.command = this.updateCommand(view);
+      this.command = this.updatedCommand(view);
     }
     this.status = this.calculateStatus(view, activeElements);
     this.updateData(view, activeElements);
@@ -76,7 +77,7 @@ export class MenuItemComponent implements OnInit {
    * @param view Updated editor view
    * @protected
    */
-  protected updateCommand(view: EditorView): Command {
+  protected updatedCommand(view: EditorView): Command {
     return (): boolean => false;
   };
 

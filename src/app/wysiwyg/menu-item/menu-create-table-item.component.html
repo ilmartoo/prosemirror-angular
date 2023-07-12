@@ -1,0 +1,23 @@
+<div class="base" #base (focusout)="itemFocusLost($event)">
+  <button [ngClass]="{
+    item: true,
+    active: MenuItemStatus.ACTIVE === status || isPopupOpen
+  }"      [disabled]="MenuItemStatus.DISABLED === status"
+          (click)="isPopupOpen ? closePopup() : openPopup()">
+    <img class="icon" [src]="filePath" [alt]="tooltip ?? ''">
+    <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>
+  </button>
+
+  <div #popup [ngClass]="{ 'popup': true, show: isPopupOpen }" tabindex="-1">
+    <label>Rows</label>
+    <input #rows type="number" min="1" (input)="validateInput()">
+
+    <label>Columns</label>
+    <input #cols type="number" min="1" (input)="validateInput()">
+
+    <div class="popup-actions">
+      <button [disabled]="!canCreateTable" (click)="createTable()">Create</button>
+    </div>
+  </div>
+
+</div>
