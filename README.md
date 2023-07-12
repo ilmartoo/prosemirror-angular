@@ -2,16 +2,15 @@
 
 This project contain a custom implementation of a ProseMirror-based WYSIWYG editor for Angular v16.
 
-## Contents
-The following is what you will find in this repository.
+## [Try it out with this demo!](https://prosemirror-angular.vercel.app/)
 
+## Contents
 ### Angular components
 - Opinionated WYSIWYG editor component.
 - Menu bar component.
 - Multiple menu bar item components.
 
-### Functions
-- Custom schema definition.
-- Custom helper types, classes and functions.
-- Custom commands.
-- Custom transaction methods.
+### Other
+- **Opinionated custom schema definition**.
+- **Helper types, classes and functions** to handle and manage prosemirror objects.
+- **Commands** which implement various functionalities, some of them related to the custom schema.
