@@ -72,8 +72,6 @@ export class MenuCreateTableItemComponent extends MenuNodeItemComponent {
   }
 
   private updatePopup(view: EditorView): void {
-    const link: { name?: string, href?: string } = { };
-
     const state = view.state;
     const selection = state.selection;
 
