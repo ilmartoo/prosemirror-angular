@@ -36,7 +36,7 @@ app-menu {
 
   indent {
     display: block;
-    margin-left: 1rem;
+    padding-left: 1rem;
   }
 
   em,
@@ -62,6 +62,12 @@ app-menu {
   pre:has(> code) {
     padding: 0.25rem 0.4rem;
     background-color: #f5f5f5;
+
+    overflow-x: auto;
+
+    code {
+      white-space: inherit;
+    }
   }
 
   & > blockquote {
@@ -86,6 +92,21 @@ app-menu {
   ul {
     padding-left: 1.125rem;
     margin: 1rem 0;
+
+    li {
+      margin: 0.5rem 0 0;
+    }
+
+    li > * {
+      margin: 0;
+    }
+
+    ol,
+    ul,
+    ol + li,
+    ul + li {
+      margin: 1rem 0 0;
+    }
   }
 
   img {
@@ -122,12 +143,18 @@ app-menu {
     border-collapse: collapse;
     table-layout: fixed;
 
+    max-width: 100%;
+
     tbody,
     tr,
     th,
     td,
     th > *,
-    td > * {
+    td > *,
+    th indent,
+    td indent,
+    th indent > *:not(indent),
+    td indent > *:not(indent) {
       margin: 0;
     }
 
@@ -144,6 +171,7 @@ app-menu {
         border: black solid 1px;
 
         min-width: 2.5rem;
+        max-width: 30rem;
         min-height: 1rem;
 
         padding: 0.25rem 0.5rem;

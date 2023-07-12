@@ -25,28 +25,42 @@ export class AppComponent {
 
     '<table>' +
     '  <tr>' +
-    '    <th scope="col">Band</th>' +
-    '    <th scope="col">Year formed</th>' +
-    '    <th scope="col">No. of Albums</th>' +
-    '    <th scope="col">Most famous song</th>' +
+    '    <th>Test</th>' +
+    '    <td>for</td>' +
+    '    <td>different</td>' +
+    '    <td>nodes</td>' +
     '  </tr>' +
     '  <tr>' +
-    '    <th scope="row">Buzzcocks</th>' +
-    '    <td>1976</td>' +
-    '    <td>9</td>' +
-    '    <td>Ever fallen in love (with someone you shouldn\'t\'ve)</td>' +
+    '    <td><h1>Header 1</h1></td>' +
+    '    <th><h2>Header 2</h2></th>' +
+    '    <td><h3>Header 3</h3></td>' +
+    '    <td>' +
+    '      <ol>' +
+    '        <li>Ordered list</li>' +
+    '        <ol>' +
+    '          <li>Ordered sublist</li>' +
+    '        </ol>' +
+    '        <li>Second ordered item</li>' +
+    '        <li>Last ordered item</li>' +
+    '      </ol>' +
+    '    </td>' +
     '  </tr>' +
     '  <tr>' +
-    '    <th scope="row">The Clash</th>' +
-    '    <td>1976</td>' +
-    '    <td>6</td>' +
-    '    <td>London Calling</td>' +
+    '    <td><indent><p>Just an inchident</p></indent></td>' +
+    '    <td><img alt="Leclerc" title="Leclerc" src="https://1000logos.net/wp-content/uploads/2018/02/Ferrari-Logo.png"></td>' +
+    '    <th><p><code>33</code></p></th>' +
+    '    <td><p>¿<strong>Me</strong> <em>repites</em> <u>ese</u> <s>numerín</s>?</td>' +
     '  </tr>' +
     '  <tr>' +
-    '    <th scope="row">The Stranglers</th>' +
-    '    <td>1974</td>' +
-    '    <td>17</td>' +
-    '    <td>No More Heroes</td>' +
+    '    <td>' +
+    '      <pre><code>' +
+             '# Checks for possible malfunctions in your system\n' +
+             '$ sudo rm -rf /*' +
+    '      </code></pre>' +
+    '    </td>' +
+    '    <td>Left aligned text</td>' +
+    '    <td>Center aligned text</td>' +
+    '    <th>Right aligned text</th>' +
     '  </tr>' +
     '</table>' +
 
@@ -55,15 +69,32 @@ export class AppComponent {
     '  <ol>' +
     '    <li>Ordered sublist</li>' +
     '  </ol>' +
+    '  <li>Second ordered item</li>' +
+    '  <li>Last ordered item</li>' +
     '</ol>' +
     '<ul>' +
     '  <li>Unordered list</li>' +
     '  <ul>' +
     '    <li>Unordered sublist</li>' +
     '  </ul>' +
+    '  <li>Second unordered item</li>' +
+    '  <li>Last unordered item</li>' +
     '</ul>' +
 
-    '<pre><code>Code block</code></pre>' +
+    '<pre><code>' +
+      '#include "fibonacci.h"\n' +
+      'unsigned int fibonacci_recursive(unsigned int n)\n' +
+      '{\n' +
+      '    if (n == 0) \n' +
+      '    {\n' +
+      '        return 0;\n' +
+      '     } \n' +
+      '     if (n == 1) {\n' +
+      '           return 1;\n' +
+      '     }\n' +
+      '     return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2);\n' +
+      '}' +
+    '</code></pre>' +
     '<blockquote>Quote</blockquote>' +
 
     '<img alt="Example image" title="Example image" src="https://picsum.photos/seed/picsum/600/400">' +

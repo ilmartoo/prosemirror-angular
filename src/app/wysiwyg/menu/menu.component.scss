@@ -1,9 +1,10 @@
 .menu {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.075rem;
+  gap: 0.3rem 0.075rem;
 
-  height: 1.5rem;
+  min-height: 1.5rem;
   width: 100%;
 
   .separator {
