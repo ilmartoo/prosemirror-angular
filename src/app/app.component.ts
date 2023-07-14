@@ -10,13 +10,13 @@ export class AppComponent {
 
   initialData =
     '<p>Normal</p>' +
-    '<p><strong>Bold</strong></p>' +
+    '<p><strong style="background-color: red">Bold</strong></p>' +
     '<p><em>Italic</em></p>' +
     '<p><u>Underline</u></p>' +
     '<p><s>Strikethrough</s></p>' +
     '<p><code>Inline code</code></p>' +
 
-    '<p><a href="https://example.com" title="Link">Link</a></p>' +
+    '<p><a href="https://example.com" title="https://example.com">Link</a></p>' +
     '<h1>Header 1</h1>' +
     '<h2>Header 2</h2>' +
     '<h3>Header 3</h3>' +
@@ -48,8 +48,8 @@ export class AppComponent {
     '  <tr>' +
     '    <td><indent><p>Just an inchident</p></indent></td>' +
     '    <td><img alt="Leclerc" title="Leclerc" src="https://1000logos.net/wp-content/uploads/2018/02/Ferrari-Logo.png"></td>' +
-    '    <th><p><code>33</code></p></th>' +
-    '    <td><p>¿<strong>Me</strong> <em>repites</em> <u>ese</u> <s>numerín</s>?</td>' +
+    '    <th><table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table></th>' +
+    '    <td><p>¿<code>33</code>? ¿<strong>Me</strong> <em>repites</em> <u>ese</u> <s>numerín</s>?</td>' +
     '  </tr>' +
     '  <tr>' +
     '    <td>' +

@@ -10,11 +10,12 @@ app-menu {
 .__ProseMirror-text-editor > .ProseMirror {
   $color: #000;
   color: $color;
+  line-height: 1.5;
 
   height: 40rem;
-  overflow: clip auto;
   padding-right: 0.5rem;
 
+  overflow: clip auto;
   overflow-wrap: normal;
 
   &.ProseMirror-focused {
@@ -29,13 +30,23 @@ app-menu {
     text-decoration: underline wavy #ff8080;
   }
 
-  * {
-    line-height: 1.5;
+  indent,
+  h1,
+  h2,
+  h3,
+  p,
+  table,
+  pre:has(> code),
+  img,
+  blockquote,
+  ol,
+  ul {
+    display: block;
     margin: 0.5rem 0;
   }
 
   indent {
-    display: block;
+    margin: 0;
     padding-left: 1rem;
   }
 
@@ -88,27 +99,6 @@ app-menu {
     margin: 0.5rem 0;
   }
 
-  ol,
-  ul {
-    padding-left: 1.125rem;
-    margin: 1rem 0;
-
-    li {
-      margin: 0.5rem 0 0;
-    }
-
-    li > * {
-      margin: 0;
-    }
-
-    ol,
-    ul,
-    ol + li,
-    ul + li {
-      margin: 1rem 0 0;
-    }
-  }
-
   img {
     max-height: 20rem;
   }
@@ -139,24 +129,28 @@ app-menu {
     cursor: pointer;
   }
 
+  ol,
+  ul,
   table {
+    margin: 1rem 0;
+  }
+
+  ol,
+  ul {
+    padding-left: 1.125rem;
+
+    ol,
+    ul {
+      margin: 0.5rem;
+    }
+  }
+
+  table {
+    display: table;
     border-collapse: collapse;
     table-layout: fixed;
 
     max-width: 100%;
-
-    tbody,
-    tr,
-    th,
-    td,
-    th > *,
-    td > *,
-    th indent,
-    td indent,
-    th indent > *:not(indent),
-    td indent > *:not(indent) {
-      margin: 0;
-    }
 
     tr {
       width: 100%;
@@ -164,6 +158,14 @@ app-menu {
 
       th {
         font-weight: bold;
+
+        & > * {
+          margin: 0 auto;
+        }
+      }
+
+      td > * {
+        margin: 0;
       }
 
       td,
@@ -175,6 +177,8 @@ app-menu {
         min-height: 1rem;
 
         padding: 0.25rem 0.5rem;
+
+        overflow: auto;
       }
     }
   }
