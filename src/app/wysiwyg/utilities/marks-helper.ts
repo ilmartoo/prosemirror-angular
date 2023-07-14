@@ -45,7 +45,7 @@ export function activeMarksInRange(node: ProseNode, start: number, end: number):
  * @param state State of the editor
  * @return Array of active marks
  */
-export function activeMarksInCursorPosition(state: EditorState): Mark[] {
+export function activeMarksInSelectionStart(state: EditorState): Mark[] {
   const storedMarks = state.storedMarks;
   const $from = state.selection.$from;
 
@@ -67,7 +67,7 @@ export function activeMarksInSelection(state: EditorState): Mark[] {
   const isEmpty = state.selection.empty;
 
   if (isEmpty) {
-    return activeMarksInCursorPosition(state);
+    return activeMarksInSelectionStart(state);
   } else {
     const $head = state.selection.$head; // Dynamic end of the selection
     const $anchor = state.selection.$anchor; // export function end of the selection

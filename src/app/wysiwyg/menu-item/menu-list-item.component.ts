@@ -5,7 +5,7 @@ import {MenuNodeItemComponent} from './menu-node-item.component';
 import {chainCommands} from 'prosemirror-commands';
 import {changeListType} from '../utilities/commands';
 import {EditorView} from 'prosemirror-view';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodeTypesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
@@ -22,7 +22,7 @@ export class MenuListItemComponent extends MenuNodeItemComponent {
     return chainCommands(wrapInList(this.type, this.attrs), changeListType(this.type, this.attrs));
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
     const isActive = !!activeElements.nodes.find(node => areNodeTypesEquals(node.type, this.type));
     const isEnabled = this.command(view.state, undefined, view);
 

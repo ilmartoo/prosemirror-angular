@@ -4,7 +4,7 @@ import {toggleMark} from 'prosemirror-commands';
 import {MarkType} from 'prosemirror-model';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
 import {EditorView} from 'prosemirror-view';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areMarkTypesEquals} from "../utilities/marks-helper";
 import {Command} from 'prosemirror-state';
@@ -21,7 +21,7 @@ export class MenuMarkItemComponent extends MenuSchemaItemComponent<MarkType> {
     return toggleMark(this.type, this.attrs);
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
       const isActive = !!activeElements.marks.find(mark => areMarkTypesEquals(mark.type, this.type));
       const isEnabled = this.command(view.state, undefined, view);
 

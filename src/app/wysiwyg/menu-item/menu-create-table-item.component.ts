@@ -5,7 +5,7 @@ import {customSchema} from '../text-editor/custom-schema';
 import {EditorView} from 'prosemirror-view';
 import {MenuNodeItemComponent} from './menu-node-item.component';
 import {Command} from 'prosemirror-state';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
 @Component({
@@ -31,7 +31,7 @@ export class MenuCreateTableItemComponent extends MenuNodeItemComponent {
     return insertTable(view.state.selection.head, 1, 1);
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
     const isEnabled = this.command(view.state, undefined, view);
     return isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
   }

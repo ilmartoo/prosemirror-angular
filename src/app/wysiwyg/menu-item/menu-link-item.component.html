@@ -4,7 +4,7 @@
     active: MenuItemStatus.ACTIVE === status || isPopupOpen
   }"      [disabled]="MenuItemStatus.DISABLED === status"
           (click)="isPopupOpen ? closePopup() : openPopup()">
-    <img class="icon" [src]="filePath" [alt]="tooltip ?? ''">
+    <img class="icon" [src]="iconPath(payload)" [alt]="tooltip ?? ''">
     <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>
   </button>
 

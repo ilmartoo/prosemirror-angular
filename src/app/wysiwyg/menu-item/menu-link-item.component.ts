@@ -117,7 +117,7 @@ export class MenuLinkItemComponent extends MenuMarkItemComponent {
 
     // Create link & close
     if (this.view && this.isValidLink(name, href) && this.selection) {
-      const linkMark = this.type.create({ href: href, title: name });
+      const linkMark = this.type.create({ href: href, title: href });
       this.executeCommand(replaceWithMarkedText(name, [linkMark], this.selection.from, this.selection.to));
       this.closePopup(); // Exit popup
       this.focusEditor(); // Focus text editor

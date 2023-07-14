@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
 import {EditorView} from 'prosemirror-view';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodeTypesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
@@ -24,7 +24,7 @@ export class MenuDeleteTableElementItemComponent extends MenuNodeItemComponent {
     return this.isColumn ? deleteColumn : deleteRow;
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
     const tableNode = activeElements.nodes.find(node => areNodeTypesEquals(node.type, this.type));
     if (!tableNode) { return MenuItemStatus.HIDDEN; }
 

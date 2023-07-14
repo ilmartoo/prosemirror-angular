@@ -4,7 +4,7 @@ import {customSchema} from '../text-editor/custom-schema';
 import {Command} from 'prosemirror-state';
 import {expandAndRemoveMarks} from '../utilities/commands';
 import {EditorView} from 'prosemirror-view';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
 import {areEquals} from '../utilities/multipurpose-helper';
 import {MarkType} from 'prosemirror-model';
@@ -36,7 +36,7 @@ export class MenuRemoveElementItemComponent extends MenuSchemaItemComponent {
     return this.getCommandByType(view);
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
     const isEnabled = this.command(view.state);
     return isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.HIDDEN;
   }

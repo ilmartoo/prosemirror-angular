@@ -4,7 +4,7 @@ import {setBlockType} from 'prosemirror-commands';
 import {NodeType} from 'prosemirror-model';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
 import {EditorView} from 'prosemirror-view';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
@@ -21,7 +21,7 @@ export class MenuNodeItemComponent extends MenuSchemaItemComponent<NodeType> {
     return setBlockType(this.type, this.attrs);
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
     const isActive = !!activeElements.nodes.find(node => areNodesEquals(node, this));
     const isEnabled = this.command(view.state, undefined, view);
 

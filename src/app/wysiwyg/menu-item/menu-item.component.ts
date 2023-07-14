@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Command} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 /**
  * Possible statuses of the menu item
@@ -13,8 +13,6 @@ export enum MenuItemStatus {
   HIDDEN = 'HIDDEN',
 }
 
-const createIconPath = (iconName: string): string => `./assets/${iconName}.svg`;
-
 @Component({
   selector: 'app-menu-item',
   templateUrl: './menu-item.component.html',
@@ -22,7 +20,8 @@ const createIconPath = (iconName: string): string => `./assets/${iconName}.svg`;
 })
 export class MenuItemComponent implements OnInit {
 
-  @Input({ required: true }) icon!: string;
+  @Input({ required: true }) payload!: string;
+  @Input() isText = false;
   @Input() tooltip?: string;
   @Input() command!: Command;
 
@@ -30,21 +29,23 @@ export class MenuItemComponent implements OnInit {
 
   protected view?: EditorView;
   protected status = MenuItemStatus.ENABLED;
-  protected filePath = '';
   protected readonly MenuItemStatus = MenuItemStatus;
 
   constructor() { }
 
   public ngOnInit() {
-    this.filePath = createIconPath(this.icon);
     this.isCommandFromInput = !!this.command;
     if (!this.isCommandFromInput) {
       this.command = () => false; // Default command, to be updated
     }
   }
 
+  protected iconPath(iconName: string): string {
+    return `./assets/${iconName}.svg`;
+  }
 
-  public update(view: EditorView, activeElements: EditorSelectionActiveElements): void {
+
+  public update(view: EditorView, activeElements: EditorHeadSelectionActiveElements): void {
     this.view = view; // Update to the current view
     if (!this.isCommandFromInput) {
       this.command = this.updatedCommand(view);
@@ -59,7 +60,7 @@ export class MenuItemComponent implements OnInit {
    * @param activeElements Active marks & nodes of the selection
    * @protected
    */
-  protected calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
     return MenuItemStatus.ENABLED;
   }
 
@@ -69,7 +70,7 @@ export class MenuItemComponent implements OnInit {
    * @param activeElements Active marks & nodes of the selection
    * @protected
    */
-  protected updateData(view: EditorView, activeElements: EditorSelectionActiveElements): void { }
+  protected updateData(view: EditorView, activeElements: EditorHeadSelectionActiveElements): void { }
 
   /**
    * Returns the updated command (Override this method if needed when extending this or a child class).

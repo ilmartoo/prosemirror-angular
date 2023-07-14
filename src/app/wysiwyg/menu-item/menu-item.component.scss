@@ -10,23 +10,13 @@
   border: none;
   border-radius: 0.2rem;
 
-
-  &.active,
-  &:disabled {
-    background-color: #172b4d;
-  }
-
   &.active {
-    .icon {
-      filter: invert(100%);
-    }
+    background-color: #dadee6;
   }
 
   &:disabled {
-    opacity: 0.4;
-
     .icon {
-      filter: invert(100%);
+      filter: invert(60%);
     }
   }
 

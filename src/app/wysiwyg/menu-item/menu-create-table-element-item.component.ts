@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
 import {EditorView} from 'prosemirror-view';
-import {EditorSelectionActiveElements} from '../menu/menu.component';
+import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodeTypesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
@@ -28,7 +28,7 @@ export class MenuCreateTableElementItemComponent extends MenuNodeItemComponent {
     return this.isAfter ? commands.after : commands.before;
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
     const isInsideTable = !!activeElements.nodes.find(node => areNodeTypesEquals(node.type, this.type));
     const isEnabled = this.command(view.state);
     return isInsideTable && isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.HIDDEN;

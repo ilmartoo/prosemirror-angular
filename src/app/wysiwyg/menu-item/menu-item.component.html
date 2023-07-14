@@ -4,7 +4,12 @@
     active: MenuItemStatus.ACTIVE === status,
     hidden: MenuItemStatus.HIDDEN === status
   }" [disabled]="MenuItemStatus.DISABLED === status" (click)="onClick()">
-    <img class="icon" [src]="filePath" [alt]="tooltip ?? ''">
+    <ng-container *ngIf="!isText">
+      <img class="icon" [src]="iconPath(payload)" [alt]="tooltip ?? ''">
+    </ng-container>
+    <ng-template #itemText>
+      <div class="text">{{payload}}</div>
+    </ng-template>
     <div class="tooltip" *ngIf="tooltip">{{ tooltip }}</div>
   </button>
 </div>
