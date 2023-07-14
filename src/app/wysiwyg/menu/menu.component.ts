@@ -4,14 +4,14 @@ import {EditorView} from 'prosemirror-view';
 import {EditorState, Plugin, PluginView} from 'prosemirror-state';
 import {Mark} from 'prosemirror-model';
 import {customSchema} from '../text-editor/custom-schema';
-import {activeMarksInSelection} from "../utilities/marks-helper";
-import {ancestorNodesInSelection, ExtendedNode} from "../utilities/nodes-helper";
+import {activeMarksInSelectionStart} from "../utilities/marks-helper";
+import {ancestorNodesInSelectionStart, ExtendedNode} from "../utilities/nodes-helper";
 import {fixTables} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
 
 // TODO: Let it be an dictionary as { [markTypeName: string]: Mark[], [nodeTypeName: string]: ProseNode[] }
-export type EditorSelectionActiveElements = {
+export type EditorHeadSelectionActiveElements = {
   marks: Mark[],
   nodes: ExtendedNode[],
 };
@@ -70,9 +70,9 @@ export class MenuComponent implements PluginView {
    */
   public updateItemStatuses(view: EditorView): void {
     const state = view.state;
-    const updateData: EditorSelectionActiveElements = {
-      marks: activeMarksInSelection(state),
-      nodes: ancestorNodesInSelection(state),
+    const updateData: EditorHeadSelectionActiveElements = {
+      marks: activeMarksInSelectionStart(state),
+      nodes: ancestorNodesInSelectionStart(state),
     };
 
     this.items.forEach(item => item.update(view, updateData));
