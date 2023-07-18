@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.3rem 0.075rem;
+  row-gap: 0.3rem;
 
   min-height: 1.5rem;
   width: 100%;
@@ -10,17 +10,15 @@
   .section {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
     align-items: center;
 
-    flex: 1;
-
     &:not(:last-of-type) {
-      border-right: 1px solid black
+      border-right: 1px solid black;
+      padding-right: 0.3rem;
     }
 
     &:not(:first-of-type) {
-      margin-left: 0.3rem;
+      padding-left: 0.3rem;
     }
   }
 }

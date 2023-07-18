@@ -27,6 +27,9 @@ export class MenuCreateTableItemComponent extends MenuNodeItemComponent {
   protected canCreateTable = false;
   protected insertPos?: number;
 
+  private readonly DEFAULT_ROWS = 2;
+  private readonly DEFAULT_COLS = 2;
+
   protected override updatedCommand(view: EditorView): Command {
     return insertTable(view.state.selection.head, 1, 1);
   }
@@ -64,8 +67,8 @@ export class MenuCreateTableItemComponent extends MenuNodeItemComponent {
   private resetPopup(): void {
     this.canCreateTable = false;
 
-    this.rowsRef.nativeElement.value = '2';
-    this.colsRef.nativeElement.value = '2';
+    this.rowsRef.nativeElement.value = `${this.DEFAULT_ROWS}`;
+    this.colsRef.nativeElement.value = `${this.DEFAULT_COLS}`;
     this.validateInput();
 
     this.insertPos = undefined;

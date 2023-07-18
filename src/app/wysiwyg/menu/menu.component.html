@@ -17,6 +17,14 @@
                           payload="strikethrough"
                           tooltip="Strikethrough"
       ></app-menu-mark-item>
+      <app-menu-mark-item [type]="customSchema.marks.superscript"
+                          payload="superscript"
+                          tooltip="Superscript"
+      ></app-menu-mark-item>
+      <app-menu-mark-item [type]="customSchema.marks.subscript"
+                          payload="subscript"
+                          tooltip="Subscript"
+      ></app-menu-mark-item>
       <app-menu-mark-item [type]="customSchema.marks.code"
                           payload="code"
                           tooltip="Inline code"
@@ -72,12 +80,24 @@
                                           payload="table-row-remove"
                                           tooltip="Delete row"
       ></app-menu-delete-table-element-item>
+      <app-menu-toggle-table-header-item headerType="CELL"
+                                         payload="table-header"
+                                         tooltip="Toggle header cell"
+      ></app-menu-toggle-table-header-item>
+      <app-menu-toggle-table-header-item headerType="ROW"
+                                         payload="table-row-header"
+                                         tooltip="Toggle header row"
+      ></app-menu-toggle-table-header-item>
+      <app-menu-toggle-table-header-item headerType="COLUMN"
+                                         payload="table-column-header"
+                                         tooltip="Toggle header column"
+      ></app-menu-toggle-table-header-item>
     </div>
 
     <div class="section">
       <app-menu-node-item [type]="customSchema.nodes.paragraph"
                           payload="paragraph"
-                          tooltip="Text paragraph"
+                          tooltip="Paragraph"
       ></app-menu-node-item>
       <app-menu-node-item [type]="customSchema.nodes.heading"
                           [attrs]="{ level: 1 }"
@@ -94,10 +114,10 @@
                           payload="header3"
                           tooltip="Header 3"
       ></app-menu-node-item>
-      <app-menu-node-item [type]="customSchema.nodes.blockquote"
+      <app-menu-wrap-item [type]="customSchema.nodes.blockquote"
                           payload="blockquote"
                           tooltip="Quote text"
-      ></app-menu-node-item>
+      ></app-menu-wrap-item>
       <app-menu-node-item [type]="customSchema.nodes.code_block"
                           payload="code-block"
                           tooltip="Code block"
@@ -118,9 +138,6 @@
       <!--                        icon="list-check"-->
       <!--                        tooltip="Checklist"-->
       <!--  ></app-menu-item>-->
-    </div>
-
-    <div class="section">
       <app-menu-indent-item [isIncrease]="false"
                             payload="indent-decrease"
                             tooltip="Decrease indent"

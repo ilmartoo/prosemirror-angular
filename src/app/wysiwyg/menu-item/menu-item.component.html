@@ -4,7 +4,7 @@
     active: MenuItemStatus.ACTIVE === status,
     hidden: MenuItemStatus.HIDDEN === status
   }" [disabled]="MenuItemStatus.DISABLED === status" (click)="onClick()">
-    <ng-container *ngIf="!isText">
+    <ng-container *ngIf="!isText; else itemText">
       <img class="icon" [src]="iconPath(payload)" [alt]="tooltip ?? ''">
     </ng-container>
     <ng-template #itemText>

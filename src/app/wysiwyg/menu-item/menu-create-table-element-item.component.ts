@@ -7,7 +7,7 @@ import {areNodeTypesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
 import {addColumnAfter, addColumnBefore, addRowAfter, addRowBefore} from 'prosemirror-tables';
 import {customSchema} from '../text-editor/custom-schema';
-import {MenuNodeItemComponent} from './menu-node-item.component';
+import {MenuSchemaItemComponent} from './menu-schema-item.component';
 
 @Component({
   selector: 'app-menu-create-table-element-item',
@@ -15,7 +15,7 @@ import {MenuNodeItemComponent} from './menu-node-item.component';
   styleUrls: ['./menu-item.component.scss'],
   providers: [{ provide: MenuItemComponent, useExisting: MenuCreateTableElementItemComponent }],
 })
-export class MenuCreateTableElementItemComponent extends MenuNodeItemComponent {
+export class MenuCreateTableElementItemComponent extends MenuSchemaItemComponent {
 
   @Input({ required: false }) override type = customSchema.nodes.table;
   @Input({ required: true }) isColumn!: boolean;
