@@ -1,4 +1,4 @@
-import {Attrs, DOMOutputSpec, Schema} from 'prosemirror-model';
+import {Attrs, DOMOutputSpec, Mark, Schema} from 'prosemirror-model';
 import {schema} from 'prosemirror-schema-basic';
 import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
 
@@ -20,7 +20,6 @@ const baseSchema = new Schema({
 ///
 /// Custom schema's nodes definition
 ///
-const indentDOM: DOMOutputSpec = ['indent', 0];
 
 // Node groups
 const blockGroup = 'block';
@@ -59,6 +58,9 @@ enum TableNodeSpecs {
   HEADER = 'table_header',
 }
 type CustomNodeSpec = SpecialNodeSpecs | TextContainerNodeSpecs | ListNodeSpecs | TableNodeSpecs;
+
+// DOM specs
+const indentDOM: DOMOutputSpec = ['indent', 0];
 
 const customNodes = baseSchema.spec.nodes
 
@@ -104,8 +106,6 @@ const customNodes = baseSchema.spec.nodes
 ///
 /// Custom schema's marks definition
 ///
-const underlineDOM: DOMOutputSpec = ['u', 0],
-  strikethroughDOM: DOMOutputSpec = ['s', 0];
 
 // Mark specs
 enum SpecialMarkSpecs {
@@ -118,11 +118,21 @@ enum DecorationMarkSpecs {
 }
 enum StyleMarkSpecs {
   COLOR = 'color',
-  BACKGROUND = 'bg',
+  BACKGROUND = 'background',
   ITALIC = 'em',
   BOLD = 'strong',
+  SUPERSCRIPT = 'superscript',
+  SUBSCRIPT = 'subscript',
 }
 type CustomMarkSpec = SpecialMarkSpecs | DecorationMarkSpecs | StyleMarkSpecs;
+
+// DOM specs
+const underlineDOM: DOMOutputSpec = ['u', 0];
+const strikethroughDOM: DOMOutputSpec = ['s', 0];
+const colorDOM = (color?: string): DOMOutputSpec => ['color', { color: color }, 0];
+const backgroundDOM = (color?: string): DOMOutputSpec => ['background', { color: color }, 0];
+const superscriptDOM: DOMOutputSpec = ['sup', 0];
+const subscriptDOM: DOMOutputSpec = ['sub', 0];
 
 const customMarks = baseSchema.spec.marks
 
@@ -162,10 +172,57 @@ const customMarks = baseSchema.spec.marks
     toDOM: (): DOMOutputSpec => strikethroughDOM,
   })
 
+  // Color
+  .update(StyleMarkSpecs.COLOR, {
+    parseDOM: [{
+      tag: 'color',
+      getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+        if (typeof(dom) === 'string') { return false; } // If string do not parse
+        return { color: dom.style.color };
+      },
+    }],
+    toDOM: (mark: Mark): DOMOutputSpec => colorDOM(mark.attrs['color']),
+  })
+
+  // Background
+  .update(StyleMarkSpecs.BACKGROUND, {
+    parseDOM: [{
+      tag: 'background',
+      getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+        if (typeof(dom) === 'string') { return false; } // If string do not parse
+        return { color: dom.style.color };
+      },
+    }],
+    toDOM: (mark: Mark): DOMOutputSpec => backgroundDOM(mark.attrs['color']),
+  })
+
+  // Superscript
+  .update(StyleMarkSpecs.SUPERSCRIPT, {
+    parseDOM: [{ tag: 'sup' }],
+    toDOM: (): DOMOutputSpec => superscriptDOM,
+    excludes: groupChain(StyleMarkSpecs.SUPERSCRIPT, StyleMarkSpecs.SUBSCRIPT),
+  })
+
+  // Subscript
+  .update(StyleMarkSpecs.SUBSCRIPT, {
+    parseDOM: [{ tag: 'sub' }],
+    toDOM: (): DOMOutputSpec => subscriptDOM,
+    excludes: groupChain(StyleMarkSpecs.SUBSCRIPT, StyleMarkSpecs.SUPERSCRIPT),
+  })
+
+  // Link
   .update(SpecialMarkSpecs.LINK,  {
     ...baseSchema.spec.marks.get(SpecialMarkSpecs.LINK),
-    excludes: groupChain(SpecialMarkSpecs.LINK, DecorationMarkSpecs.UNDERLINE), // Excludes underline of being active when a link mark is
-  });
+    // Excludes underline of being active when a link mark is
+    excludes: groupChain(SpecialMarkSpecs.LINK, DecorationMarkSpecs.UNDERLINE),
+  })
+
+  // Inline code
+  .update(SpecialMarkSpecs.INLINE_CODE, {
+    ...baseSchema.spec.marks.get(SpecialMarkSpecs.INLINE_CODE),
+    // Excludes color, superscript & subscript of being active when an inline code mark is
+    excludes: groupChain(SpecialMarkSpecs.INLINE_CODE, StyleMarkSpecs.COLOR, StyleMarkSpecs.SUPERSCRIPT, StyleMarkSpecs.SUBSCRIPT),
+  }) ;
 
 
 ///
