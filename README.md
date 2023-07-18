@@ -1,8 +1,8 @@
-# Prosemirror Angular custom implementation
+# ProseMirror implementation for Angular v16
 
-This project contain a custom implementation of a ProseMirror-based WYSIWYG editor for Angular v16.
+This project contains a custom implementation of a ProseMirror-based WYSIWYG editor for Angular v16.
 
-## [Try it out with this demo!](https://prosemirror-angular.vercel.app/)
+## [Try it out here!](https://prosemirror-angular.vercel.app/)
 
 ## Contents
 ### Angular components
