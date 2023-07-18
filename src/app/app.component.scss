@@ -1,19 +1,22 @@
-.wrapper {
+.demo {
   font-family: Helvetica, serif;
 
+  width: 100%;
+  max-height: 100vh;
+
+  padding: 2rem;
+
+  // Overflow pass
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  overflow: auto;
 
   .title {
-    text-align: center;
-
     font-size: 4rem;
     background: linear-gradient(45deg, #2f79c0, #00d4ff, #2f79c0);
     background-size: 200%;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: transparent;
 
     width: fit-content;
 
@@ -23,17 +26,18 @@
     animation-iteration-count: infinite;
   }
 
-  &:hover .title {
-    background-color: #f3f3f3;
+  .editor {
+    // Overflow pass
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
   }
 
   & > * {
     display: block;
-    margin: 1rem;
-    padding-block: 0.5rem;
-    width: 70%;
+    margin: 1rem auto;
+    max-width: 1200px;
   }
-
 }
 
 @keyframes waves {

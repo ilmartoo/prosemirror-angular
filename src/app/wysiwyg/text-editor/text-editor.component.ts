@@ -8,7 +8,6 @@ import {EditorView} from 'prosemirror-view';
 import {MenuComponent} from '../menu/menu.component';
 import {customSchema} from './custom-schema';
 import {decreaseIndent, increaseIndent, newBlock, newLine} from '../utilities/commands';
-import {currentElementDecorator, selectedNodesDecorator} from "../utilities/decorators";
 import {tableEditing} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
@@ -79,8 +78,8 @@ export class TextEditorComponent implements AfterViewInit {
           'Shift-Tab': decreaseIndent,
         }),
         this.menuRef.asPlugin(),   // Menu bar
-        currentElementDecorator(), // Decorator marking the current element
-        selectedNodesDecorator(),  // Decorator marking the selected nodes
+        // currentElementDecorator(), // Decorator marking the current element
+        // selectedNodesDecorator(),  // Decorator marking the selected nodes
         tableEditing(),            // Table management
       ],
     })
