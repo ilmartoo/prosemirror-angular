@@ -14,3 +14,6 @@ This project contains a custom implementation of a ProseMirror-based WYSIWYG edi
 - **Opinionated custom schema definition**.
 - **Helper types, classes and functions** to handle and manage prosemirror objects.
 - **Commands** which implement various functionalities, some of them related to the custom schema.
+
+## Documentation
+Documentation for this project can be found [here](https://ilmartoo.github.io/prosemirror-angular/).
