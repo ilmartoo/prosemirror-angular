@@ -4,8 +4,8 @@ import {EditorView} from 'prosemirror-view';
 import {EditorState, Plugin, PluginView} from 'prosemirror-state';
 import {Mark} from 'prosemirror-model';
 import {customSchema} from '../text-editor/custom-schema';
-import {activeMarksInSelectionStart} from "../utilities/marks-helper";
-import {ancestorNodesInSelectionStart, ExtendedNode} from "../utilities/nodes-helper";
+import {activeMarksInSelectionEnd} from "../utilities/marks-helper";
+import {ancestorNodesInSelectionEnd, ExtendedNode} from "../utilities/nodes-helper";
 import {fixTables} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
@@ -71,8 +71,8 @@ export class MenuComponent implements PluginView {
   public updateItemStatuses(view: EditorView): void {
     const state = view.state;
     const updateData: EditorHeadSelectionActiveElements = {
-      marks: activeMarksInSelectionStart(state),
-      nodes: ancestorNodesInSelectionStart(state),
+      marks: activeMarksInSelectionEnd(state),
+      nodes: ancestorNodesInSelectionEnd(state),
     };
 
     this.items.forEach(item => item.update(view, updateData));

@@ -45,15 +45,15 @@ export function activeMarksInRange(node: ProseNode, start: number, end: number):
  * @param state State of the editor
  * @return Array of active marks
  */
-export function activeMarksInSelectionStart(state: EditorState): Mark[] {
+export function activeMarksInSelectionEnd(state: EditorState): Mark[] {
   const storedMarks = state.storedMarks;
-  const $from = state.selection.$from;
+  const $to = state.selection.$to;
 
   // Return either the stored marks, or the marks at the cursor position.
   // Note:
   //   Stored marks are the marks that are going to be applied to the next
   //   input if you dispatched a mark toggle with an empty cursor.
-  const activeMarks = storedMarks ?? $from.marks();
+  const activeMarks = storedMarks ?? $to.marks();
   return activeMarks.map(m => m);
 }
 
@@ -67,7 +67,7 @@ export function activeMarksInSelection(state: EditorState): Mark[] {
   const isEmpty = state.selection.empty;
 
   if (isEmpty) {
-    return activeMarksInSelectionStart(state);
+    return activeMarksInSelectionEnd(state);
   } else {
     const $head = state.selection.$head; // Dynamic end of the selection
     const $anchor = state.selection.$anchor; // export function end of the selection
