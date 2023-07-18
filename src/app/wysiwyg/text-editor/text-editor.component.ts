@@ -28,7 +28,7 @@ import {executeAfter} from '../utilities/multipurpose-helper';
 @Component({
   selector: 'app-text-editor',
   templateUrl: './text-editor.component.html',
-  styleUrls: ['./text-editor.component.scss'],
+  styleUrls: ['./text-editor-styles.scss', './text-editor-content-styles.scss'],
   encapsulation: ViewEncapsulation.None // Needed in order to apply styles to ProseMirror dynamically added editor element
 })
 export class TextEditorComponent implements AfterViewInit {

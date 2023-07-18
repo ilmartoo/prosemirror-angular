@@ -1,0 +1,40 @@
+.text-editor {
+  // Overflow pass
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+  app-menu {
+    position: sticky;
+    top: 0;
+
+    display: block;
+    margin-bottom: 0.5rem;
+
+    background-color: white;
+  }
+
+  *:focus-visible {
+    outline: none;
+  }
+
+  .__ProseMirror-text-editor {
+    overflow: auto; // Element that scrolls
+    overflow-wrap: normal;
+
+    & > .ProseMirror {
+
+      &.ProseMirror-focused {
+        border: inherit;
+      }
+
+      .selection {
+        text-decoration: underline wavy lightgrey;
+      }
+
+      .current-element {
+        text-decoration: underline wavy #ff8080;
+      }
+    }
+  }
+}
