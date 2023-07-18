@@ -2,13 +2,19 @@
   position: relative;
   display: block;
 
-  $button-size: 24px;
+  $button-size: 1.7125rem;
   width: $button-size;
   height: $button-size;
+  padding: 0.25rem;
+  margin: 0.25rem 0.0625rem;
 
   background-color: transparent;
   border: none;
   border-radius: 0.2rem;
+
+  &:hover {
+    background-color: #f2f2fc;
+  }
 
   &.active {
     background-color: #dadee6;
@@ -24,8 +30,8 @@
     display: none;
   }
 
-  $tooltip-bottom-from: 90%;
-  $tooltip-bottom-to: 110%;
+  $tooltip-top-from: 90%;
+  $tooltip-top-to: 110%;
   $tooltip-transition-duration: 200ms;
   $tooltip-transition-delay: 350ms;
 
@@ -41,9 +47,9 @@
     left: 50%;
     transform: translateX(-50%);
 
-    bottom: $tooltip-bottom-from;
+    top: $tooltip-top-from;
     transition:
-      bottom $tooltip-transition-duration ease-in-out 0s,
+      top $tooltip-transition-duration ease-in-out 0s,
       opacity $tooltip-transition-duration ease-in-out 0s,
       visibility $tooltip-transition-duration ease-in-out 0s;
 
@@ -63,7 +69,7 @@
   &:hover .tooltip {
     opacity: 1;
     visibility: visible;
-    bottom: $tooltip-bottom-to;
+    top: $tooltip-top-to;
     transition-delay: $tooltip-transition-delay;
   }
 }
