@@ -37,7 +37,6 @@ export class AppComponent {
     '<p></p>' +
 
     '<h1><strong>[ BLOCKS ]</strong></h1>' +
-    '<indent><indent><p>Identations</p></indent></indent>' +
     '<blockquote>Blockquotes</blockquote>' +
     '<p></p>' +
     '<pre><code>' +
@@ -73,6 +72,11 @@ export class AppComponent {
     '  <li>Second unordered item</li>' +
     '  <li>Last unordered item</li>' +
     '</ul>' +
+    '<p></p>' +
+    '<indent>' +
+    '  <p>Block identations</p>' +
+    '  <indent><p><em>Anything can be idented</em></p></indent>' +
+    '</indent>' +
 
     '<p></p>' +
 
