@@ -34,6 +34,7 @@ import {MenuCreateTableElementItemComponent} from './wysiwyg/menu-item/menu-crea
     MenuCreateTableItemComponent,
     MenuCreateTableElementItemComponent,
     MenuDeleteTableElementItemComponent,
+    MenuToggleTableHeaderComponent,
   ],
 	imports: [
 		BrowserModule,
