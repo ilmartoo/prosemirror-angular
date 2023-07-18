@@ -16,6 +16,8 @@ import {MenuRemoveElementItemComponent} from './wysiwyg/menu-item/menu-remove-el
 import {MenuCreateTableItemComponent} from './wysiwyg/menu-item/menu-create-table-item.component';
 import {MenuDeleteTableElementItemComponent} from './wysiwyg/menu-item/menu-delete-table-element-item.component';
 import {MenuCreateTableElementItemComponent} from './wysiwyg/menu-item/menu-create-table-element-item.component';
+import {MenuToggleTableHeaderComponent} from './wysiwyg/menu-item/menu-toggle-table-header-item.component';
+import {MenuWrapItemComponent} from './wysiwyg/menu-item/menu-wrap-item.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import {MenuCreateTableElementItemComponent} from './wysiwyg/menu-item/menu-crea
     MenuLinkItemComponent,
     MenuRemoveElementItemComponent,
     MenuNodeItemComponent,
+    MenuWrapItemComponent,
     MenuListItemComponent,
     MenuIndentItemComponent,
     MenuImageItemComponent,
