@@ -59,18 +59,27 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/AppModule.html" data-type="entity-link" >AppModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-bs-toggle="collapse" ${ isNormalMode ?
-                                            'data-bs-target="#components-links-module-AppModule-3edaed7feb608f2b46ab754b0146793c5b202c0b5e29648a2081ee18dd8d62d2850944a5b66900c018e64d8fca844d6e426054596fef1ff876f7f86ace7546d0"' : 'data-bs-target="#xs-components-links-module-AppModule-3edaed7feb608f2b46ab754b0146793c5b202c0b5e29648a2081ee18dd8d62d2850944a5b66900c018e64d8fca844d6e426054596fef1ff876f7f86ace7546d0"' }>
+                                            'data-bs-target="#components-links-module-AppModule-a9975ab6308f4ec7ca7c19277d67540ad6e14c243b8b597eb6739a7e28569382ddbd19841c2a9f3f291927ac69e32d5506f0f3da8073b3cb3ffd086e86a9d46b"' : 'data-bs-target="#xs-components-links-module-AppModule-a9975ab6308f4ec7ca7c19277d67540ad6e14c243b8b597eb6739a7e28569382ddbd19841c2a9f3f291927ac69e32d5506f0f3da8073b3cb3ffd086e86a9d46b"' }>
                                             <span class="icon ion-md-cog"></span>
                                             <span>Components</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-AppModule-3edaed7feb608f2b46ab754b0146793c5b202c0b5e29648a2081ee18dd8d62d2850944a5b66900c018e64d8fca844d6e426054596fef1ff876f7f86ace7546d0"' :
-                                            'id="xs-components-links-module-AppModule-3edaed7feb608f2b46ab754b0146793c5b202c0b5e29648a2081ee18dd8d62d2850944a5b66900c018e64d8fca844d6e426054596fef1ff876f7f86ace7546d0"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-AppModule-a9975ab6308f4ec7ca7c19277d67540ad6e14c243b8b597eb6739a7e28569382ddbd19841c2a9f3f291927ac69e32d5506f0f3da8073b3cb3ffd086e86a9d46b"' :
+                                            'id="xs-components-links-module-AppModule-a9975ab6308f4ec7ca7c19277d67540ad6e14c243b8b597eb6739a7e28569382ddbd19841c2a9f3f291927ac69e32d5506f0f3da8073b3cb3ffd086e86a9d46b"' }>
                                             <li class="link">
                                                 <a href="components/AppComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >AppComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/MenuComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/MenuCreateTableElementItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuCreateTableElementItemComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/MenuCreateTableItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuCreateTableItemComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/MenuDeleteTableElementItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuDeleteTableElementItemComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/MenuImageItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuImageItemComponent</a>
@@ -94,10 +103,16 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                                 <a href="components/MenuNodeItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuNodeItemComponent</a>
                                             </li>
                                             <li class="link">
-                                                <a href="components/MenuRemoveLinkItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuRemoveLinkItemComponent</a>
+                                                <a href="components/MenuRemoveElementItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuRemoveElementItemComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/MenuSchemaItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuSchemaItemComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/MenuToggleTableHeaderComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuToggleTableHeaderComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/MenuWrapItemComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MenuWrapItemComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/TextEditorComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >TextEditorComponent</a>

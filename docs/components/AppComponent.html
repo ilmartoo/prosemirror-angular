@@ -178,33 +178,119 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>&#x27;&lt;p&gt;Normal&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;u&gt;Underline&lt;/u&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;s&gt;Strikethrough&lt;/s&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;code&gt;Inline code&lt;/code&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;a href&#x3D;&quot;https://example.com&quot; title&#x3D;&quot;Link&quot;&gt;Link&lt;/a&gt;&lt;/p&gt;&#x27; +
+                        <i>Default value : </i><code>&#x27;&lt;h1&gt;&lt;strong&gt;[ TEXT STYLING ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;p&gt;&#x27; +
+    &#x27;Normal&lt;br&gt;&#x27; +
+    &#x27;&lt;strong&gt;Bold&lt;/strong&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;em&gt;Italic&lt;/em&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;u&gt;Underline&lt;/u&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;s&gt;Strikethrough&lt;/s&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;code&gt;Inline code&lt;/code&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;sup&gt;Super&lt;/sup&gt;script&lt;br&gt;&#x27; +
+    &#x27;&lt;sub&gt;Sub&lt;/sub&gt;script&#x27; +
+    &#x27;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ REFERENCES ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;a href&#x3D;&quot;https://example.com&quot; title&#x3D;&quot;https://example.com&quot;&gt;Link to example.com&lt;/a&gt;&#x27; +
+    &#x27;&lt;img alt&#x3D;&quot;Example image&quot; title&#x3D;&quot;Example image&quot; src&#x3D;&quot;https://picsum.photos/seed/picsum/600/400&quot;&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ HEADERS ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
     &#x27;&lt;h1&gt;Header 1&lt;/h1&gt;&#x27; +
     &#x27;&lt;h2&gt;Header 2&lt;/h2&gt;&#x27; +
     &#x27;&lt;h3&gt;Header 3&lt;/h3&gt;&#x27; +
-    &#x27;&lt;div class&#x3D;&quot;indent&quot;&gt;&lt;div class&#x3D;&quot;indent&quot;&gt;&lt;p&gt;Paragraph&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ BLOCKS ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;blockquote&gt;Blockquotes&lt;/blockquote&gt;&#x27; +
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+    &#x27;&lt;pre&gt;&lt;code&gt;&#x27; +
+    &#x27;/** CODE BLOCK */\n&#x27; +
+    &#x27;#include &quot;fibonacci.h&quot;\n&#x27; +
+    &#x27;unsigned int fibonacci_recursive(unsigned int n)\n&#x27; +
+    &#x27;{\n&#x27; +
+    &#x27;    if (n &#x3D;&#x3D; 0) \n&#x27; +
+    &#x27;    {\n&#x27; +
+    &#x27;        return 0;\n&#x27; +
+    &#x27;     } \n&#x27; +
+    &#x27;     if (n &#x3D;&#x3D; 1) {\n&#x27; +
+    &#x27;           return 1;\n&#x27; +
+    &#x27;     }\n&#x27; +
+    &#x27;     return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2);\n&#x27; +
+    &#x27;}&#x27; +
+    &#x27;&lt;/code&gt;&lt;/pre&gt;&#x27; +
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
     &#x27;&lt;ol&gt;&#x27; +
-      &#x27;&lt;li&gt;Ordered list&lt;/li&gt;&#x27; +
-      &#x27;&lt;ol&gt;&#x27; +
-        &#x27;&lt;li&gt;Ordered sublist&lt;/li&gt;&#x27; +
-      &#x27;&lt;/ol&gt;&#x27; +
+    &#x27;  &lt;li&gt;Ordered list&lt;/li&gt;&#x27; +
+    &#x27;  &lt;ol&gt;&#x27; +
+    &#x27;    &lt;li&gt;Ordered sublist&lt;/li&gt;&#x27; +
+    &#x27;  &lt;/ol&gt;&#x27; +
+    &#x27;  &lt;li&gt;Second ordered item&lt;/li&gt;&#x27; +
+    &#x27;  &lt;li&gt;Last ordered item&lt;/li&gt;&#x27; +
     &#x27;&lt;/ol&gt;&#x27; +
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
     &#x27;&lt;ul&gt;&#x27; +
-      &#x27;&lt;li&gt;Unordered list&lt;/li&gt;&#x27; +
-      &#x27;&lt;ul&gt;&#x27; +
-        &#x27;&lt;li&gt;Unordered sublist&lt;/li&gt;&#x27; +
-      &#x27;&lt;/ul&gt;&#x27; +
+    &#x27;  &lt;li&gt;Unordered list&lt;/li&gt;&#x27; +
+    &#x27;  &lt;ul&gt;&#x27; +
+    &#x27;    &lt;li&gt;Unordered sublist&lt;/li&gt;&#x27; +
+    &#x27;  &lt;/ul&gt;&#x27; +
+    &#x27;  &lt;li&gt;Second unordered item&lt;/li&gt;&#x27; +
+    &#x27;  &lt;li&gt;Last unordered item&lt;/li&gt;&#x27; +
     &#x27;&lt;/ul&gt;&#x27; +
-    &#x27;&lt;pre&gt;&lt;code&gt;Code block&lt;/code&gt;&lt;/pre&gt;&#x27; +
-    &#x27;&lt;blockquote&gt;Quote&lt;/blockquote&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;img alt&#x3D;&quot;Example image&quot; title&#x3D;&quot;Example image&quot; src&#x3D;&quot;https://picsum.photos/seed/picsum/200/300&quot;&gt;&lt;/p&gt;&#x27; +
-  &#x27;&#x27;</code>
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+    &#x27;&lt;indent&gt;&#x27; +
+    &#x27;  &lt;p&gt;Block identations&lt;/p&gt;&#x27; +
+    &#x27;  &lt;indent&gt;&lt;p&gt;&lt;em&gt;Anything can be idented&lt;/em&gt;&lt;/p&gt;&lt;/indent&gt;&#x27; +
+    &#x27;&lt;/indent&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ TABLES ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;table&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;th&gt;Test&lt;/th&gt;&#x27; +
+    &#x27;    &lt;td&gt;for&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;different&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;nodes&lt;/td&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;h1&gt;Header 1&lt;/h1&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;th&gt;&lt;h2&gt;Header 2&lt;/h2&gt;&lt;/th&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;h3&gt;Header 3&lt;/h3&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;&#x27; +
+    &#x27;      &lt;ol&gt;&#x27; +
+    &#x27;        &lt;li&gt;Ordered list&lt;/li&gt;&#x27; +
+    &#x27;        &lt;ol&gt;&#x27; +
+    &#x27;          &lt;li&gt;Ordered sublist&lt;/li&gt;&#x27; +
+    &#x27;        &lt;/ol&gt;&#x27; +
+    &#x27;        &lt;li&gt;Second ordered item&lt;/li&gt;&#x27; +
+    &#x27;        &lt;li&gt;Last ordered item&lt;/li&gt;&#x27; +
+    &#x27;      &lt;/ol&gt;&#x27; +
+    &#x27;    &lt;/td&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;indent&gt;&lt;p&gt;Just an inchident&lt;/p&gt;&lt;/indent&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;img alt&#x3D;&quot;Leclerc&quot; title&#x3D;&quot;Leclerc&quot; src&#x3D;&quot;https://1000logos.net/wp-content/uploads/2018/02/Ferrari-Logo.png&quot;&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;th&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;13&lt;/td&gt;&lt;td&gt;21&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/th&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;sub&gt;&lt;code&gt;33&lt;/code&gt; &lt;sub&gt;¿&lt;/sub&gt;&lt;strong&gt;Me&lt;/strong&gt; &lt;em&gt;repites&lt;/em&gt; &lt;u&gt;ese&lt;/u&gt; &lt;s&gt;numerín&lt;/s&gt;&lt;sup&gt;?&lt;/sup&gt;&lt;/td&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;td&gt;&#x27; +
+    &#x27;      &lt;pre&gt;&lt;code&gt;&#x27; +
+             &#x27;# Checks for possible malfunctions in your system\n&#x27; +
+             &#x27;$ sudo rm -rf /*&#x27; +
+    &#x27;      &lt;/code&gt;&lt;/pre&gt;&#x27; +
+    &#x27;    &lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;Left aligned text TODO&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;Center aligned text TODO&lt;/td&gt;&#x27; +
+    &#x27;    &lt;th&gt;Right aligned text TODO&lt;/th&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;&lt;/table&gt;&#x27; +
+    &#x27;&#x27;</code>
                     </td>
                 </tr>
                     <tr>
@@ -264,42 +350,128 @@ export class AppComponent {
   title &#x3D; &#x27;Prosemirror Demo&#x27;;
 
   initialData &#x3D;
-    &#x27;&lt;p&gt;Normal&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;u&gt;Underline&lt;/u&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;s&gt;Strikethrough&lt;/s&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;code&gt;Inline code&lt;/code&gt;&lt;/p&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;a href&#x3D;&quot;https://example.com&quot; title&#x3D;&quot;Link&quot;&gt;Link&lt;/a&gt;&lt;/p&gt;&#x27; +
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ TEXT STYLING ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;p&gt;&#x27; +
+    &#x27;Normal&lt;br&gt;&#x27; +
+    &#x27;&lt;strong&gt;Bold&lt;/strong&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;em&gt;Italic&lt;/em&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;u&gt;Underline&lt;/u&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;s&gt;Strikethrough&lt;/s&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;code&gt;Inline code&lt;/code&gt;&lt;br&gt;&#x27; +
+    &#x27;&lt;sup&gt;Super&lt;/sup&gt;script&lt;br&gt;&#x27; +
+    &#x27;&lt;sub&gt;Sub&lt;/sub&gt;script&#x27; +
+    &#x27;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ REFERENCES ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;a href&#x3D;&quot;https://example.com&quot; title&#x3D;&quot;https://example.com&quot;&gt;Link to example.com&lt;/a&gt;&#x27; +
+    &#x27;&lt;img alt&#x3D;&quot;Example image&quot; title&#x3D;&quot;Example image&quot; src&#x3D;&quot;https://picsum.photos/seed/picsum/600/400&quot;&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ HEADERS ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
     &#x27;&lt;h1&gt;Header 1&lt;/h1&gt;&#x27; +
     &#x27;&lt;h2&gt;Header 2&lt;/h2&gt;&#x27; +
     &#x27;&lt;h3&gt;Header 3&lt;/h3&gt;&#x27; +
-    &#x27;&lt;div class&#x3D;&quot;indent&quot;&gt;&lt;div class&#x3D;&quot;indent&quot;&gt;&lt;p&gt;Paragraph&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ BLOCKS ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;blockquote&gt;Blockquotes&lt;/blockquote&gt;&#x27; +
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+    &#x27;&lt;pre&gt;&lt;code&gt;&#x27; +
+    &#x27;/** CODE BLOCK */\n&#x27; +
+    &#x27;#include &quot;fibonacci.h&quot;\n&#x27; +
+    &#x27;unsigned int fibonacci_recursive(unsigned int n)\n&#x27; +
+    &#x27;{\n&#x27; +
+    &#x27;    if (n &#x3D;&#x3D; 0) \n&#x27; +
+    &#x27;    {\n&#x27; +
+    &#x27;        return 0;\n&#x27; +
+    &#x27;     } \n&#x27; +
+    &#x27;     if (n &#x3D;&#x3D; 1) {\n&#x27; +
+    &#x27;           return 1;\n&#x27; +
+    &#x27;     }\n&#x27; +
+    &#x27;     return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2);\n&#x27; +
+    &#x27;}&#x27; +
+    &#x27;&lt;/code&gt;&lt;/pre&gt;&#x27; +
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
     &#x27;&lt;ol&gt;&#x27; +
-      &#x27;&lt;li&gt;Ordered list&lt;/li&gt;&#x27; +
-      &#x27;&lt;ol&gt;&#x27; +
-        &#x27;&lt;li&gt;Ordered sublist&lt;/li&gt;&#x27; +
-      &#x27;&lt;/ol&gt;&#x27; +
+    &#x27;  &lt;li&gt;Ordered list&lt;/li&gt;&#x27; +
+    &#x27;  &lt;ol&gt;&#x27; +
+    &#x27;    &lt;li&gt;Ordered sublist&lt;/li&gt;&#x27; +
+    &#x27;  &lt;/ol&gt;&#x27; +
+    &#x27;  &lt;li&gt;Second ordered item&lt;/li&gt;&#x27; +
+    &#x27;  &lt;li&gt;Last ordered item&lt;/li&gt;&#x27; +
     &#x27;&lt;/ol&gt;&#x27; +
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
     &#x27;&lt;ul&gt;&#x27; +
-      &#x27;&lt;li&gt;Unordered list&lt;/li&gt;&#x27; +
-      &#x27;&lt;ul&gt;&#x27; +
-        &#x27;&lt;li&gt;Unordered sublist&lt;/li&gt;&#x27; +
-      &#x27;&lt;/ul&gt;&#x27; +
+    &#x27;  &lt;li&gt;Unordered list&lt;/li&gt;&#x27; +
+    &#x27;  &lt;ul&gt;&#x27; +
+    &#x27;    &lt;li&gt;Unordered sublist&lt;/li&gt;&#x27; +
+    &#x27;  &lt;/ul&gt;&#x27; +
+    &#x27;  &lt;li&gt;Second unordered item&lt;/li&gt;&#x27; +
+    &#x27;  &lt;li&gt;Last unordered item&lt;/li&gt;&#x27; +
     &#x27;&lt;/ul&gt;&#x27; +
-    &#x27;&lt;pre&gt;&lt;code&gt;Code block&lt;/code&gt;&lt;/pre&gt;&#x27; +
-    &#x27;&lt;blockquote&gt;Quote&lt;/blockquote&gt;&#x27; +
-    &#x27;&lt;p&gt;&lt;img alt&#x3D;&quot;Example image&quot; title&#x3D;&quot;Example image&quot; src&#x3D;&quot;https://picsum.photos/seed/picsum/200/300&quot;&gt;&lt;/p&gt;&#x27; +
-  &#x27;&#x27;;
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+    &#x27;&lt;indent&gt;&#x27; +
+    &#x27;  &lt;p&gt;Block identations&lt;/p&gt;&#x27; +
+    &#x27;  &lt;indent&gt;&lt;p&gt;&lt;em&gt;Anything can be idented&lt;/em&gt;&lt;/p&gt;&lt;/indent&gt;&#x27; +
+    &#x27;&lt;/indent&gt;&#x27; +
+
+    &#x27;&lt;p&gt;&lt;/p&gt;&#x27; +
+
+    &#x27;&lt;h1&gt;&lt;strong&gt;[ TABLES ]&lt;/strong&gt;&lt;/h1&gt;&#x27; +
+    &#x27;&lt;table&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;th&gt;Test&lt;/th&gt;&#x27; +
+    &#x27;    &lt;td&gt;for&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;different&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;nodes&lt;/td&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;h1&gt;Header 1&lt;/h1&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;th&gt;&lt;h2&gt;Header 2&lt;/h2&gt;&lt;/th&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;h3&gt;Header 3&lt;/h3&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;&#x27; +
+    &#x27;      &lt;ol&gt;&#x27; +
+    &#x27;        &lt;li&gt;Ordered list&lt;/li&gt;&#x27; +
+    &#x27;        &lt;ol&gt;&#x27; +
+    &#x27;          &lt;li&gt;Ordered sublist&lt;/li&gt;&#x27; +
+    &#x27;        &lt;/ol&gt;&#x27; +
+    &#x27;        &lt;li&gt;Second ordered item&lt;/li&gt;&#x27; +
+    &#x27;        &lt;li&gt;Last ordered item&lt;/li&gt;&#x27; +
+    &#x27;      &lt;/ol&gt;&#x27; +
+    &#x27;    &lt;/td&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;indent&gt;&lt;p&gt;Just an inchident&lt;/p&gt;&lt;/indent&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;img alt&#x3D;&quot;Leclerc&quot; title&#x3D;&quot;Leclerc&quot; src&#x3D;&quot;https://1000logos.net/wp-content/uploads/2018/02/Ferrari-Logo.png&quot;&gt;&lt;/td&gt;&#x27; +
+    &#x27;    &lt;th&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;13&lt;/td&gt;&lt;td&gt;21&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/th&gt;&#x27; +
+    &#x27;    &lt;td&gt;&lt;sub&gt;&lt;code&gt;33&lt;/code&gt; &lt;sub&gt;¿&lt;/sub&gt;&lt;strong&gt;Me&lt;/strong&gt; &lt;em&gt;repites&lt;/em&gt; &lt;u&gt;ese&lt;/u&gt; &lt;s&gt;numerín&lt;/s&gt;&lt;sup&gt;?&lt;/sup&gt;&lt;/td&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;  &lt;tr&gt;&#x27; +
+    &#x27;    &lt;td&gt;&#x27; +
+    &#x27;      &lt;pre&gt;&lt;code&gt;&#x27; +
+             &#x27;# Checks for possible malfunctions in your system\n&#x27; +
+             &#x27;$ sudo rm -rf /*&#x27; +
+    &#x27;      &lt;/code&gt;&lt;/pre&gt;&#x27; +
+    &#x27;    &lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;Left aligned text TODO&lt;/td&gt;&#x27; +
+    &#x27;    &lt;td&gt;Center aligned text TODO&lt;/td&gt;&#x27; +
+    &#x27;    &lt;th&gt;Right aligned text TODO&lt;/th&gt;&#x27; +
+    &#x27;  &lt;/tr&gt;&#x27; +
+    &#x27;&lt;/table&gt;&#x27; +
+    &#x27;&#x27;;
 }
 
 </code></pre>
     </div>
 
     <div class="tab-pane fade " id="templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;wrapper&quot;&gt;
-  &lt;span class&#x3D;&quot;title&quot;&gt;prosemirror-angular&lt;/span&gt;
-  &lt;app-text-editor [initialData]&#x3D;&quot;initialData&quot;&gt;&lt;/app-text-editor&gt;
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;demo&quot;&gt;
+  &lt;span class&#x3D;&quot;title&quot;&gt;prosemirror-angular DEMO&lt;/span&gt;
+  &lt;app-text-editor class&#x3D;&quot;editor&quot; [initialData]&#x3D;&quot;initialData&quot;&gt;&lt;/app-text-editor&gt;
 &lt;/div&gt;
 </code></pre>
     </div>
@@ -308,22 +480,25 @@ export class AppComponent {
                 <p class="comment">
                     <code>./app.component.scss</code>
                 </p>
-                <pre class="line-numbers"><code class="language-scss">.wrapper {
+                <pre class="line-numbers"><code class="language-scss">.demo {
   font-family: Helvetica, serif;
 
+  width: 100%;
+  max-height: 100vh;
+
+  padding: 2rem;
+
+  // Overflow pass
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  overflow: auto;
 
   .title {
-    text-align: center;
-
     font-size: 4rem;
     background: linear-gradient(45deg, #2f79c0, #00d4ff, #2f79c0);
     background-size: 200%;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: transparent;
 
     width: fit-content;
 
@@ -333,18 +508,18 @@ export class AppComponent {
     animation-iteration-count: infinite;
   }
 
-  &amp;:hover .title {
-    background-color: #f3f3f3;
+  .editor {
+    // Overflow pass
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
   }
 
   &amp; &gt; * {
     display: block;
-    margin: 1rem;
-    padding-block: 0.5rem;
-    width: 50%;
-    min-width: 600px;
+    margin: 1rem auto;
+    max-width: 1200px;
   }
-
 }
 
 @keyframes waves {
@@ -383,8 +558,8 @@ export class AppComponent {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="wrapper">  <span class="title">prosemirror-angular</span>  <app-text-editor [initialData]="initialData"></app-text-editor></div></div>'
-    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveLinkItemComponent', 'selector': 'app-menu-remove-link-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
+        var COMPONENT_TEMPLATE = '<div><div class="demo">  <span class="title">prosemirror-angular DEMO</span>  <app-text-editor class="editor" [initialData]="initialData"></app-text-editor></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuCreateTableElementItemComponent', 'selector': 'app-menu-create-table-element-item'},{'name': 'MenuCreateTableItemComponent', 'selector': 'app-menu-create-table-item'},{'name': 'MenuDeleteTableElementItemComponent', 'selector': 'app-menu-delete-table-element-item'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveElementItemComponent', 'selector': 'app-menu-remove-element-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'MenuToggleTableHeaderComponent', 'selector': 'app-menu-toggle-table-header-item'},{'name': 'MenuWrapItemComponent', 'selector': 'app-menu-wrap-item'},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
     var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'AppComponent'};
 </script>

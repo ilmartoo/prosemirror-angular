@@ -61,13 +61,13 @@
                 <td class="col-md-4">
                     <ul class="index-list">
                         <li>
-                            <a href="#activeMarksInCursorPosition" title="src/app/wysiwyg/utilities/marks-helper.ts" ><b>activeMarksInCursorPosition</b>&nbsp;&nbsp;&nbsp;(src/.../marks-helper.ts)</a>
-                        </li>
-                        <li>
                             <a href="#activeMarksInRange" title="src/app/wysiwyg/utilities/marks-helper.ts" ><b>activeMarksInRange</b>&nbsp;&nbsp;&nbsp;(src/.../marks-helper.ts)</a>
                         </li>
                         <li>
                             <a href="#activeMarksInSelection" title="src/app/wysiwyg/utilities/marks-helper.ts" ><b>activeMarksInSelection</b>&nbsp;&nbsp;&nbsp;(src/.../marks-helper.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#activeMarksInSelectionEnd" title="src/app/wysiwyg/utilities/marks-helper.ts" ><b>activeMarksInSelectionEnd</b>&nbsp;&nbsp;&nbsp;(src/.../marks-helper.ts)</a>
                         </li>
                         <li>
                             <a href="#addProps" title="src/app/wysiwyg/utilities/multipurpose-helper.ts" ><b>addProps</b>&nbsp;&nbsp;&nbsp;(src/.../multipurpose-helper.ts)</a>
@@ -76,13 +76,13 @@
                             <a href="#ancestorNodesAt" title="src/app/wysiwyg/utilities/nodes-helper.ts" ><b>ancestorNodesAt</b>&nbsp;&nbsp;&nbsp;(src/.../nodes-helper.ts)</a>
                         </li>
                         <li>
-                            <a href="#ancestorNodesInCursorPosition" title="src/app/wysiwyg/utilities/nodes-helper.ts" ><b>ancestorNodesInCursorPosition</b>&nbsp;&nbsp;&nbsp;(src/.../nodes-helper.ts)</a>
-                        </li>
-                        <li>
                             <a href="#ancestorNodesInRange" title="src/app/wysiwyg/utilities/nodes-helper.ts" ><b>ancestorNodesInRange</b>&nbsp;&nbsp;&nbsp;(src/.../nodes-helper.ts)</a>
                         </li>
                         <li>
                             <a href="#ancestorNodesInSelection" title="src/app/wysiwyg/utilities/nodes-helper.ts" ><b>ancestorNodesInSelection</b>&nbsp;&nbsp;&nbsp;(src/.../nodes-helper.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ancestorNodesInSelectionEnd" title="src/app/wysiwyg/utilities/nodes-helper.ts" ><b>ancestorNodesInSelectionEnd</b>&nbsp;&nbsp;&nbsp;(src/.../nodes-helper.ts)</a>
                         </li>
                         <li>
                             <a href="#areEquals" title="src/app/wysiwyg/utilities/multipurpose-helper.ts" ><b>areEquals</b>&nbsp;&nbsp;&nbsp;(src/.../multipurpose-helper.ts)</a>
@@ -103,7 +103,13 @@
                             <a href="#changeListType" title="src/app/wysiwyg/utilities/commands.ts" ><b>changeListType</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
                         </li>
                         <li>
+                            <a href="#createTable" title="src/app/wysiwyg/utilities/table-helper.ts" ><b>createTable</b>&nbsp;&nbsp;&nbsp;(src/.../table-helper.ts)</a>
+                        </li>
+                        <li>
                             <a href="#currentElementDecorator" title="src/app/wysiwyg/utilities/decorators.ts" ><b>currentElementDecorator</b>&nbsp;&nbsp;&nbsp;(src/.../decorators.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#executeAfter" title="src/app/wysiwyg/utilities/multipurpose-helper.ts" ><b>executeAfter</b>&nbsp;&nbsp;&nbsp;(src/.../multipurpose-helper.ts)</a>
                         </li>
                         <li>
                             <a href="#expandAndRemoveMarks" title="src/app/wysiwyg/utilities/commands.ts" ><b>expandAndRemoveMarks</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
@@ -139,6 +145,9 @@
                             <a href="#insertContent" title="src/app/wysiwyg/utilities/commands.ts" ><b>insertContent</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
                         </li>
                         <li>
+                            <a href="#insertTable" title="src/app/wysiwyg/utilities/commands.ts" ><b>insertTable</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
+                        </li>
+                        <li>
                             <a href="#isMarkActiveAt" title="src/app/wysiwyg/utilities/marks-helper.ts" ><b>isMarkActiveAt</b>&nbsp;&nbsp;&nbsp;(src/.../marks-helper.ts)</a>
                         </li>
                         <li>
@@ -164,6 +173,9 @@
                         </li>
                         <li>
                             <a href="#removeMarks" title="src/app/wysiwyg/utilities/commands.ts" ><b>removeMarks</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#repeat" title="src/app/wysiwyg/utilities/multipurpose-helper.ts" ><b>repeat</b>&nbsp;&nbsp;&nbsp;(src/.../multipurpose-helper.ts)</a>
                         </li>
                         <li>
                             <a href="#replaceWithMarkedText" title="src/app/wysiwyg/utilities/commands.ts" ><b>replaceWithMarkedText</b>&nbsp;&nbsp;&nbsp;(src/.../commands.ts)</a>
@@ -199,77 +211,6 @@
     <h3>src/app/wysiwyg/utilities/marks-helper.ts</h3>
     <section data-compodoc="block-methods">
     <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="activeMarksInCursorPosition"></a>
-                    <span class="name">
-                        <span ><b>activeMarksInCursorPosition</b></span>
-                        <a href="#activeMarksInCursorPosition"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>activeMarksInCursorPosition(state: EditorState)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Gets active marks for the current cursor position</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>state</td>
-                                    <td>
-                                            <code>EditorState</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>State of the editor</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Mark[]</code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>Array of active marks</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
@@ -395,6 +336,77 @@
             <tr>
                 <td class="col-md-4">
                     <div class="io-description"><p>Gets active marks for the current selection</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                            <code>EditorState</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>State of the editor</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Mark[]</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Array of active marks</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeMarksInSelectionEnd"></a>
+                    <span class="name">
+                        <span ><b>activeMarksInSelectionEnd</b></span>
+                        <a href="#activeMarksInSelectionEnd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>activeMarksInSelectionEnd(state: EditorState)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Gets active marks for the current cursor position</p>
 </div>
 
                     <div class="io-description">
@@ -1568,6 +1580,158 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="executeAfter"></a>
+                    <span class="name">
+                        <span ><b>executeAfter</b></span>
+                        <a href="#executeAfter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>executeAfter(func)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Delays the execution of the function to the next possible time frame</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>func</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Function to execute</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="repeat"></a>
+                    <span class="name">
+                        <span ><b>repeat</b></span>
+                        <a href="#repeat"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>repeat(arr, n: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Repeats an array the given times. It creates a new array.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>arr</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Array to repeat</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>n</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Times to repeat</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>T[]</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>New array contained the elements from arr repeated n times</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>src/app/wysiwyg/utilities/nodes-helper.ts</h3>
     <section data-compodoc="block-methods">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -1635,77 +1799,6 @@
                     </div>
                     <div class="io-description">
                         <p>List of all ancestors at the given position</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="ancestorNodesInCursorPosition"></a>
-                    <span class="name">
-                        <span ><b>ancestorNodesInCursorPosition</b></span>
-                        <a href="#ancestorNodesInCursorPosition"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>ancestorNodesInCursorPosition(state: EditorState)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Gets ancestor nodes for the current cursor position</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>state</td>
-                                    <td>
-                                            <code>EditorState</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>State of the editor</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ExtendedNode" target="_self" >ExtendedNode[]</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>Ancestor nodes at cursor position</p>
 
                     </div>
                 </td>
@@ -1880,6 +1973,77 @@
                     </div>
                     <div class="io-description">
                         <p>Array of active nodes</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ancestorNodesInSelectionEnd"></a>
+                    <span class="name">
+                        <span ><b>ancestorNodesInSelectionEnd</b></span>
+                        <a href="#ancestorNodesInSelectionEnd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ancestorNodesInSelectionEnd(state: EditorState)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Gets ancestor nodes for the current cursor position</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                            <code>EditorState</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>State of the editor</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ExtendedNode" target="_self" >ExtendedNode[]</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Ancestor nodes at cursor position</p>
 
                     </div>
                 </td>
@@ -2374,6 +2538,8 @@
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Expands the selected marks and mark types into individual ranges and removes them from the expanded ranges</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -2384,6 +2550,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2398,6 +2565,10 @@
                                     </td>
 
 
+                                    <td>
+                                        <p>Position to start the range expansion</p>
+
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>marks</td>
@@ -2409,11 +2580,23 @@
                                     </td>
 
 
+                                    <td>
+                                        <p>Marks and mark types to expand and remove</p>
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Command</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Command remove the marks and mark types from the expanded ranges</p>
+
                     </div>
                 </td>
             </tr>
@@ -2499,6 +2682,109 @@
                     </div>
                     <div class="io-description">
                         <p>Command to insert the content at the given position</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insertTable"></a>
+                    <span class="name">
+                        <span ><b>insertTable</b></span>
+                        <a href="#insertTable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>insertTable(at: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, rows: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, cols: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Creates a table at a specified position</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>at</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Position to insert the table at</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>rows</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Number of rows of the table</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>cols</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Number of columns of the table</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Command</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Command to insert a table with the given dimensions at the specified position of the document</p>
 
                     </div>
                 </td>
@@ -2840,6 +3126,96 @@ that are currently active will be removed and replaced with these</p>
                     </div>
                     <div class="io-description">
                         <p>Command to select the text between the given positions</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/wysiwyg/utilities/table-helper.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createTable"></a>
+                    <span class="name">
+                        <span ><b>createTable</b></span>
+                        <a href="#createTable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>createTable(rows: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, cols: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Creates a table with the specified rows and columns.
+If the number of rows or columns is 0 or less, an empty table is created.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>rows</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Number of rows</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>cols</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Number of columns</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>ProseNode</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Table node with the specified dimensions</p>
 
                     </div>
                 </td>

@@ -227,8 +227,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="35"
-                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:35</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="38"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:38</a></div>
                 </td>
             </tr>
 
@@ -268,8 +268,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:63</a></div>
                 </td>
             </tr>
 
@@ -300,15 +300,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(view: EditorView)</code>
+                    <code>update(view: EditorView, prevState?: EditorState)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="46"
-                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:46</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:53</a></div>
                 </td>
             </tr>
 
@@ -336,6 +336,18 @@
 
                                     <td>
                                         No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>prevState</td>
+                                    <td>
+                                            <code>EditorState</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
                                     </td>
 
 
@@ -378,8 +390,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="59"
-                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:59</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="71"
+                            class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:71</a></div>
                 </td>
             </tr>
 
@@ -455,7 +467,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -491,7 +503,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:24</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:27</a></div>
                         </td>
                     </tr>
 
@@ -519,7 +531,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/wysiwyg/menu/menu.component.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -535,16 +547,19 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {Component, QueryList, ViewChildren} from &#x27;@angular/core&#x27;;
 import {MenuItemComponent} from &#x27;../menu-item/menu-item.component&#x27;;
 import {EditorView} from &#x27;prosemirror-view&#x27;;
-import {Plugin, PluginView} from &#x27;prosemirror-state&#x27;;
-import {Mark, Node as ProseNode} from &#x27;prosemirror-model&#x27;;
+import {EditorState, Plugin, PluginView} from &#x27;prosemirror-state&#x27;;
+import {Mark} from &#x27;prosemirror-model&#x27;;
 import {customSchema} from &#x27;../text-editor/custom-schema&#x27;;
-import {activeMarksInSelection} from &quot;../utilities/marks-helper&quot;;
-import {ancestorNodesInSelection} from &quot;../utilities/nodes-helper&quot;;
+import {activeMarksInSelectionEnd} from &quot;../utilities/marks-helper&quot;;
+import {ancestorNodesInSelectionEnd, ExtendedNode} from &quot;../utilities/nodes-helper&quot;;
+import {fixTables} from &#x27;prosemirror-tables&#x27;;
+import {executeAfter} from &#x27;../utilities/multipurpose-helper&#x27;;
 
 
-export type EditorSelectionActiveElements &#x3D; {
+// TODO: Let it be an dictionary as { [markTypeName: string]: Mark[], [nodeTypeName: string]: ProseNode[] }
+export type EditorHeadSelectionActiveElements &#x3D; {
   marks: Mark[],
-  nodes: ProseNode[],
+  nodes: ExtendedNode[],
 };
 
 
@@ -572,13 +587,22 @@ export class MenuComponent implements PluginView {
     return new Plugin({
       view(view: EditorView): PluginView {
         editorMenu.view &#x3D; view;
+
+        // Delays the execution of the update to a time when the view has been updated &amp; the menu items are displayed
+        executeAfter(() &#x3D;&gt; editorMenu.update(view));
+
         return editorMenu;
       },
     })
   }
 
-  public update(view: EditorView): void {
+  public update(view: EditorView, prevState?: EditorState): void {
     this.view &#x3D; view;
+
+    // Fix for the tables if needed
+    const trTableFix &#x3D; fixTables(view.state, prevState);
+    if (trTableFix) { view.dispatch(trTableFix); }
+
     this.updateItemStatuses(view);
   }
 
@@ -592,9 +616,9 @@ export class MenuComponent implements PluginView {
    */
   public updateItemStatuses(view: EditorView): void {
     const state &#x3D; view.state;
-    const updateData: EditorSelectionActiveElements &#x3D; {
-      marks: activeMarksInSelection(state),
-      nodes: ancestorNodesInSelection(state),
+    const updateData: EditorHeadSelectionActiveElements &#x3D; {
+      marks: activeMarksInSelectionEnd(state),
+      nodes: ancestorNodesInSelectionEnd(state),
     };
 
     this.items.forEach(item &#x3D;&gt; item.update(view, updateData));
@@ -604,100 +628,158 @@ export class MenuComponent implements PluginView {
     </div>
 
     <div class="tab-pane fade " id="templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;menu&quot; *ngIf&#x3D;&quot;view&quot;&gt;
-  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.strong&quot;
-                      icon&#x3D;&quot;bold&quot;
-                      tooltip&#x3D;&quot;Bold&quot;
-  &gt;&lt;/app-menu-mark-item&gt;
-  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.em&quot;
-                      icon&#x3D;&quot;italic&quot;
-                      tooltip&#x3D;&quot;Italic&quot;
-  &gt;&lt;/app-menu-mark-item&gt;
-  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.underline&quot;
-                      icon&#x3D;&quot;underline&quot;
-                      tooltip&#x3D;&quot;Underline&quot;
-  &gt;&lt;/app-menu-mark-item&gt;
-  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.strikethrough&quot;
-                      icon&#x3D;&quot;strikethrough&quot;
-                      tooltip&#x3D;&quot;Strikethrough&quot;
-  &gt;&lt;/app-menu-mark-item&gt;
-  &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.code&quot;
-                      icon&#x3D;&quot;code&quot;
-                      tooltip&#x3D;&quot;Inline code&quot;
-  &gt;&lt;/app-menu-mark-item&gt;
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;menu&quot;&gt;
+  &lt;ng-container *ngIf&#x3D;&quot;view&quot;&gt;
+    &lt;div class&#x3D;&quot;section&quot;&gt;
+      &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.strong&quot;
+                          payload&#x3D;&quot;bold&quot;
+                          tooltip&#x3D;&quot;Bold&quot;
+      &gt;&lt;/app-menu-mark-item&gt;
+      &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.em&quot;
+                          payload&#x3D;&quot;italic&quot;
+                          tooltip&#x3D;&quot;Italic&quot;
+      &gt;&lt;/app-menu-mark-item&gt;
+      &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.underline&quot;
+                          payload&#x3D;&quot;underline&quot;
+                          tooltip&#x3D;&quot;Underline&quot;
+      &gt;&lt;/app-menu-mark-item&gt;
+      &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.strikethrough&quot;
+                          payload&#x3D;&quot;strikethrough&quot;
+                          tooltip&#x3D;&quot;Strikethrough&quot;
+      &gt;&lt;/app-menu-mark-item&gt;
+      &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.superscript&quot;
+                          payload&#x3D;&quot;superscript&quot;
+                          tooltip&#x3D;&quot;Superscript&quot;
+      &gt;&lt;/app-menu-mark-item&gt;
+      &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.subscript&quot;
+                          payload&#x3D;&quot;subscript&quot;
+                          tooltip&#x3D;&quot;Subscript&quot;
+      &gt;&lt;/app-menu-mark-item&gt;
+      &lt;app-menu-mark-item [type]&#x3D;&quot;customSchema.marks.code&quot;
+                          payload&#x3D;&quot;code&quot;
+                          tooltip&#x3D;&quot;Inline code&quot;
+      &gt;&lt;/app-menu-mark-item&gt;
+    &lt;/div&gt;
 
-  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
+    &lt;div class&#x3D;&quot;section&quot;&gt;
+      &lt;app-menu-link-item payload&#x3D;&quot;link&quot;
+                          tooltip&#x3D;&quot;Hyperlink&quot;
+      &gt;&lt;/app-menu-link-item&gt;
+      &lt;app-menu-remove-element-item [type]&#x3D;&quot;customSchema.marks.link&quot;
+                                    payload&#x3D;&quot;link-remove&quot;
+                                    tooltip&#x3D;&quot;Delete hyperlink&quot;
+      &gt;&lt;/app-menu-remove-element-item&gt;
+      &lt;app-menu-image-item payload&#x3D;&quot;image&quot;
+                           tooltip&#x3D;&quot;Add image&quot;
+      &gt;&lt;/app-menu-image-item&gt;
+    &lt;/div&gt;
 
-  &lt;app-menu-link-item icon&#x3D;&quot;link&quot;
-                      tooltip&#x3D;&quot;Hyperlink&quot;
-  &gt;&lt;/app-menu-link-item&gt;
-  &lt;app-menu-remove-link-item icon&#x3D;&quot;remove_link&quot;
-                             tooltip&#x3D;&quot;Delete hyperlink&quot;
-  &gt;&lt;/app-menu-remove-link-item&gt;
+    &lt;div class&#x3D;&quot;section&quot;&gt;
+      &lt;app-menu-create-table-item payload&#x3D;&quot;table-plus&quot;
+                                  tooltip&#x3D;&quot;Create table&quot;
+      &gt;&lt;/app-menu-create-table-item&gt;
+      &lt;app-menu-remove-element-item [type]&#x3D;&quot;customSchema.nodes.table&quot;
+                                    payload&#x3D;&quot;table-remove&quot;
+                                    tooltip&#x3D;&quot;Delete table&quot;
+      &gt;&lt;/app-menu-remove-element-item&gt;
+      &lt;app-menu-create-table-element-item [isColumn]&#x3D;&quot;true&quot;
+                                          [isAfter]&#x3D;&quot;false&quot;
+                                          payload&#x3D;&quot;table-column-plus-before&quot;
+                                          tooltip&#x3D;&quot;Add column before&quot;
+      &gt;&lt;/app-menu-create-table-element-item&gt;
+      &lt;app-menu-create-table-element-item [isColumn]&#x3D;&quot;true&quot;
+                                          [isAfter]&#x3D;&quot;true&quot;
+                                          payload&#x3D;&quot;table-column-plus-after&quot;
+                                          tooltip&#x3D;&quot;Add column after&quot;
+      &gt;&lt;/app-menu-create-table-element-item&gt;
+      &lt;app-menu-delete-table-element-item [isColumn]&#x3D;&quot;true&quot;
+                                          payload&#x3D;&quot;table-column-remove&quot;
+                                          tooltip&#x3D;&quot;Delete column&quot;
+      &gt;&lt;/app-menu-delete-table-element-item&gt;
+      &lt;app-menu-create-table-element-item [isColumn]&#x3D;&quot;false&quot;
+                                          [isAfter]&#x3D;&quot;false&quot;
+                                          payload&#x3D;&quot;table-row-plus-before&quot;
+                                          tooltip&#x3D;&quot;Add row before&quot;
+      &gt;&lt;/app-menu-create-table-element-item&gt;
+      &lt;app-menu-create-table-element-item [isColumn]&#x3D;&quot;false&quot;
+                                          [isAfter]&#x3D;&quot;true&quot;
+                                          payload&#x3D;&quot;table-row-plus-after&quot;
+                                          tooltip&#x3D;&quot;Add row after&quot;
+      &gt;&lt;/app-menu-create-table-element-item&gt;
+      &lt;app-menu-delete-table-element-item [isColumn]&#x3D;&quot;false&quot;
+                                          payload&#x3D;&quot;table-row-remove&quot;
+                                          tooltip&#x3D;&quot;Delete row&quot;
+      &gt;&lt;/app-menu-delete-table-element-item&gt;
+      &lt;app-menu-toggle-table-header-item headerType&#x3D;&quot;CELL&quot;
+                                         payload&#x3D;&quot;table-header&quot;
+                                         tooltip&#x3D;&quot;Toggle header cell&quot;
+      &gt;&lt;/app-menu-toggle-table-header-item&gt;
+      &lt;app-menu-toggle-table-header-item headerType&#x3D;&quot;ROW&quot;
+                                         payload&#x3D;&quot;table-row-header&quot;
+                                         tooltip&#x3D;&quot;Toggle header row&quot;
+      &gt;&lt;/app-menu-toggle-table-header-item&gt;
+      &lt;app-menu-toggle-table-header-item headerType&#x3D;&quot;COLUMN&quot;
+                                         payload&#x3D;&quot;table-column-header&quot;
+                                         tooltip&#x3D;&quot;Toggle header column&quot;
+      &gt;&lt;/app-menu-toggle-table-header-item&gt;
+    &lt;/div&gt;
 
-  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
+    &lt;div class&#x3D;&quot;section&quot;&gt;
+      &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.paragraph&quot;
+                          payload&#x3D;&quot;paragraph&quot;
+                          tooltip&#x3D;&quot;Paragraph&quot;
+      &gt;&lt;/app-menu-node-item&gt;
+      &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
+                          [attrs]&#x3D;&quot;{ level: 1 }&quot;
+                          payload&#x3D;&quot;header1&quot;
+                          tooltip&#x3D;&quot;Header 1&quot;
+      &gt;&lt;/app-menu-node-item&gt;
+      &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
+                          [attrs]&#x3D;&quot;{ level: 2 }&quot;
+                          payload&#x3D;&quot;header2&quot;
+                          tooltip&#x3D;&quot;Header 2&quot;
+      &gt;&lt;/app-menu-node-item&gt;
+      &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
+                          [attrs]&#x3D;&quot;{ level: 3 }&quot;
+                          payload&#x3D;&quot;header3&quot;
+                          tooltip&#x3D;&quot;Header 3&quot;
+      &gt;&lt;/app-menu-node-item&gt;
+      &lt;app-menu-wrap-item [type]&#x3D;&quot;customSchema.nodes.blockquote&quot;
+                          payload&#x3D;&quot;blockquote&quot;
+                          tooltip&#x3D;&quot;Quote text&quot;
+      &gt;&lt;/app-menu-wrap-item&gt;
+      &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.code_block&quot;
+                          payload&#x3D;&quot;code-block&quot;
+                          tooltip&#x3D;&quot;Code block&quot;
+      &gt;&lt;/app-menu-node-item&gt;
+    &lt;/div&gt;
 
-  &lt;app-menu-image-item icon&#x3D;&quot;image&quot;
-                       tooltip&#x3D;&quot;Add image&quot;
-  &gt;&lt;/app-menu-image-item&gt;
-
-  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
-
-  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.paragraph&quot;
-                      icon&#x3D;&quot;paragraph&quot;
-                      tooltip&#x3D;&quot;Text paragraph&quot;
-  &gt;&lt;/app-menu-node-item&gt;
-  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
-                      [attrs]&#x3D;&quot;{ level: 1 }&quot;
-                      icon&#x3D;&quot;header1&quot;
-                      tooltip&#x3D;&quot;Header 1&quot;
-  &gt;&lt;/app-menu-node-item&gt;
-  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
-                      [attrs]&#x3D;&quot;{ level: 2 }&quot;
-                      icon&#x3D;&quot;header2&quot;
-                      tooltip&#x3D;&quot;Header 2&quot;
-  &gt;&lt;/app-menu-node-item&gt;
-  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.heading&quot;
-                      [attrs]&#x3D;&quot;{ level: 3 }&quot;
-                      icon&#x3D;&quot;header3&quot;
-                      tooltip&#x3D;&quot;Header 3&quot;
-  &gt;&lt;/app-menu-node-item&gt;
-  &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.blockquote&quot;
-                      icon&#x3D;&quot;blockquote&quot;
-                      tooltip&#x3D;&quot;Quote text&quot;
-  &gt;&lt;/app-menu-list-item&gt;
-  &lt;app-menu-node-item [type]&#x3D;&quot;customSchema.nodes.code_block&quot;
-                      icon&#x3D;&quot;code_block&quot;
-                      tooltip&#x3D;&quot;Code block&quot;
-  &gt;&lt;/app-menu-node-item&gt;
-
-  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
-
-  &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.bullet_list&quot;
-                      icon&#x3D;&quot;bullet_list&quot;
-                      tooltip&#x3D;&quot;Bullet list&quot;
-  &gt;&lt;/app-menu-list-item&gt;
-  &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.ordered_list&quot;
-                      icon&#x3D;&quot;ordered_list&quot;
-                      tooltip&#x3D;&quot;Ordered list&quot;
-  &gt;&lt;/app-menu-list-item&gt;
-  &lt;!--  &lt;app-menu-item [type]&#x3D;&quot;view.state.schema.nodes[&#x27;checklist&#x27;]&quot;--&gt;
-  &lt;!--                        [status]&#x3D;&quot;getNodeStatus(&#x27;checklist&#x27;)&quot;--&gt;
-  &lt;!--                        icon&#x3D;&quot;checklist&quot;--&gt;
-  &lt;!--                        tooltip&#x3D;&quot;Checklist&quot;--&gt;
-  &lt;!--  &gt;&lt;/app-menu-item&gt;--&gt;
-
-  &lt;div class&#x3D;&quot;separator&quot;&gt;&lt;/div&gt;
-
-  &lt;app-menu-indent-item [isIncrease]&#x3D;&quot;false&quot;
-                        icon&#x3D;&quot;indent_decrease&quot;
-                        tooltip&#x3D;&quot;Decrease indent&quot;
-  &gt;&lt;/app-menu-indent-item&gt;
-  &lt;app-menu-indent-item [isIncrease]&#x3D;&quot;true&quot;
-                        icon&#x3D;&quot;indent_increase&quot;
-                        tooltip&#x3D;&quot;Increase indent&quot;
-  &gt;&lt;/app-menu-indent-item&gt;
+    &lt;div class&#x3D;&quot;section&quot;&gt;
+      &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.bullet_list&quot;
+                          payload&#x3D;&quot;list-bullet&quot;
+                          tooltip&#x3D;&quot;Bullet list&quot;
+      &gt;&lt;/app-menu-list-item&gt;
+      &lt;app-menu-list-item [type]&#x3D;&quot;customSchema.nodes.ordered_list&quot;
+                          payload&#x3D;&quot;list-ordered&quot;
+                          tooltip&#x3D;&quot;Ordered list&quot;
+      &gt;&lt;/app-menu-list-item&gt;
+      &lt;!--  &lt;app-menu-item [type]&#x3D;&quot;view.state.schema.nodes[&#x27;checklist&#x27;]&quot;--&gt;
+      &lt;!--                        [status]&#x3D;&quot;getNodeStatus(&#x27;checklist&#x27;)&quot;--&gt;
+      &lt;!--                        icon&#x3D;&quot;list-check&quot;--&gt;
+      &lt;!--                        tooltip&#x3D;&quot;Checklist&quot;--&gt;
+      &lt;!--  &gt;&lt;/app-menu-item&gt;--&gt;
+      &lt;app-menu-indent-item [isIncrease]&#x3D;&quot;false&quot;
+                            payload&#x3D;&quot;indent-decrease&quot;
+                            tooltip&#x3D;&quot;Decrease indent&quot;
+      &gt;&lt;/app-menu-indent-item&gt;
+      &lt;app-menu-indent-item [isIncrease]&#x3D;&quot;true&quot;
+                            payload&#x3D;&quot;indent-increase&quot;
+                            tooltip&#x3D;&quot;Increase indent&quot;
+      &gt;&lt;/app-menu-indent-item&gt;
+    &lt;/div&gt;
+  &lt;/ng-container&gt;
 &lt;/div&gt;
+
 </code></pre>
     </div>
 
@@ -707,17 +789,26 @@ export class MenuComponent implements PluginView {
                 </p>
                 <pre class="line-numbers"><code class="language-scss">.menu {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.075rem;
+  row-gap: 0.3rem;
 
-  .separator {
-    height: 0.25rem;
-    width: 0.25rem;
+  min-height: 1.5rem;
+  width: 100%;
 
-    margin: 0 auto;
+  .section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-    border-radius: 100%;
-    background-color: #172b4d;
+    &amp;:not(:last-of-type) {
+      border-right: 1px solid black;
+      padding-right: 0.3rem;
+    }
+
+    &amp;:not(:first-of-type) {
+      padding-left: 0.3rem;
+    }
   }
 }
 </code></pre>
@@ -748,8 +839,8 @@ export class MenuComponent implements PluginView {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="menu" *ngIf="view">  <app-menu-mark-item [type]="customSchema.marks.strong"                      icon="bold"                      tooltip="Bold"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.em"                      icon="italic"                      tooltip="Italic"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.underline"                      icon="underline"                      tooltip="Underline"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.strikethrough"                      icon="strikethrough"                      tooltip="Strikethrough"  ></app-menu-mark-item>  <app-menu-mark-item [type]="customSchema.marks.code"                      icon="code"                      tooltip="Inline code"  ></app-menu-mark-item>  <div class="separator"></div>  <app-menu-link-item icon="link"                      tooltip="Hyperlink"  ></app-menu-link-item>  <app-menu-remove-link-item icon="remove_link"                             tooltip="Delete hyperlink"  ></app-menu-remove-link-item>  <div class="separator"></div>  <app-menu-image-item icon="image"                       tooltip="Add image"  ></app-menu-image-item>  <div class="separator"></div>  <app-menu-node-item [type]="customSchema.nodes.paragraph"                      icon="paragraph"                      tooltip="Text paragraph"  ></app-menu-node-item>  <app-menu-node-item [type]="customSchema.nodes.heading"                      [attrs]="{ level: 1 }"                      icon="header1"                      tooltip="Header 1"  ></app-menu-node-item>  <app-menu-node-item [type]="customSchema.nodes.heading"                      [attrs]="{ level: 2 }"                      icon="header2"                      tooltip="Header 2"  ></app-menu-node-item>  <app-menu-node-item [type]="customSchema.nodes.heading"                      [attrs]="{ level: 3 }"                      icon="header3"                      tooltip="Header 3"  ></app-menu-node-item>  <app-menu-list-item [type]="customSchema.nodes.blockquote"                      icon="blockquote"                      tooltip="Quote text"  ></app-menu-list-item>  <app-menu-node-item [type]="customSchema.nodes.code_block"                      icon="code_block"                      tooltip="Code block"  ></app-menu-node-item>  <div class="separator"></div>  <app-menu-list-item [type]="customSchema.nodes.bullet_list"                      icon="bullet_list"                      tooltip="Bullet list"  ></app-menu-list-item>  <app-menu-list-item [type]="customSchema.nodes.ordered_list"                      icon="ordered_list"                      tooltip="Ordered list"  ></app-menu-list-item>  <!--  <app-menu-item [type]="view.state.schema.nodes[\'checklist\']"-->  <!--                        [status]="getNodeStatus(\'checklist\')"-->  <!--                        icon="checklist"-->  <!--                        tooltip="Checklist"-->  <!--  ></app-menu-item>-->  <div class="separator"></div>  <app-menu-indent-item [isIncrease]="false"                        icon="indent_decrease"                        tooltip="Decrease indent"  ></app-menu-indent-item>  <app-menu-indent-item [isIncrease]="true"                        icon="indent_increase"                        tooltip="Increase indent"  ></app-menu-indent-item></div></div>'
-    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveLinkItemComponent', 'selector': 'app-menu-remove-link-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
+        var COMPONENT_TEMPLATE = '<div><div class="menu">  <ng-container *ngIf="view">    <div class="section">      <app-menu-mark-item [type]="customSchema.marks.strong"                          payload="bold"                          tooltip="Bold"      ></app-menu-mark-item>      <app-menu-mark-item [type]="customSchema.marks.em"                          payload="italic"                          tooltip="Italic"      ></app-menu-mark-item>      <app-menu-mark-item [type]="customSchema.marks.underline"                          payload="underline"                          tooltip="Underline"      ></app-menu-mark-item>      <app-menu-mark-item [type]="customSchema.marks.strikethrough"                          payload="strikethrough"                          tooltip="Strikethrough"      ></app-menu-mark-item>      <app-menu-mark-item [type]="customSchema.marks.superscript"                          payload="superscript"                          tooltip="Superscript"      ></app-menu-mark-item>      <app-menu-mark-item [type]="customSchema.marks.subscript"                          payload="subscript"                          tooltip="Subscript"      ></app-menu-mark-item>      <app-menu-mark-item [type]="customSchema.marks.code"                          payload="code"                          tooltip="Inline code"      ></app-menu-mark-item>    </div>    <div class="section">      <app-menu-link-item payload="link"                          tooltip="Hyperlink"      ></app-menu-link-item>      <app-menu-remove-element-item [type]="customSchema.marks.link"                                    payload="link-remove"                                    tooltip="Delete hyperlink"      ></app-menu-remove-element-item>      <app-menu-image-item payload="image"                           tooltip="Add image"      ></app-menu-image-item>    </div>    <div class="section">      <app-menu-create-table-item payload="table-plus"                                  tooltip="Create table"      ></app-menu-create-table-item>      <app-menu-remove-element-item [type]="customSchema.nodes.table"                                    payload="table-remove"                                    tooltip="Delete table"      ></app-menu-remove-element-item>      <app-menu-create-table-element-item [isColumn]="true"                                          [isAfter]="false"                                          payload="table-column-plus-before"                                          tooltip="Add column before"      ></app-menu-create-table-element-item>      <app-menu-create-table-element-item [isColumn]="true"                                          [isAfter]="true"                                          payload="table-column-plus-after"                                          tooltip="Add column after"      ></app-menu-create-table-element-item>      <app-menu-delete-table-element-item [isColumn]="true"                                          payload="table-column-remove"                                          tooltip="Delete column"      ></app-menu-delete-table-element-item>      <app-menu-create-table-element-item [isColumn]="false"                                          [isAfter]="false"                                          payload="table-row-plus-before"                                          tooltip="Add row before"      ></app-menu-create-table-element-item>      <app-menu-create-table-element-item [isColumn]="false"                                          [isAfter]="true"                                          payload="table-row-plus-after"                                          tooltip="Add row after"      ></app-menu-create-table-element-item>      <app-menu-delete-table-element-item [isColumn]="false"                                          payload="table-row-remove"                                          tooltip="Delete row"      ></app-menu-delete-table-element-item>      <app-menu-toggle-table-header-item headerType="CELL"                                         payload="table-header"                                         tooltip="Toggle header cell"      ></app-menu-toggle-table-header-item>      <app-menu-toggle-table-header-item headerType="ROW"                                         payload="table-row-header"                                         tooltip="Toggle header row"      ></app-menu-toggle-table-header-item>      <app-menu-toggle-table-header-item headerType="COLUMN"                                         payload="table-column-header"                                         tooltip="Toggle header column"      ></app-menu-toggle-table-header-item>    </div>    <div class="section">      <app-menu-node-item [type]="customSchema.nodes.paragraph"                          payload="paragraph"                          tooltip="Paragraph"      ></app-menu-node-item>      <app-menu-node-item [type]="customSchema.nodes.heading"                          [attrs]="{ level: 1 }"                          payload="header1"                          tooltip="Header 1"      ></app-menu-node-item>      <app-menu-node-item [type]="customSchema.nodes.heading"                          [attrs]="{ level: 2 }"                          payload="header2"                          tooltip="Header 2"      ></app-menu-node-item>      <app-menu-node-item [type]="customSchema.nodes.heading"                          [attrs]="{ level: 3 }"                          payload="header3"                          tooltip="Header 3"      ></app-menu-node-item>      <app-menu-wrap-item [type]="customSchema.nodes.blockquote"                          payload="blockquote"                          tooltip="Quote text"      ></app-menu-wrap-item>      <app-menu-node-item [type]="customSchema.nodes.code_block"                          payload="code-block"                          tooltip="Code block"      ></app-menu-node-item>    </div>    <div class="section">      <app-menu-list-item [type]="customSchema.nodes.bullet_list"                          payload="list-bullet"                          tooltip="Bullet list"      ></app-menu-list-item>      <app-menu-list-item [type]="customSchema.nodes.ordered_list"                          payload="list-ordered"                          tooltip="Ordered list"      ></app-menu-list-item>      <!--  <app-menu-item [type]="view.state.schema.nodes[\'checklist\']"-->      <!--                        [status]="getNodeStatus(\'checklist\')"-->      <!--                        icon="list-check"-->      <!--                        tooltip="Checklist"-->      <!--  ></app-menu-item>-->      <app-menu-indent-item [isIncrease]="false"                            payload="indent-decrease"                            tooltip="Decrease indent"      ></app-menu-indent-item>      <app-menu-indent-item [isIncrease]="true"                            payload="indent-increase"                            tooltip="Increase indent"      ></app-menu-indent-item>    </div>  </ng-container></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuCreateTableElementItemComponent', 'selector': 'app-menu-create-table-element-item'},{'name': 'MenuCreateTableItemComponent', 'selector': 'app-menu-create-table-item'},{'name': 'MenuDeleteTableElementItemComponent', 'selector': 'app-menu-delete-table-element-item'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveElementItemComponent', 'selector': 'app-menu-remove-element-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'MenuToggleTableHeaderComponent', 'selector': 'app-menu-toggle-table-header-item'},{'name': 'MenuWrapItemComponent', 'selector': 'app-menu-wrap-item'},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
     var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'MenuComponent'};
 </script>

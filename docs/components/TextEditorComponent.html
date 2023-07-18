@@ -131,7 +131,7 @@ bloque (headers, blockquote, paragraph...)</p>
 
             <tr>
                 <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>./text-editor.component.scss</code></td>
+                <td class="col-md-9"><code>./text-editor-styles.scss,<br>./text-editor-content-styles.scss</code></td>
             </tr>
 
 
@@ -236,7 +236,7 @@ bloque (headers, blockquote, paragraph...)</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:40</a></div>
                             </td>
                         </tr>
 
@@ -262,7 +262,7 @@ bloque (headers, blockquote, paragraph...)</p>
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:34</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:35</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -298,8 +298,8 @@ bloque (headers, blockquote, paragraph...)</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="58"
-                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:58</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:59</a></div>
                 </td>
             </tr>
 
@@ -339,8 +339,8 @@ bloque (headers, blockquote, paragraph...)</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="47"
-                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:47</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="48"
+                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:48</a></div>
                 </td>
             </tr>
 
@@ -376,8 +376,8 @@ bloque (headers, blockquote, paragraph...)</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="43"
-                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:43</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="44"
+                            class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:44</a></div>
                 </td>
             </tr>
 
@@ -428,7 +428,7 @@ bloque (headers, blockquote, paragraph...)</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -464,7 +464,7 @@ bloque (headers, blockquote, paragraph...)</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -491,7 +491,7 @@ bloque (headers, blockquote, paragraph...)</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/wysiwyg/text-editor/text-editor.component.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -514,7 +514,8 @@ import {EditorView} from &#x27;prosemirror-view&#x27;;
 import {MenuComponent} from &#x27;../menu/menu.component&#x27;;
 import {customSchema} from &#x27;./custom-schema&#x27;;
 import {decreaseIndent, increaseIndent, newBlock, newLine} from &#x27;../utilities/commands&#x27;;
-import {currentElementDecorator, selectedNodesDecorator} from &quot;../utilities/decorators&quot;;
+import {tableEditing} from &#x27;prosemirror-tables&#x27;;
+import {executeAfter} from &#x27;../utilities/multipurpose-helper&#x27;;
 
 
 /**
@@ -533,7 +534,7 @@ import {currentElementDecorator, selectedNodesDecorator} from &quot;../utilities
 @Component({
   selector: &#x27;app-text-editor&#x27;,
   templateUrl: &#x27;./text-editor.component.html&#x27;,
-  styleUrls: [&#x27;./text-editor.component.scss&#x27;],
+  styleUrls: [&#x27;./text-editor-styles.scss&#x27;, &#x27;./text-editor-content-styles.scss&#x27;],
   encapsulation: ViewEncapsulation.None // Needed in order to apply styles to ProseMirror dynamically added editor element
 })
 export class TextEditorComponent implements AfterViewInit {
@@ -583,12 +584,13 @@ export class TextEditorComponent implements AfterViewInit {
           &#x27;Shift-Tab&#x27;: decreaseIndent,
         }),
         this.menuRef.asPlugin(),   // Menu bar
-        currentElementDecorator(), // Decorator marking the current element
-        selectedNodesDecorator(),  // Decorator marking the selected nodes
+        // currentElementDecorator(), // Decorator marking the current element
+        // selectedNodesDecorator(),  // Decorator marking the selected nodes
+        tableEditing(),            // Table management
       ],
     })
 
-    setTimeout(() &#x3D;&gt; {
+    executeAfter(() &#x3D;&gt; {
       // View - Referencia al elemento introducido en el DOM
       this.view &#x3D; new EditorView(this.prosemirrorRef.nativeElement, {
         state: initialState,
@@ -600,131 +602,195 @@ export class TextEditorComponent implements AfterViewInit {
     </div>
 
     <div class="tab-pane fade " id="templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;!-- Editor menu --&gt;
-&lt;app-menu #menu&gt;&lt;/app-menu&gt;
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;text-editor&quot;&gt;
+  &lt;!-- Editor menu --&gt;
+  &lt;app-menu #menu&gt;&lt;/app-menu&gt;
 
-&lt;!-- Editor ProseMirror --&gt;
-&lt;div class&#x3D;&quot;__rich-text-editor&quot; #prosemirror&gt;&lt;/div&gt;
-
-&lt;!-- ProseMirror document --&gt;
-&lt;!--&lt;div *ngIf&#x3D;&quot;view?.state&quot;&gt;{{ view.state.doc }}&lt;/div&gt;--&gt;
+  &lt;!-- Editor ProseMirror --&gt;
+  &lt;div class&#x3D;&quot;__ProseMirror-text-editor&quot; #prosemirror&gt;&lt;/div&gt;
+&lt;/div&gt;
 </code></pre>
     </div>
 
     <div class="tab-pane fade " id="styleData">
                 <p class="comment">
-                    <code>./text-editor.component.scss</code>
+                    <code>./text-editor-styles.scss</code>
                 </p>
-                <pre class="line-numbers"><code class="language-scss">app-menu {
-  display: block;
-  margin-bottom: 0.5rem;
-}
+                <pre class="line-numbers"><code class="language-scss">.text-editor {
+  // Overflow pass
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 
-*:focus-visible {
-  outline: none;
-}
+  app-menu {
+    position: sticky;
+    top: 0;
 
-.__rich-text-editor {
+    display: block;
+    margin-bottom: 0.5rem;
 
-  &amp; &gt; .ProseMirror {
-    $color: #000;
-    color: $color;
+    background-color: white;
+  }
 
-    &amp;.ProseMirror-focused {
-      border: inherit;
-    }
+  *:focus-visible {
+    outline: none;
+  }
 
-    .selection {
-      text-decoration: underline wavy lightgrey;
-    }
+  .__ProseMirror-text-editor {
+    overflow: auto; // Element that scrolls
+    overflow-wrap: normal;
 
-    .current-element {
-      text-decoration: underline wavy #ff8080;
-    }
+    &amp; &gt; .ProseMirror {
 
-    * {
-      line-height: 1.5;
-      margin: 0.5rem 0;
-    }
+      &amp;.ProseMirror-focused {
+        border: inherit;
+      }
 
-    div.indent {
-      margin-left: 1rem;
-    }
+      .selection {
+        text-decoration: underline wavy lightgrey;
+      }
 
-    em,
-    i {
-      font-style: italic;
-    }
-
-    b,
-    strong {
-      font-weight: bold;
-    }
-
-    code {
-      font-size: 14px;
-      font-family: &#x27;Courier New&#x27;, &#x27;Courier&#x27;, &#x27;Lucida Sans Typewriter&#x27;, &#x27;Lucida Typewriter&#x27;, monospace;
-    }
-
-    *:not(pre) &gt; code {
-      color: #d04437;
-      background-color: #172b4d14;
-    }
-
-    pre:has(&gt; code) {
-      padding: 0.25rem 0.4rem;
-
-      background-color: #f5f5f5;
-    }
-
-    blockquote {
-      border-left: 0.25rem solid #EBECF0;
-      padding: 0.25rem 0 0.25rem 0.5rem;
-      color: rgba($color, 0.75);
-
-      *:not(pre) &gt; code {
-        color: rgba(#d04437, 0.75);
+      .current-element {
+        text-decoration: underline wavy #ff8080;
       }
     }
+  }
+}
+</code></pre>
+                <p class="comment">
+                    <code>./text-editor-content-styles.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.text-editor &gt; .__ProseMirror-text-editor &gt; .ProseMirror {
+  $color: #000;
+  color: $color;
+  line-height: 1.5;
 
-    pre:has(&gt; code),
-    blockquote {
-      margin: 0.5rem 0;
+  indent, h1, h2, h3, p, table, ol, ul,
+  pre:has(&gt; code), img, blockquote {
+    display: block;
+    margin: 0.5rem 0;
+  }
+
+  indent {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  em, i {
+    font-style: italic;
+  }
+
+  b, strong {
+    font-weight: bold;
+  }
+
+  sup, sub {
+    font-size: smaller;
+  }
+
+  code {
+    font-size: small;
+    font-family: &#x27;Courier New&#x27;, &#x27;Courier&#x27;, &#x27;Lucida Sans Typewriter&#x27;, &#x27;Lucida Typewriter&#x27;, monospace;
+  }
+
+  *:not(pre) &gt; code {
+    color: #d04437;
+    background-color: #172b4d14;
+    padding: 0.09375rem 0;
+  }
+
+  pre:has(&gt; code) {
+    padding: 0.25rem 0.4rem;
+    background-color: #f5f5f5;
+
+    overflow-x: auto;
+
+    code {
+      white-space: inherit;
     }
+  }
 
-    ol,
-    ul {
-      margin: 1rem 0 1rem 1.125rem;
+  &amp; &gt; blockquote {
+    opacity: 0.75;
+  }
+
+  blockquote {
+    border-left: 0.25rem solid #EBECF0;
+    padding: 0.25rem 0 0.25rem 0.5rem;
+  }
+
+  pre:has(&gt; code), blockquote {
+    margin: 0.5rem 0;
+  }
+
+  img {
+    max-height: 20rem;
+  }
+
+  h1, h2, h3 {
+    margin-top: 0.75rem;
+  }
+
+  h1 {
+    font-size: xx-large;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: x-large;
+    margin-bottom: 0.75rem;
+  }
+
+  h3 {
+    font-size: large;
+    margin-bottom: 0.5rem;
+  }
+
+  a {
+    color: #172b4d;
+    cursor: pointer;
+  }
+
+  ol, ul,
+  table {
+    margin: 1rem 0;
+  }
+
+  ol, ul {
+    padding-left: 1.125rem;
+
+    ol, ul {
+      margin: 0.5rem;
     }
+  }
 
-    img {
-      max-height: 20rem;
-    }
+  table {
+    display: table;
+    border-collapse: collapse;
+    table-layout: fixed;
 
-    h1,
-    h2,
-    h3 {
-      margin-top: 0.75rem;
-    }
+    max-width: 100%;
 
-    h1 {
-      font-size: xx-large;
-      margin-bottom: 1rem;
-    }
+    tr {
+      width: 100%;
+      min-height: 1rem;
 
-    h2 {
-      font-size: x-large;
-      margin-bottom: 0.75rem;
-    }
+      th {
+        font-weight: bold;
+      }
 
-    h3 {
-      font-size: large;
-      margin-bottom: 0.5rem;
-    }
+      td, th {
+        border: black solid 1px;
 
-    a {
-      color: #172b4d;
-      cursor: pointer;
+        min-width: 2.5rem;
+        max-width: 30rem;
+        min-height: 1rem;
+
+        margin: 0;
+        padding: 0.25rem 0.5rem;
+
+        overflow: auto;
+      }
     }
   }
 }
@@ -756,8 +822,8 @@ export class TextEditorComponent implements AfterViewInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><!-- Editor menu --><app-menu #menu></app-menu><!-- Editor ProseMirror --><div class="__rich-text-editor" #prosemirror></div><!-- ProseMirror document --><!--<div *ngIf="view?.state">{{ view.state.doc }}</div>--></div>'
-    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveLinkItemComponent', 'selector': 'app-menu-remove-link-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
+        var COMPONENT_TEMPLATE = '<div><div class="text-editor">  <!-- Editor menu -->  <app-menu #menu></app-menu>  <!-- Editor ProseMirror -->  <div class="__ProseMirror-text-editor" #prosemirror></div></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'MenuComponent', 'selector': 'app-menu'},{'name': 'MenuCreateTableElementItemComponent', 'selector': 'app-menu-create-table-element-item'},{'name': 'MenuCreateTableItemComponent', 'selector': 'app-menu-create-table-item'},{'name': 'MenuDeleteTableElementItemComponent', 'selector': 'app-menu-delete-table-element-item'},{'name': 'MenuImageItemComponent', 'selector': 'app-menu-image-item'},{'name': 'MenuIndentItemComponent', 'selector': 'app-menu-indent-item'},{'name': 'MenuItemComponent', 'selector': 'app-menu-item'},{'name': 'MenuLinkItemComponent', 'selector': 'app-menu-link-item'},{'name': 'MenuListItemComponent', 'selector': 'app-menu-list-item'},{'name': 'MenuMarkItemComponent', 'selector': 'app-menu-mark-item'},{'name': 'MenuNodeItemComponent', 'selector': 'app-menu-node-item'},{'name': 'MenuRemoveElementItemComponent', 'selector': 'app-menu-remove-element-item'},{'name': 'MenuSchemaItemComponent', 'selector': ''},{'name': 'MenuToggleTableHeaderComponent', 'selector': 'app-menu-toggle-table-header-item'},{'name': 'MenuWrapItemComponent', 'selector': 'app-menu-wrap-item'},{'name': 'TextEditorComponent', 'selector': 'app-text-editor'}];
     var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'TextEditorComponent'};
 </script>

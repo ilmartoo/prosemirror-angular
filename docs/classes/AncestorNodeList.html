@@ -447,8 +447,8 @@ export function ancestorNodesInRange(node: ProseNode, start: number, end: number
  * @param state State of the editor
  * @return Ancestor nodes at cursor position
  */
-export function ancestorNodesInCursorPosition(state: EditorState): ExtendedNode[] {
-  return ancestorNodesAt(state.selection.$from);
+export function ancestorNodesInSelectionEnd(state: EditorState): ExtendedNode[] {
+  return ancestorNodesAt(state.selection.$to);
 }
 
 /**
@@ -460,7 +460,7 @@ export function ancestorNodesInSelection(state: EditorState): ExtendedNode[] {
   const isEmpty &#x3D; state.selection.empty;
 
   if (isEmpty) {
-    return ancestorNodesInCursorPosition(state);
+    return ancestorNodesInSelectionEnd(state);
   } else {
     const $head &#x3D; state.selection.$head; // Dynamic end of the selection
     const $anchor &#x3D; state.selection.$anchor; // export function end of the selection
