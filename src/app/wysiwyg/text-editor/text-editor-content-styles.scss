@@ -2,6 +2,7 @@
   $color: #000;
   color: $color;
   line-height: 1.5;
+  text-align: left;
 
   indent, h1, h2, h3, p, table, ol, ul,
   pre:has(> code), img, blockquote {
@@ -11,7 +12,10 @@
 
   indent {
     margin: 0;
-    padding-left: 1rem;
+
+    $indent-base: 1.5rem;
+    --indent-level: 1;
+    padding-left: calc($indent-base * var(--indent-level));
   }
 
   em, i {

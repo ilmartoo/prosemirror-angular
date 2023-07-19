@@ -4,7 +4,7 @@
 
 import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
 import {Attrs, Fragment, Mark, MarkType, Node as ProseNode, NodeRange, NodeType} from 'prosemirror-model';
-import {customSchema} from '../text-editor/custom-schema';
+import {INDENT_LEVEL_STEP, NODE_TYPES} from '../text-editor/custom-schema';
 import {
   chainCommands,
   createParagraphNear,
@@ -15,8 +15,7 @@ import {
 } from 'prosemirror-commands';
 import {findWrapping} from 'prosemirror-transform';
 import {extendTransaction} from "./transactions-helper";
-import {areNodeTypesEquals, findAllAncestors, findAncestor} from "./nodes-helper";
-import {isValidContent} from "./node-content-helper";
+import {ancestorAt, areNodeTypesEquals, findAllAncestors, findAncestor, findAncestorOfType} from "./nodes-helper";
 import {expandMarkActiveRange, expandMarkTypeActiveRange} from './marks-helper';
 import {createTable} from './table-helper';
 
@@ -201,7 +200,7 @@ export function changeListType(listType: NodeType, attrs?: Attrs | null): Comman
     const $head = state.selection.$head;
 
     const isDifferentListType = (node: ProseNode): boolean => {
-      return areNodeTypesEquals(node.firstChild?.type, customSchema.nodes.list_item)
+      return areNodeTypesEquals(node.firstChild?.type, NODE_TYPES.list_item)
         && node.type.compatibleContent(listType)
     }
 
@@ -213,8 +212,8 @@ export function changeListType(listType: NodeType, attrs?: Attrs | null): Comman
       const tr = state.tr;
 
       const $anchor = state.selection.$anchor;
-      const from = listNode.start;
-      const to = listNode.nodeSize + listNode.start;
+      const from = listNode.before;
+      const to = listNode.nodeSize + listNode.before;
       const newList = listType.create(attrs, listNode.content);
 
       tr.replaceWith(from, to, newList);
@@ -237,18 +236,25 @@ export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
   const range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  const isIndentable = (node: ProseNode) => isValidContent(customSchema.nodes.indent, node);
-  const indentableNode = findAncestor(range.$from, isIndentable);
-  if (!indentableNode) { return false; } // Cancel if no indentable node is found
-
-  const wrapping = findWrapping(range, customSchema.nodes.indent);
-  if (!wrapping) { return false; } // Cancel if no wrapping is found
+  const wrapping = findWrapping(range, NODE_TYPES.indent);
+  if (!wrapping) { return false; } // Cancel if no valid wrapping is found
 
   if (dispatch) {
     const tr = extendTransaction(state.tr);
 
-    tr.wrap(range, wrapping);
-    tr.mapAndSelect($anchor.pos, $head.pos);
+    const parent = ancestorAt(range.$from, range.depth);
+    const isParentIndentNode = areNodeTypesEquals(parent.type, NODE_TYPES.indent)
+
+    // Update indent level if is already wrapped and is the only content of the indentation
+    if (isParentIndentNode && parent.content.size === range.end - range.start) {
+      const updatedLevel = parent.attrs['level'] + INDENT_LEVEL_STEP;
+      tr.setNodeAttribute(parent.before, 'level',  updatedLevel);
+    }
+    // Wrap in new indent otherwise
+    else {
+      tr.wrap(range, wrapping);
+      tr.mapAndSelect($anchor.pos, $head.pos);
+    }
 
     dispatch(tr.scrollIntoView());
   }
@@ -266,13 +272,19 @@ export const decreaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
   const range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  const indentNode = findAncestor(state.doc.resolve(range.$from.pos), (node) => node.type.name === customSchema.nodes.indent.name);
+  const indentNode = findAncestorOfType(range.$from, NODE_TYPES.indent);
   if (!indentNode) { return false; }
 
   if (dispatch) {
     const tr = extendTransaction(state.tr);
 
-    tr.unwrapNode(indentNode);
+    const updatedLevel = indentNode.attrs['level'] - INDENT_LEVEL_STEP;
+    if (updatedLevel > 0) {
+      tr.setNodeAttribute(indentNode.before, 'level',  updatedLevel);
+    }
+    else {
+      tr.unwrapNode(indentNode);
+    }
 
     dispatch(tr.scrollIntoView());
   }
@@ -290,7 +302,7 @@ export const increaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
   let range = $anchor.blockRange($head);
   if (!range) { return false; }
 
-  const isListItem = (node?: ProseNode | null) => areNodeTypesEquals(node?.type, customSchema.nodes.list_item);
+  const isListItem = (node?: ProseNode | null) => areNodeTypesEquals(node?.type, NODE_TYPES.list_item);
 
   const rangeParent = range.parent;
   let listNode: ProseNode;
@@ -338,7 +350,7 @@ export const decreaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
   let range = $anchor.blockRange($head);
   if (!range) { return false; }
 
-  const isListNode = (node: ProseNode): boolean => areNodeTypesEquals(node.firstChild?.type, customSchema.nodes.list_item);
+  const isListNode = (node: ProseNode): boolean => areNodeTypesEquals(node.firstChild?.type, NODE_TYPES.list_item);
 
   const listNodes = findAllAncestors(range.$from, isListNode, range.depth);
   if (listNodes.length < 2) { return false; } // Cancel if list does not have a parent list wrapping it
@@ -375,7 +387,7 @@ export const decreaseIndent: Command = chainCommands(decreaseListIndent, decreas
 export const newListItem: Command = (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
   const $from = state.selection.$from;
 
-  const isListNode = (node: ProseNode): boolean => areNodeTypesEquals(node.firstChild?.type, customSchema.nodes.list_item);
+  const isListNode = (node: ProseNode): boolean => areNodeTypesEquals(node.firstChild?.type, NODE_TYPES.list_item);
 
   const listNodeData = findAncestor($from, isListNode);
   if (!listNodeData) { return false; } // Cancel if list item different from listType exists
@@ -403,7 +415,7 @@ export const newLineText: Command = (state: EditorState, dispatch?: (tr: Transac
   if (dispatch) {
     const tr = state.tr;
 
-    tr.replaceSelectionWith(state.schema.node(customSchema.nodes.hard_break), true);
+    tr.replaceSelectionWith(state.schema.node(NODE_TYPES.hard_break), true);
 
     dispatch(tr.scrollIntoView());
   }

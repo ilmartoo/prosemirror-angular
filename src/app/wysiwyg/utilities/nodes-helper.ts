@@ -10,14 +10,26 @@ import {addProps, areEquals} from "./multipurpose-helper";
 export type NodeForLookup = ProseNode | { type: { name: string }, attrs?: Attrs };
 /** Alias for the needed NodeType elements to perform a ProseMirrorHelper node type lookup */
 export type NodeTypeForLookup = NodeType | { name: string };
-/**
- * Node data & position for helper functions
- */
-export type ExtendedNode = ProseNode & { start: number, depth: number };
-/**
- * Ancestor of a node
- */
-export type AncestorNode = ExtendedNode & { parent?: AncestorNode };
+/** Node data & position for helper functions */
+export type ExtendedNode = ProseNode & {
+  /** Position right before the start of the node */
+  readonly before: number,
+  /** Position at the start of the node */
+  readonly start: number,
+  /** Position at the end of the node */
+  readonly end: number,
+  /** Position right after the end of the node */
+  readonly after: number,
+  /** Depth of the node */
+  readonly depth: number,
+  /** Size of the node */
+  get size(): number;
+};
+/** Ancestor of a node */
+export type AncestorNode = ExtendedNode & {
+  /** Parent of the node */
+  readonly parent?: AncestorNode,
+};
 
 /** List to display & relate ancestors of a node */
 export class AncestorNodeList extends Array<AncestorNode> {
@@ -46,17 +58,31 @@ export class AncestorNodeList extends Array<AncestorNode> {
   private linkAncestors(ancestors: ExtendedNode[]): AncestorNode[] {
     const linkedAncestors: AncestorNode[] = [];
 
-    if (ancestors.length > 0) {
-      linkedAncestors.push(addProps<AncestorNode>(ancestors[0], {parent: undefined}));
-
-      for (let i = 1; i < ancestors.length; i++) {
-        linkedAncestors.push(addProps<AncestorNode>(ancestors[i], {parent: undefined}));
-        linkedAncestors[i - 1].parent = linkedAncestors[i];
-      }
+    for (let i = 0; i < ancestors.length; i++) {
+      linkedAncestors.push(addProps<AncestorNode>(ancestors[i], {parent: ancestors[i + 1]}));
     }
 
     return linkedAncestors;
   }
+}
+
+/**
+ * Extends the node
+ * @param node Node to extend
+ * @param $pos Position contained in the node
+ * @param depth Depth of the node
+ * @returns Reference to the extended node for chaining
+ */
+export function extendNode(node: ProseNode, $pos: ResolvedPos, depth: number): ExtendedNode {
+  const extendedNodeRef = node as ExtendedNode;
+  return addProps<ExtendedNode>(node, {
+    before: depth < 1 ? $pos.start(depth) : $pos.before(depth),
+    start: $pos.start(depth),
+    end: $pos.end(depth),
+    after: depth < 1 ? $pos.end(depth) : $pos.after(depth),
+    depth: depth,
+    get size() { return extendedNodeRef.before + extendedNodeRef.nodeSize; },
+  });
 }
 
 /**
@@ -67,7 +93,7 @@ export class AncestorNodeList extends Array<AncestorNode> {
 export function ancestorNodesAt($pos: ResolvedPos): ExtendedNode[] {
   const parents: ExtendedNode[] = [];
   for (let depth = $pos.depth; depth > 0; depth--) {
-    parents.push(addProps<ExtendedNode>($pos.node(depth), {start: $pos.start(depth), depth: depth}))
+    parents.push(extendNode($pos.node(depth), $pos, depth))
   }
   return parents;
 }
@@ -147,15 +173,26 @@ export function areNodeTypesEquals(a?: NodeTypeForLookup, b?: NodeTypeForLookup)
  * @returns Ancestor node that satisfies the condition or undefined if not found
  */
 export function findAncestor($pos: ResolvedPos,
-                             isValid: (node: ProseNode) => boolean,
-                             startDepth?: number): AncestorNode | undefined {
-  for (let depth = startDepth ?? $pos.depth; depth >= 0; depth--) {
+                             isValid: (node: ProseNode, depth: number) => boolean,
+                             startDepth: number = $pos.depth): ExtendedNode | undefined {
+  for (let depth = startDepth; depth >= 0; depth--) {
     const node = $pos.node(depth);
-    if (isValid(node)) {
-      return addProps<AncestorNode>(node, {start: $pos.before(depth), depth: depth});
+    if (isValid(node, depth)) {
+      return extendNode(node, $pos, depth);
     }
   }
   return undefined;
+}
+
+/**
+ * Searches for the closest ancestor node of the given type
+ * @param $pos Starting position for ancestor lookup
+ * @param type Node type to look for
+ * @param startDepth Starting depth to check from (default is $pos.depth)
+ * @returns Ancestor node of the given type or undefined if not found
+ */
+export function findAncestorOfType($pos: ResolvedPos, type: NodeTypeForLookup, startDepth?: number): ExtendedNode | undefined {
+  return findAncestor($pos, (node: ProseNode) => areNodeTypesEquals(node.type, type), startDepth);
 }
 
 /**
@@ -166,14 +203,24 @@ export function findAncestor($pos: ResolvedPos,
  * @returns Ancestor nodes that satisfies the condition or empty array if none found
  */
 export function findAllAncestors($pos: ResolvedPos,
-                                 isValid: (node: ProseNode) => boolean,
-                                 startDepth?: number): AncestorNodeList {
+                                 isValid: (node: ProseNode, depth: number) => boolean,
+                                 startDepth: number = $pos.depth): AncestorNodeList {
   const parents = new AncestorNodeList();
-  for (let depth = startDepth ?? $pos.depth; depth >= 0; depth--) {
+  for (let depth = startDepth; depth >= 0; depth--) {
     const node = $pos.node(depth);
-    if (isValid(node)) {
-      parents.push(addProps<ExtendedNode>(node, {start: $pos.before(depth), depth: depth}));
+    if (isValid(node, depth)) {
+      parents.push(extendNode(node, $pos, depth));
     }
   }
   return parents;
+}
+
+/**
+ * Retrieves the ancestor node at the given position with the given depth
+ * @param $pos Position for the ancestor retrieval
+ * @param depth Depth of the ancestor
+ * @returns Ancestor node at the given depth
+ */
+export function ancestorAt($pos: ResolvedPos, depth: number): ExtendedNode {
+  return extendNode($pos.node(depth), $pos, depth);
 }

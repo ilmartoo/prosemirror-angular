@@ -1,4 +1,4 @@
-import {Attrs, DOMOutputSpec, Mark, Schema} from 'prosemirror-model';
+import {Attrs, DOMOutputSpec, Schema} from 'prosemirror-model';
 import {schema} from 'prosemirror-schema-basic';
 import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
 
@@ -60,7 +60,9 @@ enum TableNodeSpecs {
 type CustomNodeSpec = SpecialNodeSpecs | TextContainerNodeSpecs | ListNodeSpecs | TableNodeSpecs;
 
 // DOM specs
-const indentDOM: DOMOutputSpec = ['indent', 0];
+const indentDOM: (level: number) => DOMOutputSpec = (level: number) => ['indent', { style: `--indent-level: ${level}` }, 0];
+
+const INDENT_LEVEL_STEP = 1;
 
 const customNodes = baseSchema.spec.nodes
 
@@ -96,10 +98,13 @@ const customNodes = baseSchema.spec.nodes
   .update(SpecialNodeSpecs.INDENT, {
     content: indentContent,
     group: blockGroup,
+    attrs: {
+      level: { default: INDENT_LEVEL_STEP },
+    },
     parseDOM: [
       { tag: 'indent' },
     ],
-    toDOM: (): DOMOutputSpec => indentDOM,
+    toDOM: (node): DOMOutputSpec => indentDOM(node.attrs['level']),
   });
 
 
@@ -181,7 +186,7 @@ const customMarks = baseSchema.spec.marks
         return { color: dom.style.color };
       },
     }],
-    toDOM: (mark: Mark): DOMOutputSpec => colorDOM(mark.attrs['color']),
+    toDOM: (mark): DOMOutputSpec => colorDOM(mark.attrs['color']),
   })
 
   // Background
@@ -193,7 +198,7 @@ const customMarks = baseSchema.spec.marks
         return { color: dom.style.color };
       },
     }],
-    toDOM: (mark: Mark): DOMOutputSpec => backgroundDOM(mark.attrs['color']),
+    toDOM: (mark): DOMOutputSpec => backgroundDOM(mark.attrs['color']),
   })
 
   // Superscript
@@ -243,3 +248,5 @@ export { CustomNodeSpec, SpecialNodeSpecs, TextContainerNodeSpecs, ListNodeSpecs
 export { CustomMarkSpec, SpecialMarkSpecs, DecorationMarkSpecs, StyleMarkSpecs }
 // Groups
 export { blockGroup, listGroup, listGroups }
+// Constants
+export { INDENT_LEVEL_STEP }

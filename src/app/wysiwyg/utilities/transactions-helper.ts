@@ -81,8 +81,8 @@ export function mapAndResolvePos(tr: Transaction | ExtendedTransaction, pos: num
 export function unwrapNode<T extends Transaction = Transaction>(tr: T, node: ExtendedNode): T {
   const {$anchor, $head} = tr.selection;
 
-  const from = node.start;
-  const to = node.start + node.nodeSize;
+  const from = node.before;
+  const to = node.before + node.nodeSize;
 
   // A wrapping node was replaced with its contents:
   // - Position before unwrapped node --> original position
