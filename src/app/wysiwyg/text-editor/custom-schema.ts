@@ -233,8 +233,11 @@ const customSchema = new Schema<CustomNodeSpec, CustomMarkSpec>({
   marks: customMarks,
 })
 
+const NODE_TYPES = customSchema.nodes;
+const MARK_TYPES = customSchema.marks;
+
 // Schema
-export { customNodes, customMarks, customSchema }
+export { customSchema, NODE_TYPES, MARK_TYPES }
 // Specs
 export { CustomNodeSpec, SpecialNodeSpecs, TextContainerNodeSpecs, ListNodeSpecs, TableNodeSpecs }
 export { CustomMarkSpec, SpecialMarkSpecs, DecorationMarkSpecs, StyleMarkSpecs }

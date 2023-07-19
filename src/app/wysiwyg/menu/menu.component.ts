@@ -3,7 +3,7 @@ import {MenuItemComponent} from '../menu-item/menu-item.component';
 import {EditorView} from 'prosemirror-view';
 import {EditorState, Plugin, PluginView} from 'prosemirror-state';
 import {Mark} from 'prosemirror-model';
-import {customSchema} from '../text-editor/custom-schema';
+import {MARK_TYPES, NODE_TYPES} from '../text-editor/custom-schema';
 import {activeMarksInSelectionEnd} from "../utilities/marks-helper";
 import {ancestorNodesInSelectionEnd, ExtendedNode} from "../utilities/nodes-helper";
 import {fixTables} from 'prosemirror-tables';
@@ -27,7 +27,8 @@ export class MenuComponent implements PluginView {
   @ViewChildren(MenuItemComponent) items!: QueryList<MenuItemComponent>;
 
   protected view?: EditorView;
-  protected readonly customSchema = customSchema;
+  protected readonly NODE_TYPES = NODE_TYPES;
+  protected readonly MARK_TYPES = MARK_TYPES;
 
   /******************* ProseMirror Plugin creation & PluginView methods *******************/
 

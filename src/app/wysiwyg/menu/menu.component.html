@@ -1,31 +1,31 @@
 <div class="menu">
   <ng-container *ngIf="view">
     <div class="section">
-      <app-menu-mark-item [type]="customSchema.marks.strong"
+      <app-menu-mark-item [type]="MARK_TYPES.strong"
                           payload="bold"
                           tooltip="Bold"
       ></app-menu-mark-item>
-      <app-menu-mark-item [type]="customSchema.marks.em"
+      <app-menu-mark-item [type]="MARK_TYPES.em"
                           payload="italic"
                           tooltip="Italic"
       ></app-menu-mark-item>
-      <app-menu-mark-item [type]="customSchema.marks.underline"
+      <app-menu-mark-item [type]="MARK_TYPES.underline"
                           payload="underline"
                           tooltip="Underline"
       ></app-menu-mark-item>
-      <app-menu-mark-item [type]="customSchema.marks.strikethrough"
+      <app-menu-mark-item [type]="MARK_TYPES.strikethrough"
                           payload="strikethrough"
                           tooltip="Strikethrough"
       ></app-menu-mark-item>
-      <app-menu-mark-item [type]="customSchema.marks.superscript"
+      <app-menu-mark-item [type]="MARK_TYPES.superscript"
                           payload="superscript"
                           tooltip="Superscript"
       ></app-menu-mark-item>
-      <app-menu-mark-item [type]="customSchema.marks.subscript"
+      <app-menu-mark-item [type]="MARK_TYPES.subscript"
                           payload="subscript"
                           tooltip="Subscript"
       ></app-menu-mark-item>
-      <app-menu-mark-item [type]="customSchema.marks.code"
+      <app-menu-mark-item [type]="MARK_TYPES.code"
                           payload="code"
                           tooltip="Inline code"
       ></app-menu-mark-item>
@@ -35,7 +35,7 @@
       <app-menu-link-item payload="link"
                           tooltip="Hyperlink"
       ></app-menu-link-item>
-      <app-menu-remove-element-item [type]="customSchema.marks.link"
+      <app-menu-remove-element-item [type]="MARK_TYPES.link"
                                     payload="link-remove"
                                     tooltip="Delete hyperlink"
       ></app-menu-remove-element-item>
@@ -48,7 +48,7 @@
       <app-menu-create-table-item payload="table-plus"
                                   tooltip="Create table"
       ></app-menu-create-table-item>
-      <app-menu-remove-element-item [type]="customSchema.nodes.table"
+      <app-menu-remove-element-item [type]="NODE_TYPES.table"
                                     payload="table-remove"
                                     tooltip="Delete table"
       ></app-menu-remove-element-item>
@@ -95,41 +95,41 @@
     </div>
 
     <div class="section">
-      <app-menu-node-item [type]="customSchema.nodes.paragraph"
+      <app-menu-node-item [type]="NODE_TYPES.paragraph"
                           payload="paragraph"
                           tooltip="Paragraph"
       ></app-menu-node-item>
-      <app-menu-node-item [type]="customSchema.nodes.heading"
+      <app-menu-node-item [type]="NODE_TYPES.heading"
                           [attrs]="{ level: 1 }"
                           payload="header1"
                           tooltip="Header 1"
       ></app-menu-node-item>
-      <app-menu-node-item [type]="customSchema.nodes.heading"
+      <app-menu-node-item [type]="NODE_TYPES.heading"
                           [attrs]="{ level: 2 }"
                           payload="header2"
                           tooltip="Header 2"
       ></app-menu-node-item>
-      <app-menu-node-item [type]="customSchema.nodes.heading"
+      <app-menu-node-item [type]="NODE_TYPES.heading"
                           [attrs]="{ level: 3 }"
                           payload="header3"
                           tooltip="Header 3"
       ></app-menu-node-item>
-      <app-menu-wrap-item [type]="customSchema.nodes.blockquote"
+      <app-menu-wrap-item [type]="NODE_TYPES.blockquote"
                           payload="blockquote"
                           tooltip="Quote text"
       ></app-menu-wrap-item>
-      <app-menu-node-item [type]="customSchema.nodes.code_block"
+      <app-menu-node-item [type]="NODE_TYPES.code_block"
                           payload="code-block"
                           tooltip="Code block"
       ></app-menu-node-item>
     </div>
 
     <div class="section">
-      <app-menu-list-item [type]="customSchema.nodes.bullet_list"
+      <app-menu-list-item [type]="NODE_TYPES.bullet_list"
                           payload="list-bullet"
                           tooltip="Bullet list"
       ></app-menu-list-item>
-      <app-menu-list-item [type]="customSchema.nodes.ordered_list"
+      <app-menu-list-item [type]="NODE_TYPES.ordered_list"
                           payload="list-ordered"
                           tooltip="Ordered list"
       ></app-menu-list-item>
