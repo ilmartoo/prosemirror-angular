@@ -7,9 +7,7 @@ import {TextSelection, Transaction} from "prosemirror-state";
 import {ResolvedPos} from "prosemirror-model";
 import {ExtendedNode} from "./nodes-helper";
 
-/**
- * Extended document transaction
- */
+/** Extended document transaction */
 export type ExtendedTransaction = Transaction & {
   /**
    * Maps the given resolved pos to a new resolved pos in the changed document

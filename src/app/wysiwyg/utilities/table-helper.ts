@@ -1,6 +1,7 @@
 /**
  * Custom ProseMirror helper functions for tables management
  */
+
 import {Node as ProseNode} from 'prosemirror-model';
 import {customSchema} from '../text-editor/custom-schema';
 import {repeat} from './multipurpose-helper';

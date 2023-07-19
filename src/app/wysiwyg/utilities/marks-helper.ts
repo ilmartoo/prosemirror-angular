@@ -6,17 +6,11 @@ import {Attrs, Mark, MarkType, Node as ProseNode, NodeRange, ResolvedPos} from "
 import {EditorState} from "prosemirror-state";
 import {addProps, areEquals} from "./multipurpose-helper";
 
-/**
- * Alias for the needed Mark elements to perform a ProseMirrorHelper mark lookup
- */
+/** Alias for the needed Mark elements to perform a ProseMirrorHelper mark lookup */
 export type MarkForLookup = Mark | { type: { name: string }, attrs?: Attrs };
-/**
- * Alias for the needed MarkType elements to perform a ProseMirrorHelper mark type lookup
- */
+/** Alias for the needed MarkType elements to perform a ProseMirrorHelper mark type lookup */
 export type MarkTypeForLookup = MarkType | { name: string };
-/**
- * Mark data & position for helper functions
- */
+/** Mark data & position for helper functions */
 export type ExtendedMark = Mark & { pos: number };
 
 /**
@@ -160,7 +154,7 @@ export function expandMarkActiveRange(node: ProseNode, mark: MarkForLookup, posi
   // Mark expanded range
   const startPos = node.resolve(start);
   const endPos = node.resolve(end);
-  return new NodeRange(startPos, endPos, 1);
+  return new NodeRange(startPos, endPos, 0);
 }
 
 /**

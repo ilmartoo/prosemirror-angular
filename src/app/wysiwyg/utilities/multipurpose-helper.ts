@@ -1,6 +1,4 @@
-/**
- * Multipurpose helper functions
- */
+/** Multipurpose helper functions */
 
 /**
  * Adds the given props to the given object
@@ -8,10 +6,10 @@
  * @param props Properties to add
  * @returns Reference to the given object with the updated props for chaining
  */
-export function addProps<T extends object = object>(item: object, props: { [p in keyof T]?: any }): T {
-  const ref = item as { [p in keyof T]: any };
+export function addProps<T extends object = object>(item: object, props: { [p in keyof T]?: T[p] }): T {
+  const ref = item as { [p in keyof T]: T[p] };
   for (let prop in props) {
-    ref[prop] = props[prop];
+    ref[prop] = props[prop]!;
   }
   return item as T;
 }

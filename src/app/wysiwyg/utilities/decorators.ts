@@ -1,6 +1,4 @@
-/**
- * Custom ProseMirror decorator functions
- */
+/** Custom ProseMirror decorator functions */
 
 
 import {Decoration, DecorationSet} from "prosemirror-view";

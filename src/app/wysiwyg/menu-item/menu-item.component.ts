@@ -3,9 +3,7 @@ import {Command} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
 import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
-/**
- * Possible statuses of the menu item
- */
+/** Possible statuses of the menu item */
 export enum MenuItemStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',

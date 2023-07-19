@@ -6,13 +6,9 @@ import {Attrs, Node as ProseNode, NodeType, ResolvedPos} from "prosemirror-model
 import {EditorState} from "prosemirror-state";
 import {addProps, areEquals} from "./multipurpose-helper";
 
-/**
- * Alias for the needed Node elements to perform a ProseMirrorHelper node lookup
- */
+/** Alias for the needed Node elements to perform a ProseMirrorHelper node lookup */
 export type NodeForLookup = ProseNode | { type: { name: string }, attrs?: Attrs };
-/**
- * Alias for the needed NodeType elements to perform a ProseMirrorHelper node type lookup
- */
+/** Alias for the needed NodeType elements to perform a ProseMirrorHelper node type lookup */
 export type NodeTypeForLookup = NodeType | { name: string };
 /**
  * Node data & position for helper functions
@@ -23,9 +19,7 @@ export type ExtendedNode = ProseNode & { start: number, depth: number };
  */
 export type AncestorNode = ExtendedNode & { parent?: AncestorNode };
 
-/**
- * List to display & relate ancestors of a node
- */
+/** List to display & relate ancestors of a node */
 export class AncestorNodeList extends Array<AncestorNode> {
 
   constructor(...ancestors: ExtendedNode[]) {

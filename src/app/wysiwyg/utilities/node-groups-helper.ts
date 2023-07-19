@@ -1,6 +1,4 @@
-/**
- * Management functions for ProseMirror Node groups & content
- */
+/** Management functions for ProseMirror Node groups & content */
 
 /**
  * Creates a concatenation from multiple group strings
