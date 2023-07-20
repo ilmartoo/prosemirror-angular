@@ -12,13 +12,13 @@ export type NodeForLookup = ProseNode | { type: { name: string }, attrs?: Attrs 
 export type NodeTypeForLookup = NodeType | { name: string };
 /** Node data & position for helper functions */
 export type ExtendedNode = ProseNode & {
-  /** Position right before the start of the node */
+  /** Position right before the start of the node. Before the content. */
   readonly before: number,
-  /** Position at the start of the node */
+  /** Position at the start of the node. First position of the content. */
   readonly start: number,
-  /** Position at the end of the node */
+  /** Position at the end of the node. Last position of the content. */
   readonly end: number,
-  /** Position right after the end of the node */
+  /** Position right after the end of the node. After the content. */
   readonly after: number,
   /** Depth of the node */
   readonly depth: number,
