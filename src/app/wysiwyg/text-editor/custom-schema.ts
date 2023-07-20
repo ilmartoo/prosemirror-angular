@@ -4,6 +4,7 @@ import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
 
 import {groupChain, groupOr, groupRange} from "../utilities/node-groups-helper";
 import {tableNodes} from 'prosemirror-tables';
+import {generateStyles} from '../utilities/multipurpose-helper';
 
 
 ///
@@ -60,7 +61,8 @@ enum TableNodeSpecs {
 type CustomNodeSpec = SpecialNodeSpecs | TextContainerNodeSpecs | ListNodeSpecs | TableNodeSpecs;
 
 // DOM specs
-const indentDOM: (level: number) => DOMOutputSpec = (level: number) => ['indent', { style: `--indent-level: ${level}` }, 0];
+const indentDOM: (level: number) => DOMOutputSpec = (level: number) =>
+  ['indent', { style: generateStyles({ '--indent-level': level }) }, 0];
 
 const INDENT_LEVEL_STEP = 1;
 
@@ -123,7 +125,6 @@ enum DecorationMarkSpecs {
 }
 enum StyleMarkSpecs {
   COLOR = 'color',
-  BACKGROUND = 'background',
   ITALIC = 'em',
   BOLD = 'strong',
   SUPERSCRIPT = 'superscript',
@@ -134,8 +135,8 @@ type CustomMarkSpec = SpecialMarkSpecs | DecorationMarkSpecs | StyleMarkSpecs;
 // DOM specs
 const underlineDOM: DOMOutputSpec = ['u', 0];
 const strikethroughDOM: DOMOutputSpec = ['s', 0];
-const colorDOM = (color?: string): DOMOutputSpec => ['color', { color: color }, 0];
-const backgroundDOM = (color?: string): DOMOutputSpec => ['background', { color: color }, 0];
+const colorDOM = (txtColor?: string, bgColor?: string): DOMOutputSpec =>
+  ['color', { style: generateStyles({ color: txtColor, 'background-color': bgColor }) }, 0];
 const superscriptDOM: DOMOutputSpec = ['sup', 0];
 const subscriptDOM: DOMOutputSpec = ['sub', 0];
 
@@ -179,26 +180,34 @@ const customMarks = baseSchema.spec.marks
 
   // Color
   .update(StyleMarkSpecs.COLOR, {
-    parseDOM: [{
-      tag: 'color',
-      getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
-        if (typeof(dom) === 'string') { return false; } // If string do not parse
-        return { color: dom.style.color };
+    attrs: {
+      color: { default: undefined },
+      backgroundColor: { default: undefined },
+    },
+    parseDOM: [
+      {
+        tag: 'color',
+        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+          if (typeof(dom) === 'string') { return false; } // If string do not parse
+          return {
+            color: dom.style.color,
+            backgroundColor: dom.style.backgroundColor,
+          };
+        },
       },
-    }],
-    toDOM: (mark): DOMOutputSpec => colorDOM(mark.attrs['color']),
-  })
-
-  // Background
-  .update(StyleMarkSpecs.BACKGROUND, {
-    parseDOM: [{
-      tag: 'background',
-      getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
-        if (typeof(dom) === 'string') { return false; } // If string do not parse
-        return { color: dom.style.color };
-      },
-    }],
-    toDOM: (mark): DOMOutputSpec => backgroundDOM(mark.attrs['color']),
+      {
+        tag: ':not(color)',
+        consuming: false,
+        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+          if (typeof(dom) === 'string') { return false; } // If string do not parse
+          return {
+            color: dom.style.color,
+            backgroundColor: dom.style.backgroundColor,
+          };
+        },
+      }
+    ],
+    toDOM: (mark): DOMOutputSpec => colorDOM(mark.attrs['color'], mark.attrs['backgroundColor']),
   })
 
   // Superscript

@@ -20,6 +20,14 @@ export class AppComponent {
     '<sup>Super</sup>script<br>' +
     '<sub>Sub</sub>script' +
     '</p>' +
+    '<p style="color: red">All paragraph red</p>' +
+    '<p>' +
+    '<color style="color: cornflowerblue">Multi</color>' +
+    '-' +
+    '<color style="color: #589; background-color: #fd4">styled</color>' +
+    ' ' +
+    '<color style="color: white; background-color: black">text</color>' +
+    '</p>' +
 
     '<p></p>' +
 

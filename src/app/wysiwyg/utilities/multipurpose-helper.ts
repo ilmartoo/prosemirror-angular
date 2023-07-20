@@ -80,3 +80,21 @@ export function repeat<T = any>(arr: T | T[], n: number): T[] {
 export function executeAfter(func: () => void): void {
   setTimeout(func);
 }
+
+/**
+ * Generates the style attribute for a DOM tag with the given attributes, removing all of which are undefined
+ * @param styleAttrs Style attributes
+ * @returns String of semicolon separated styles to insert into the style attribute value
+ */
+export function generateStyles(styleAttrs: { [s: string]: string | number | undefined }): string {
+  const styles: string[] = [];
+
+  for (const styleKey in styleAttrs) {
+    const styleValue = styleAttrs[styleKey];
+    if (styleValue != null) {
+      styles.push(`${styleKey}:${styleValue}`);
+    }
+  }
+
+  return styles.join(';');
+}
