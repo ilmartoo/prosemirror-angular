@@ -14,26 +14,26 @@ export type ExtendedTransaction = Transaction & {
    * @param $pos Resolved position to be mapped
    * @returns Mapped position to the changed document
    */
-  mapAndResolveResolvedPos: ($pos: ResolvedPos) => ResolvedPos;
+  mapAndResolveResolvedPos($pos: ResolvedPos): ResolvedPos;
   /**
    * Maps the given pos to a new resolved pos in the changed document
    * @param pos Position to be mapped
    * @returns Mapped position to the changed document
    */
-  mapAndResolvePos: (pos: number) => ResolvedPos;
+  mapAndResolvePos(pos: number): ResolvedPos;
   /**
    * Unwraps the content of the given node, mapping the selection accordingly
    * @param node Node whose contents will be unwrapped
    * @returns Transaction for chaining
    */
-  unwrapNode: (node: ExtendedNode) => ExtendedTransaction;
+  unwrapNode(node: ExtendedNode): ExtendedTransaction;
   /**
    * Updates the current selection to the corresponding mapped selection
    * @param anchor Anchor of the selection
    * @param head Head of the selection
    * @returns Transaction for chaining
    */
-  mapAndSelect: (anchor: number, head: number) => ExtendedTransaction;
+  mapAndSelect(anchor: number, head: number): ExtendedTransaction;
 }
 
 /**
@@ -44,10 +44,10 @@ export type ExtendedTransaction = Transaction & {
 export function extendTransaction(tr: Transaction): ExtendedTransaction {
   const extr = tr as ExtendedTransaction;
   return addProps<ExtendedTransaction>(tr, {
-    mapAndResolveResolvedPos: ($pos: ResolvedPos): ResolvedPos => mapAndResolveResolvedPos(extr, $pos),
-    mapAndResolvePos: (pos: number): ResolvedPos => mapAndResolvePos(extr, pos),
-    unwrapNode: (node: ExtendedNode): ExtendedTransaction => unwrapNode(extr, node),
-    mapAndSelect: (anchor: number, head: number): ExtendedTransaction => mapAndSelect(extr, anchor, head),
+    mapAndResolveResolvedPos($pos: ResolvedPos) { return mapAndResolveResolvedPos(extr, $pos); },
+    mapAndResolvePos(pos: number) { return mapAndResolvePos(extr, pos); },
+    unwrapNode(node: ExtendedNode) { return unwrapNode(extr, node); },
+    mapAndSelect(anchor: number, head: number) { return mapAndSelect(extr, anchor, head); },
   })
 }
 
@@ -82,7 +82,7 @@ export function unwrapNode<T extends Transaction = Transaction>(tr: T, node: Ext
   const {$anchor, $head} = tr.selection;
 
   const from = node.before;
-  const to = node.before + node.nodeSize;
+  const to = node.after;
 
   // A wrapping node was replaced with its contents:
   // - Position before unwrapped node --> original position
@@ -92,10 +92,9 @@ export function unwrapNode<T extends Transaction = Transaction>(tr: T, node: Ext
   const anchor = updatePos($anchor.pos);
   const head = updatePos($head.pos);
 
-  tr.replaceWith(from, to, node.content);
-  tr.setSelection(new TextSelection(tr.doc.resolve(anchor), tr.doc.resolve(head)));
-
-  return tr;
+  return tr
+    .replaceWith(from, to, node.content)
+    .setSelection(new TextSelection(tr.doc.resolve(anchor), tr.doc.resolve(head)));
 }
 
 /**
@@ -106,6 +105,6 @@ export function unwrapNode<T extends Transaction = Transaction>(tr: T, node: Ext
  * @returns Transaction for chaining
  */
 export function mapAndSelect<T extends Transaction = Transaction>(tr: T, anchor: number, head: number): T {
-  tr.setSelection(new TextSelection(mapAndResolvePos(tr, anchor), mapAndResolvePos(tr, head)));
-  return tr;
+  return tr
+    .setSelection(new TextSelection(mapAndResolvePos(tr, anchor), mapAndResolvePos(tr, head)));
 }
