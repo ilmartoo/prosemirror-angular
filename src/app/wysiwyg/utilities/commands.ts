@@ -444,3 +444,69 @@ export const newLine: Command = chainCommands(exitCode, newLineText);
  * @returns False if the command cannot be executed
  */
 export const newBlock: Command = chainCommands(newlineInCode, createParagraphNear, liftEmptyBlock, newListItem, splitBlock);
+
+/**
+ * Changes the color mark of the text
+ * @param color New color to change into or undefined if the color should be removed
+ * @returns False if the command cannot be executed
+ */
+export function changeTextColor(color?: string): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const {$from, $to} = state.selection;
+    const range = $from.blockRange($to);
+    if (!range) { return false; }
+
+    if (dispatch) {
+      const tr = state.tr;
+
+      if (color) {
+        tr.addMark($from.pos, $to.pos, MARK_TYPES.color.create({ color }));
+      } else {
+        tr.removeMark($from.pos, $to.pos, MARK_TYPES.color);
+      }
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+/**
+ * Unwraps the node of the given type at the selection
+ * @param type Type of the node to unwrap
+ * @returns False if the command cannot be executed
+ */
+export function unwrapFrom(type: NodeType): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const {$from, $to} = state.selection;
+    const range = $from.blockRange($to);
+    if (!range) { return false; }
+
+    const isWrapperType = (node: ProseNode) => areNodeTypesEquals(node.type, type);
+    const wrapper = findAncestor(range.$from, isWrapperType, range.depth);
+    if (!wrapper) { return false; } // No wrapper from the given type is found
+
+    const wrapperParent = range.$from.node(wrapper.depth - 1);
+    const isUnwrappable = isValidContent(wrapperParent.type, wrapper.content);
+    if (!isUnwrappable) { return false; } // Node cannot be unwrapped
+
+    if (dispatch) {
+      const tr = extendTransaction(state.tr);
+
+      tr.unwrapNode(wrapper);
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+/**
+ * Command chain of:
+ * - unwrapFrom
+ * - wrapIn
+ * @param type Type of the node to wrap or unwrap
+ * @param attrs Attributes of the wrapping node
+ * @returns False if the command cannot be executed
+ */
+export const toggleWrapper = (type: NodeType, attrs?: Attrs): Command => chainCommands(unwrapFrom(type), wrapIn(type, attrs));
