@@ -1,13 +1,13 @@
 import {Component, Input} from '@angular/core';
-import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
+import {MenuItemComponent} from './menu-item.component';
 import {EditorView} from 'prosemirror-view';
-import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodeTypesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
 import {addColumnAfter, addColumnBefore, addRowAfter, addRowBefore} from 'prosemirror-tables';
 import {customSchema} from '../text-editor/custom-schema';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
+import {CursorActiveElements, MenuItemStatus} from './menu-item-types';
 
 @Component({
   selector: 'app-menu-create-table-element-item',
@@ -28,8 +28,8 @@ export class MenuCreateTableElementItemComponent extends MenuSchemaItemComponent
     return this.isAfter ? commands.after : commands.before;
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
-    const isInsideTable = !!activeElements.nodes.find(node => areNodeTypesEquals(node.type, this.type));
+  protected override calculateStatus(view: EditorView, activeElements: CursorActiveElements): MenuItemStatus {
+    const isInsideTable = !!activeElements.ancestors.find(node => areNodeTypesEquals(node.type, this.type));
     const isEnabled = this.command(view.state);
     return isInsideTable && isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.HIDDEN;
   }

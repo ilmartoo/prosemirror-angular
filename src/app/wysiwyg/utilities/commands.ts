@@ -4,20 +4,31 @@
 
 import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
 import {Attrs, Fragment, Mark, MarkType, Node as ProseNode, NodeRange, NodeType} from 'prosemirror-model';
-import {INDENT_LEVEL_STEP, NODE_TYPES} from '../text-editor/custom-schema';
+import {INDENT_LEVEL_STEP, MARK_TYPES, NODE_TYPES} from '../text-editor/custom-schema';
 import {
   chainCommands,
   createParagraphNear,
   exitCode,
   liftEmptyBlock,
   newlineInCode,
-  splitBlock
+  splitBlock,
+  wrapIn
 } from 'prosemirror-commands';
-import {findWrapping} from 'prosemirror-transform';
+import {canJoin, findWrapping} from 'prosemirror-transform';
 import {extendTransaction} from "./transactions-helper";
-import {ancestorAt, areNodeTypesEquals, findAllAncestors, findAncestor, findAncestorOfType} from "./nodes-helper";
+import {
+  ancestorAt,
+  areNodeTypesEquals,
+  ExtendedNode,
+  findAllAncestors,
+  findAncestor,
+  findAncestorOfType,
+  isListNode
+} from "./nodes-helper";
 import {expandMarkActiveRange, expandMarkTypeActiveRange} from './marks-helper';
 import {createTable} from './table-helper';
+import {isValidContent} from './node-content-helper';
+import {wrapInList} from 'prosemirror-schema-list';
 
 /**
  * Selects the text of the given range
@@ -197,16 +208,12 @@ export function insertTable(at: number, rows: number, cols: number): Command {
  */
 export function changeListType(listType: NodeType, attrs?: Attrs | null): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
-    const $head = state.selection.$head;
+    const {$head} = state.selection;
 
-    const isDifferentListType = (node: ProseNode): boolean => {
-      return areNodeTypesEquals(node.firstChild?.type, NODE_TYPES.list_item)
-        && node.type.compatibleContent(listType)
-    }
-
+    const isDifferentListType = (node: ProseNode): boolean =>
+      isListNode(node) && areNodeTypesEquals(node.type, listType) && isValidContent(listType, node.content);
     const listNode = findAncestor($head, isDifferentListType);
-    // Cancel if closest list do not exist or is the same type as listType
-    if (!listNode || areNodeTypesEquals(listNode.type, listType)) { return false; }
+    if (!listNode) { return false; } // Cancel if no different list type with compatible content is found
 
     if (dispatch) {
       const tr = state.tr;
@@ -226,18 +233,32 @@ export function changeListType(listType: NodeType, attrs?: Attrs | null): Comman
 }
 
 /**
- * Increases indent on selected non list area
+ * Increases indent on selected area
  * @param state State of the editor
  * @param dispatch Dispatch function
  * @returns False if the command cannot be executed
  */
 export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
   const {$head , $anchor} = state.selection;
-  const range = $head.blockRange($anchor);
+  let range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  const wrapping = findWrapping(range, NODE_TYPES.indent);
-  if (!wrapping) { return false; } // Cancel if no valid wrapping is found
+  let wrapping = findWrapping(range, NODE_TYPES.indent);
+  if (!wrapping) {
+    const isIndentable = (node: ProseNode) => isValidContent(NODE_TYPES.indent, node);
+    const indentableNode = findAncestor(range.$from, isIndentable, range.depth);
+
+    // Cancel if no parent indentable node is found
+    if (!indentableNode) { return false; }
+
+    const $from = state.doc.resolve(indentableNode.before);
+    const $to = state.doc.resolve(indentableNode.after);
+    range = new NodeRange($from, $to, indentableNode.depth);
+    wrapping = findWrapping(range, NODE_TYPES.indent);
+  }
+
+  // Cancel if no valid wrapping parent node is found
+  if (!wrapping) { return false; }
 
   if (dispatch) {
     const tr = extendTransaction(state.tr);
@@ -262,7 +283,7 @@ export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
 }
 
 /**
- * Decreases indent on selected non list area
+ * Decreases indent on selected area
  * @param state State of the editor
  * @param dispatch Dispatch function
  * @returns False if the command cannot be executed
@@ -275,15 +296,24 @@ export const decreaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
   const indentNode = findAncestorOfType(range.$from, NODE_TYPES.indent);
   if (!indentNode) { return false; }
 
+  const updatedLevel = indentNode.attrs['level'] - INDENT_LEVEL_STEP;
+  const isUnwrapNeeded = updatedLevel <= 0;
+
+  // Only if unwrap is needed
+  if (isUnwrapNeeded) {
+    const wrapperParent = range.$from.node(indentNode.depth - 1);
+    const isUnwrappable = isValidContent(wrapperParent.type, indentNode.content);
+    if (!isUnwrappable) { return false; } // Node cannot be unwrapped
+  }
+
   if (dispatch) {
     const tr = extendTransaction(state.tr);
 
-    const updatedLevel = indentNode.attrs['level'] - INDENT_LEVEL_STEP;
-    if (updatedLevel > 0) {
-      tr.setNodeAttribute(indentNode.before, 'level',  updatedLevel);
+    if (isUnwrapNeeded) {
+      tr.unwrapNode(indentNode);
     }
     else {
-      tr.unwrapNode(indentNode);
+      tr.setNodeAttribute(indentNode.before, 'level',  updatedLevel);
     }
 
     dispatch(tr.scrollIntoView());
@@ -304,27 +334,43 @@ export const increaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
 
   const isListItem = (node?: ProseNode | null) => areNodeTypesEquals(node?.type, NODE_TYPES.list_item);
 
-  const rangeParent = range.parent;
-  let listNode: ProseNode;
+  const rangeParent = ancestorAt(range.$from, range.depth);
+  let listNode: ExtendedNode;
+
   let from: number;
   let to: number;
 
+  let selectedFirstChild = false;
+  let selectedAllContent = false;
+
   // Selected a list item or a subsection of it
   if (isListItem(rangeParent)) {
-    listNode = range.$from.node(range.depth - 1);
-    from = range.start - 1; // Get list tag before list_item tag
-    to = range.end + 1;     // Get list tag after list_item tag
+    listNode = ancestorAt(range.$from, range.depth - 1);
+
+    from = range.$from.before(range.depth); // Set from just before list_item open tag
+    to = range.$from.after(range.depth);    // Set to just after list_item close tag
+
+    selectedFirstChild = rangeParent === listNode.firstChild;
   }
   // Selected multiple list items
   else if (isListItem(rangeParent.firstChild)) {
     listNode = rangeParent;
-    from = range.$from.before();
-    to = range.$to.after();
+
+    from = range.$from.before(range.depth + 1); // Set from just before first selected list_item open tag
+    to = range.$to.after(range.depth + 1);      // Set to just after last selected list_item close tag
+
+    selectedFirstChild = listNode.start === from;
+    selectedAllContent =  listNode.content.size === to - from;
   }
   // Cancel if no list is detected
   else { return false; }
 
-  range = new NodeRange(state.doc.resolve(from), state.doc.resolve(to), range.depth - 1);
+  // Cancel if first list item is selected or all list content is selected
+  if (selectedFirstChild || selectedAllContent) { return true; }
+
+  const $from = state.doc.resolve(from);
+  const $to = state.doc.resolve(to);
+  range = new NodeRange($from, $to, range.depth - 1);
   const wrapping = findWrapping(range, listNode.type);
   if (!wrapping) { return false; } // Cancel if no wrapping is found
 
@@ -332,6 +378,9 @@ export const increaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
     const tr = extendTransaction(state.tr);
 
     tr.wrap(range, wrapping);
+    if (canJoin(tr.doc, $from.pos)) {
+      tr.join($from.pos);
+    }
     tr.mapAndSelect($anchor.pos, $head.pos);
 
     dispatch(tr.scrollIntoView());
@@ -350,8 +399,6 @@ export const decreaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
   let range = $anchor.blockRange($head);
   if (!range) { return false; }
 
-  const isListNode = (node: ProseNode): boolean => areNodeTypesEquals(node.firstChild?.type, NODE_TYPES.list_item);
-
   const listNodes = findAllAncestors(range.$from, isListNode, range.depth);
   if (listNodes.length < 2) { return false; } // Cancel if list does not have a parent list wrapping it
 
@@ -367,13 +414,17 @@ export const decreaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
 }
 
 /**
- * Increases indent on selected area
+ * Command chain of:
+ * - increaseListIndent
+ * - increaseBlockIndent
  * @returns False if command cannot be executed
  */
 export const increaseIndent: Command = chainCommands(increaseListIndent, increaseBlockIndent);
 
 /**
- * Decreases indent on selected area
+ * Command chain of:
+ * - decreaseListIndent
+ * - decreaseBlockIndent
  * @returns False if command cannot be executed
  */
 export const decreaseIndent: Command = chainCommands(decreaseListIndent, decreaseBlockIndent);
@@ -387,8 +438,6 @@ export const decreaseIndent: Command = chainCommands(decreaseListIndent, decreas
 export const newListItem: Command = (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
   const $from = state.selection.$from;
 
-  const isListNode = (node: ProseNode): boolean => areNodeTypesEquals(node.firstChild?.type, NODE_TYPES.list_item);
-
   const listNodeData = findAncestor($from, isListNode);
   if (!listNodeData) { return false; } // Cancel if list item different from listType exists
 
@@ -400,6 +449,18 @@ export const newListItem: Command = (state: EditorState, dispatch?: (tr: Transac
   }
   return true;
 }
+
+/**
+ * Command chain of:
+ * - wrapInList
+ * - changeListType
+ * @param listType List node type to wrap into or change to its type
+ * @return Command of the chained commmands
+ */
+export const listCommands = (listType: NodeType): Command =>
+  chainCommands(wrapInList(listType), changeListType(listType));
+  // TODO: unwrapList
+  // chainCommands(wrapInList(this.type), changeListType(this.type), unwrapList(this.type));
 
 /**
  * Replaces a selection in a node with a new line

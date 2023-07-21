@@ -1,5 +1,7 @@
 /** Multipurpose helper functions */
 
+import {Component} from '@angular/core';
+
 /**
  * Adds the given props to the given object
  * @param item Object to which props will be added
@@ -97,4 +99,22 @@ export function generateStyles(styleAttrs: { [s: string]: string | number | unde
   }
 
   return styles.join(';');
+}
+
+/**
+ * Defines an Angular component dynamically
+ * @param data Data to pass to @Component decorator
+ * @param component Component class to generate
+ * @param provider Optional provider shorthand to append a provider to @Component providers param
+ * @returns Definition of an Angular component
+ */
+export function defineComponent<T = object, R = object>(
+  data: { [p in keyof Component]: Component[p] },
+  component: new(...args: any[]) => T,
+  provider?: new(...args: any[]) => R): { new(...args: any[]): T } {
+  return Component({
+    ...data,
+    providers: [...(data.providers ?? []), {provide: provider, useExisting: component}],
+  })(component);
+
 }

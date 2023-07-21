@@ -194,9 +194,7 @@ export function expandMarkTypeActiveRange(node: ProseNode, mark: MarkTypeForLook
   // Mark expanded range
   const startPos = node.resolve(start);
   const endPos = node.resolve(end);
-  const range = new NodeRange(startPos, endPos, 1);
-  console.log(range);
-  return range;
+  return new NodeRange(startPos, endPos, 1);
 }
 
 /**

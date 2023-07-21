@@ -58,7 +58,7 @@ enum TableNodeSpecs {
   CELL = 'table_cell',
   HEADER = 'table_header',
 }
-type CustomNodeSpec = SpecialNodeSpecs | TextContainerNodeSpecs | ListNodeSpecs | TableNodeSpecs;
+type CustomNodeSpecs = SpecialNodeSpecs | TextContainerNodeSpecs | ListNodeSpecs | TableNodeSpecs;
 
 // DOM specs
 const indentDOM: (level: number) => DOMOutputSpec = (level: number) =>
@@ -130,7 +130,7 @@ enum StyleMarkSpecs {
   SUPERSCRIPT = 'superscript',
   SUBSCRIPT = 'subscript',
 }
-type CustomMarkSpec = SpecialMarkSpecs | DecorationMarkSpecs | StyleMarkSpecs;
+type CustomMarkSpecs = SpecialMarkSpecs | DecorationMarkSpecs | StyleMarkSpecs;
 
 // DOM specs
 const underlineDOM: DOMOutputSpec = ['u', 0];
@@ -235,14 +235,19 @@ const customMarks = baseSchema.spec.marks
   .update(SpecialMarkSpecs.INLINE_CODE, {
     ...baseSchema.spec.marks.get(SpecialMarkSpecs.INLINE_CODE),
     // Excludes color, superscript & subscript of being active when an inline code mark is
-    excludes: groupChain(SpecialMarkSpecs.INLINE_CODE, StyleMarkSpecs.COLOR, StyleMarkSpecs.SUPERSCRIPT, StyleMarkSpecs.SUBSCRIPT),
+    excludes: groupChain(
+      SpecialMarkSpecs.INLINE_CODE,
+      StyleMarkSpecs.COLOR,
+      StyleMarkSpecs.SUPERSCRIPT,
+      StyleMarkSpecs.SUBSCRIPT,
+    ),
   }) ;
 
 
 ///
 /// Custom schema definition
 ///
-const customSchema = new Schema<CustomNodeSpec, CustomMarkSpec>({
+const customSchema = new Schema<CustomNodeSpecs, CustomMarkSpecs>({
   nodes: customNodes,
   marks: customMarks,
 })
@@ -253,8 +258,8 @@ const MARK_TYPES = customSchema.marks;
 // Schema
 export { customSchema, NODE_TYPES, MARK_TYPES }
 // Specs
-export { CustomNodeSpec, SpecialNodeSpecs, TextContainerNodeSpecs, ListNodeSpecs, TableNodeSpecs }
-export { CustomMarkSpec, SpecialMarkSpecs, DecorationMarkSpecs, StyleMarkSpecs }
+export { CustomNodeSpecs, SpecialNodeSpecs, TextContainerNodeSpecs, ListNodeSpecs, TableNodeSpecs }
+export { CustomMarkSpecs, SpecialMarkSpecs, DecorationMarkSpecs, StyleMarkSpecs }
 // Groups
 export { blockGroup, listGroup, listGroups }
 // Constants

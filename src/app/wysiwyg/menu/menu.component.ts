@@ -2,19 +2,11 @@ import {Component, QueryList, ViewChildren} from '@angular/core';
 import {MenuItemComponent} from '../menu-item/menu-item.component';
 import {EditorView} from 'prosemirror-view';
 import {EditorState, Plugin, PluginView} from 'prosemirror-state';
-import {Mark} from 'prosemirror-model';
 import {MARK_TYPES, NODE_TYPES} from '../text-editor/custom-schema';
-import {activeMarksInSelectionEnd} from "../utilities/marks-helper";
-import {ancestorNodesInSelectionEnd, ExtendedNode} from "../utilities/nodes-helper";
 import {fixTables} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
-
-// TODO: Let it be an dictionary as { [markTypeName: string]: Mark[], [nodeTypeName: string]: ProseNode[] }
-export type EditorHeadSelectionActiveElements = {
-  marks: Mark[],
-  nodes: ExtendedNode[],
-};
+import {CursorActiveElements, MENU_ITEM_TYPES} from '../menu-item/menu-item-types';
 
 
 @Component({
@@ -27,6 +19,7 @@ export class MenuComponent implements PluginView {
   @ViewChildren(MenuItemComponent) items!: QueryList<MenuItemComponent>;
 
   protected view?: EditorView;
+  protected readonly MENU_ITEM_TYPES = MENU_ITEM_TYPES;
   protected readonly NODE_TYPES = NODE_TYPES;
   protected readonly MARK_TYPES = MARK_TYPES;
 
@@ -71,11 +64,8 @@ export class MenuComponent implements PluginView {
    */
   public updateItemStatuses(view: EditorView): void {
     const state = view.state;
-    const updateData: EditorHeadSelectionActiveElements = {
-      marks: activeMarksInSelectionEnd(state),
-      nodes: ancestorNodesInSelectionEnd(state),
-    };
+    const elements = CursorActiveElements.from(state);
 
-    this.items.forEach(item => item.update(view, updateData));
+    this.items.forEach(item => item.update(view, elements));
   }
 }

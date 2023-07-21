@@ -1,12 +1,12 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
+import {MenuItemComponent} from './menu-item.component';
 import {insertTable} from '../utilities/commands';
 import {customSchema} from '../text-editor/custom-schema';
 import {EditorView} from 'prosemirror-view';
 import {MenuNodeItemComponent} from './menu-node-item.component';
 import {Command} from 'prosemirror-state';
-import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 import {executeAfter} from '../utilities/multipurpose-helper';
+import {CursorActiveElements, MenuItemStatus} from './menu-item-types';
 
 @Component({
   selector: 'app-menu-create-table-item',
@@ -34,7 +34,7 @@ export class MenuCreateTableItemComponent extends MenuNodeItemComponent {
     return insertTable(view.state.selection.head, 1, 1);
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
+  protected override calculateStatus(view: EditorView, activeElements: CursorActiveElements): MenuItemStatus {
     const isEnabled = this.command(view.state, undefined, view);
     return isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
   }

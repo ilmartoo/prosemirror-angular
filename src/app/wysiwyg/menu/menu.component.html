@@ -1,40 +1,41 @@
 <div class="menu">
   <ng-container *ngIf="view">
     <div class="section">
-      <app-menu-mark-item [type]="MARK_TYPES.strong"
-                          payload="bold"
-                          tooltip="Bold"
-      ></app-menu-mark-item>
-      <app-menu-mark-item [type]="MARK_TYPES.em"
-                          payload="italic"
-                          tooltip="Italic"
-      ></app-menu-mark-item>
-      <app-menu-mark-item [type]="MARK_TYPES.underline"
-                          payload="underline"
-                          tooltip="Underline"
-      ></app-menu-mark-item>
-      <app-menu-mark-item [type]="MARK_TYPES.strikethrough"
-                          payload="strikethrough"
-                          tooltip="Strikethrough"
-      ></app-menu-mark-item>
-      <app-menu-mark-item [type]="MARK_TYPES.superscript"
-                          payload="superscript"
-                          tooltip="Superscript"
-      ></app-menu-mark-item>
-      <app-menu-mark-item [type]="MARK_TYPES.subscript"
-                          payload="subscript"
-                          tooltip="Subscript"
-      ></app-menu-mark-item>
-      <app-menu-mark-item [type]="MARK_TYPES.code"
-                          payload="code"
-                          tooltip="Inline code"
-      ></app-menu-mark-item>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.bold"
+                             icon="bold"
+                             tooltip="Bold"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.italic"
+                             icon="italic"
+                             tooltip="Italic"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.underline"
+                             icon="underline"
+                             tooltip="Underline"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.strikethrough"
+                             icon="strikethrough"
+                             tooltip="Strikethrough"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.superscript"
+                             icon="superscript"
+                             tooltip="Superscript"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.subscript"
+                             icon="subscript"
+                             tooltip="Subscript"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.inline_code"
+                             icon="code"
+                             tooltip="Inline code"
+      ></app-menu-item-generic>
     </div>
 
     <div class="section">
-      <app-menu-link-item payload="link"
-                          tooltip="Hyperlink"
-      ></app-menu-link-item>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.link"
+                             icon="link"
+                             tooltip="Hyperlink"
+      ></app-menu-item-generic>
       <app-menu-remove-element-item [type]="MARK_TYPES.link"
                                     payload="link-remove"
                                     tooltip="Delete hyperlink"
@@ -95,57 +96,57 @@
     </div>
 
     <div class="section">
-      <app-menu-node-item [type]="NODE_TYPES.paragraph"
-                          payload="paragraph"
-                          tooltip="Paragraph"
-      ></app-menu-node-item>
-      <app-menu-node-item [type]="NODE_TYPES.heading"
-                          [attrs]="{ level: 1 }"
-                          payload="header1"
-                          tooltip="Header 1"
-      ></app-menu-node-item>
-      <app-menu-node-item [type]="NODE_TYPES.heading"
-                          [attrs]="{ level: 2 }"
-                          payload="header2"
-                          tooltip="Header 2"
-      ></app-menu-node-item>
-      <app-menu-node-item [type]="NODE_TYPES.heading"
-                          [attrs]="{ level: 3 }"
-                          payload="header3"
-                          tooltip="Header 3"
-      ></app-menu-node-item>
-      <app-menu-wrap-item [type]="NODE_TYPES.blockquote"
-                          payload="blockquote"
-                          tooltip="Quote text"
-      ></app-menu-wrap-item>
-      <app-menu-node-item [type]="NODE_TYPES.code_block"
-                          payload="code-block"
-                          tooltip="Code block"
-      ></app-menu-node-item>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.paragraph"
+                             icon="paragraph"
+                             tooltip="Paragraph"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading"
+                             [attrs]="{ level: 1 }"
+                             icon="header1"
+                             tooltip="Header 1"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading"
+                             [attrs]="{ level: 2 }"
+                             icon="header2"
+                             tooltip="Header 2"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading"
+                             [attrs]="{ level: 3 }"
+                             icon="header3"
+                             tooltip="Header 3"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.blockquote"
+                             icon="blockquote"
+                             tooltip="Quote text"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.code_block"
+                             icon="code-block"
+                             tooltip="Code block"
+      ></app-menu-item-generic>
     </div>
 
     <div class="section">
-      <app-menu-list-item [type]="NODE_TYPES.bullet_list"
-                          payload="list-bullet"
-                          tooltip="Bullet list"
-      ></app-menu-list-item>
-      <app-menu-list-item [type]="NODE_TYPES.ordered_list"
-                          payload="list-ordered"
-                          tooltip="Ordered list"
-      ></app-menu-list-item>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.bullet_list"
+                             icon="list-bullet"
+                             tooltip="Bullet list"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.ordered_list"
+                             icon="list-ordered"
+                             tooltip="Ordered list"
+      ></app-menu-item-generic>
       <!--  <app-menu-item [type]="view.state.schema.nodes['checklist']"-->
       <!--                        [status]="getNodeStatus('checklist')"-->
       <!--                        icon="list-check"-->
       <!--                        tooltip="Checklist"-->
       <!--  ></app-menu-item>-->
-      <app-menu-indent-item [isIncrease]="false"
-                            payload="indent-decrease"
-                            tooltip="Decrease indent"
-      ></app-menu-indent-item>
-      <app-menu-indent-item [isIncrease]="true"
-                            payload="indent-increase"
-                            tooltip="Increase indent"
-      ></app-menu-indent-item>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.indent"
+                             icon="indent-decrease"
+                             tooltip="Decrease indent"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.deindent"
+                             icon="indent-increase"
+                             tooltip="Increase indent"
+      ></app-menu-item-generic>
     </div>
   </ng-container>
 </div>

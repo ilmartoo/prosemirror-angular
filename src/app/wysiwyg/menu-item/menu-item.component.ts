@@ -1,15 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Command} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
-import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
-
-/** Possible statuses of the menu item */
-export enum MenuItemStatus {
-  ENABLED = 'ENABLED',
-  DISABLED = 'DISABLED',
-  ACTIVE = 'ACTIVE',
-  HIDDEN = 'HIDDEN',
-}
+import {CursorActiveElements, MenuItemStatus} from './menu-item-types';
 
 @Component({
   selector: 'app-menu-item',
@@ -43,7 +35,7 @@ export class MenuItemComponent implements OnInit {
   }
 
 
-  public update(view: EditorView, activeElements: EditorHeadSelectionActiveElements): void {
+  public update(view: EditorView, activeElements: CursorActiveElements): void {
     this.view = view; // Update to the current view
     if (!this.isCommandFromInput) {
       this.command = this.updatedCommand(view);
@@ -58,17 +50,17 @@ export class MenuItemComponent implements OnInit {
    * @param activeElements Active marks & nodes of the selection
    * @protected
    */
-  protected calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
+  protected calculateStatus(view: EditorView, activeElements: CursorActiveElements): MenuItemStatus {
     return MenuItemStatus.ENABLED;
   }
 
   /**
    * Override when needed to update other data based on the new view & active elements
    * @param view Current editor view
-   * @param activeElements Active marks & nodes of the selection
+   * @param elements Active marks & nodes at cursor
    * @protected
    */
-  protected updateData(view: EditorView, activeElements: EditorHeadSelectionActiveElements): void { }
+  protected updateData(view: EditorView, elements: CursorActiveElements): void { }
 
   /**
    * Returns the updated command (Override this method if needed when extending this or a child class).

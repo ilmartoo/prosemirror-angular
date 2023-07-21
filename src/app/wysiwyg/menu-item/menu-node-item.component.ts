@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
-import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
+import {MenuItemComponent} from './menu-item.component';
 import {setBlockType} from 'prosemirror-commands';
 import {NodeType} from 'prosemirror-model';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
 import {EditorView} from 'prosemirror-view';
-import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
+import {CursorActiveElements, MenuItemStatus} from './menu-item-types';
 
 @Component({
   selector: 'app-menu-node-item',
@@ -21,8 +21,8 @@ export class MenuNodeItemComponent extends MenuSchemaItemComponent<NodeType> {
     return setBlockType(this.type, this.attrs);
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
-    const isActive = !!activeElements.nodes.find(node => areNodesEquals(node, this));
+  protected override calculateStatus(view: EditorView, activeElements: CursorActiveElements): MenuItemStatus {
+    const isActive = !!activeElements.ancestors.find(node => areNodesEquals(node, this));
     const isEnabled = this.command(view.state, undefined, view);
 
     return isActive ? MenuItemStatus.ACTIVE : (isEnabled ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);

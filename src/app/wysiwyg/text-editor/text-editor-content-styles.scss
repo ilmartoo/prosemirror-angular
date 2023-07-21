@@ -102,8 +102,25 @@
   }
 
   a {
-    color: #172b4d;
     cursor: pointer;
+
+    color: #0052CC;
+    background-color: white;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    text-decoration-skip-ink: auto;
+    text-decoration: none;
+
+    padding: 0.125rem 0.25em;
+    border-radius: 0.125rem;
+    box-shadow: 0 1px 1px rgba(black, 0.22), 0 0 1px 1px rgba(black, 0.10);
+
+    transition: all 0.1s ease-in-out 0s;
+
+    &:hover {
+      color: #0065FF;
+      text-decoration: underline;
+    }
   }
 
   ol, ul,

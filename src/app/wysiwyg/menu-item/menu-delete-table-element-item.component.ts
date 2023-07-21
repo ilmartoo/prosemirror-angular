@@ -1,13 +1,13 @@
 import {Component, Input} from '@angular/core';
-import {MenuItemComponent, MenuItemStatus} from './menu-item.component';
+import {MenuItemComponent} from './menu-item.component';
 import {EditorView} from 'prosemirror-view';
-import {EditorHeadSelectionActiveElements} from '../menu/menu.component';
 
 import {areNodeTypesEquals} from "../utilities/nodes-helper";
 import {Command} from 'prosemirror-state';
 import {deleteColumn, deleteRow, TableMap} from 'prosemirror-tables';
 import {customSchema} from '../text-editor/custom-schema';
 import {MenuSchemaItemComponent} from './menu-schema-item.component';
+import {CursorActiveElements, MenuItemStatus} from './menu-item-types';
 
 @Component({
   selector: 'app-menu-delete-table-element-item',
@@ -24,8 +24,8 @@ export class MenuDeleteTableElementItemComponent extends MenuSchemaItemComponent
     return this.isColumn ? deleteColumn : deleteRow;
   }
 
-  protected override calculateStatus(view: EditorView, activeElements: EditorHeadSelectionActiveElements): MenuItemStatus {
-    const tableNode = activeElements.nodes.find(node => areNodeTypesEquals(node.type, this.type));
+  protected override calculateStatus(view: EditorView, activeElements: CursorActiveElements): MenuItemStatus {
+    const tableNode = activeElements.ancestors.find(node => areNodeTypesEquals(node.type, this.type));
     if (!tableNode) { return MenuItemStatus.HIDDEN; }
 
     const tableMap = TableMap.get(tableNode);

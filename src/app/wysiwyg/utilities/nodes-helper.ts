@@ -2,9 +2,10 @@
  * Custom ProseMirror helper functions for Node management
  */
 
-import {Attrs, Node as ProseNode, NodeType, ResolvedPos} from "prosemirror-model";
+import {Attrs, Node as ProseNode, NodeRange, NodeType, ResolvedPos} from "prosemirror-model";
 import {EditorState} from "prosemirror-state";
 import {addProps, areEquals} from "./multipurpose-helper";
+import {listGroup} from '../text-editor/custom-schema';
 
 /** Alias for the needed Node elements to perform a ProseMirrorHelper node lookup */
 export type NodeForLookup = ProseNode | { type: { name: string }, attrs?: Attrs };
@@ -32,11 +33,11 @@ export type AncestorNode = ExtendedNode & {
 };
 
 /** List to display & relate ancestors of a node */
-export class AncestorNodeList extends Array<AncestorNode> {
+export class AncestorsList extends Array<AncestorNode> {
 
   constructor(...ancestors: ExtendedNode[]) {
     super();
-    super.push(...this.linkAncestors(ancestors));
+    super.push(...this.link(ancestors));
   }
 
   /**
@@ -45,7 +46,7 @@ export class AncestorNodeList extends Array<AncestorNode> {
    * @returns Updated length of the ancestor list
    */
   override push(...ancestors: ExtendedNode[]): number {
-    super.push(...this.linkAncestors(ancestors));
+    super.push(...this.link(ancestors));
     return this.length;
   }
 
@@ -55,7 +56,7 @@ export class AncestorNodeList extends Array<AncestorNode> {
    * @returns Array of linked ancestors
    * @private
    */
-  private linkAncestors(ancestors: ExtendedNode[]): AncestorNode[] {
+  private link(ancestors: ExtendedNode[]): AncestorNode[] {
     const linkedAncestors: AncestorNode[] = [];
 
     for (let i = 0; i < ancestors.length; i++) {
@@ -63,6 +64,14 @@ export class AncestorNodeList extends Array<AncestorNode> {
     }
 
     return linkedAncestors;
+  }
+
+  /**
+   * Creates an empty ancestor node list
+   * @returns Empty instance of AncestorNodeList
+   */
+  static get EMPTY() {
+    return new AncestorsList();
   }
 }
 
@@ -88,35 +97,20 @@ export function extendNode(node: ProseNode, $pos: ResolvedPos, depth: number): E
 /**
  * Retrieves a list of all the ancestor nodes at a given position
  * @param $pos Position to get all the ancestors from
+ * @param startDepth Initial depth from which the lookup will start
  * @returns List of all ancestors at the given position
  */
-export function ancestorNodesAt($pos: ResolvedPos): ExtendedNode[] {
-  const parents: ExtendedNode[] = [];
-  for (let depth = $pos.depth; depth > 0; depth--) {
-    parents.push(extendNode($pos.node(depth), $pos, depth))
-  }
-  return parents;
+export function ancestorNodesAt($pos: ResolvedPos, startDepth?: number): AncestorsList {
+  return findAllAncestors($pos, () => true, startDepth);
 }
 
 /**
- * Retrieves all ancestor nodes in any subsection of the document
- * @param node Editor node to be used for the mark lookup
- * @param start Starting position (inclusive)
- * @param end End position (inclusive)
- * @returns List of all parent nodes
+ * Retrieves all ancestor nodes from a range
+ * @param range Range to retrieve the ancestors from
+ * @returns List of the ancestor nodes of the range
  */
-export function ancestorNodesInRange(node: ProseNode, start: number, end: number): ExtendedNode[] {
-  if (start > end) {
-    return ancestorNodesInRange(node, end, start);
-  }
-
-  const presentNodes = new Set<ExtendedNode>();
-
-  for (let i = start; i <= end; i++) {
-    ancestorNodesAt(node.resolve(i)).forEach(ancestor => presentNodes.add(ancestor));
-  }
-
-  return Array.from(presentNodes);
+export function ancestorNodesInRange(range: NodeRange): AncestorsList {
+  return ancestorNodesAt(range.$from, range.depth);
 }
 
 /**
@@ -124,7 +118,7 @@ export function ancestorNodesInRange(node: ProseNode, start: number, end: number
  * @param state State of the editor
  * @return Ancestor nodes at cursor position
  */
-export function ancestorNodesInSelectionEnd(state: EditorState): ExtendedNode[] {
+export function ancestorNodesAtCursor(state: EditorState): AncestorsList {
   return ancestorNodesAt(state.selection.$to);
 }
 
@@ -133,15 +127,15 @@ export function ancestorNodesInSelectionEnd(state: EditorState): ExtendedNode[] 
  * @param state State of the editor
  * @return Array of active nodes
  */
-export function ancestorNodesInSelection(state: EditorState): ExtendedNode[] {
+export function ancestorNodesInSelection(state: EditorState): AncestorsList {
   const isEmpty = state.selection.empty;
 
   if (isEmpty) {
-    return ancestorNodesInSelectionEnd(state);
+    return ancestorNodesAtCursor(state);
   } else {
-    const $head = state.selection.$head; // Dynamic end of the selection
-    const $anchor = state.selection.$anchor; // export function end of the selection
-    return ancestorNodesInRange(state.doc, $head.pos, $anchor.pos);
+    const range = state.selection.$from.blockRange(state.selection.$to);
+    if (!range) { return AncestorsList.EMPTY; }
+    return ancestorNodesInRange(range);
   }
 }
 
@@ -204,8 +198,8 @@ export function findAncestorOfType($pos: ResolvedPos, type: NodeTypeForLookup, s
  */
 export function findAllAncestors($pos: ResolvedPos,
                                  isValid: (node: ProseNode, depth: number) => boolean,
-                                 startDepth: number = $pos.depth): AncestorNodeList {
-  const parents = new AncestorNodeList();
+                                 startDepth: number = $pos.depth): AncestorsList {
+  const parents = new AncestorsList();
   for (let depth = startDepth; depth >= 0; depth--) {
     const node = $pos.node(depth);
     if (isValid(node, depth)) {
@@ -223,4 +217,32 @@ export function findAllAncestors($pos: ResolvedPos,
  */
 export function ancestorAt($pos: ResolvedPos, depth: number): ExtendedNode {
   return extendNode($pos.node(depth), $pos, depth);
+}
+
+/**
+ * Retrieves all child nodes from the range parent node contained inside the range
+ * @param range Range to get the nodes from
+ * @returns List of child nodes inside the range
+ */
+export function childNodesInRange(range: NodeRange): ExtendedNode[] {
+  const children: ExtendedNode[] = [];
+  const parent = range.parent;
+  const basePos = range.$from.start(range.depth);
+
+  parent.forEach((node, offset) => {
+    if (basePos + offset <= range.$to.pos) {
+      children.push(extendNode(node, parent.resolve(offset), range.depth + 1));
+    }
+  });
+
+  return children;
+}
+
+/**
+ * Checks if given node is a list node
+ * @param node Node to check
+ * @returns True if the node is a list node
+ */
+export function isListNode(node: ProseNode): boolean {
+  return !!node.type.spec.group?.includes(listGroup);
 }
