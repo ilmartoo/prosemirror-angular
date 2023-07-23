@@ -1,20 +1,30 @@
-import {AfterViewInit, Directive, EventEmitter, Output, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, Output, QueryList, ViewChildren} from '@angular/core';
 
 @Directive({ selector: 'app-menu-item-action-popup' })
 export class MenuItemActionPopupComponent implements AfterViewInit {
 
   @Output() acceptedPopup = new EventEmitter<{ [input: string]: string }>();
 
-  @ViewChildren(HTMLInputElement) inputsQList!: QueryList<HTMLInputElement>;
+  @ViewChildren('input') inputsRef!: QueryList<ElementRef<HTMLInputElement>>;
 
   protected isPopupOpen = false;
   protected isValid = false;
   protected inputs: { [input: string]: HTMLInputElement } = { };
 
   ngAfterViewInit() {
-    console.log(this.inputsQList);
-      //.forEach(item => this.inputs[item.name] = item);
+    this.inputsRef.forEach(item => this.inputs[item.nativeElement.name] = item.nativeElement);
     this.reset();
+  }
+
+  /**
+   * Toggles between open & closed popup
+   */
+  togglePopup() {
+    if (this.isPopupOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
   }
 
   /**
@@ -77,7 +87,7 @@ export class MenuItemActionPopupComponent implements AfterViewInit {
    * @protected
    * @returns List of transformed values
    */
-  protected transformValuesForOutput(inputs: { name: string, value: string }[]): { name: string, value: string }[] {
+  protected transformValuesForOutput(inputs: { [input: string]: string }): { [attr: string]: string } {
     return inputs;
   }
 
@@ -87,16 +97,12 @@ export class MenuItemActionPopupComponent implements AfterViewInit {
    */
   protected acceptPopup() {
 
-    let inputs = Object.keys(this.inputs).map(name => ({
-      name: name,
-      value: this.getValue(name),
-    }));
+    let inputs: { [input: string]: string } = { };
+
+    Object.keys(this.inputs).forEach(name => inputs[name] = this.getValue(name));
+
     inputs = this.transformValuesForOutput(inputs);
-
-    const attrs: { [input: string]: string } = { };
-    inputs.forEach(input => attrs[input.name] = input.value);
-
-    this.acceptedPopup.emit(attrs);
+    this.acceptedPopup.emit(inputs);
   }
 
   /**

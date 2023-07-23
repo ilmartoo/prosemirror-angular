@@ -1,75 +1,86 @@
-.item {
+.base {
   position: relative;
-  display: block;
 
-  $button-size: 1.7125rem;
-  width: $button-size;
-  height: $button-size;
-  padding: 0.25rem;
-  margin: 0.25rem 0.0625rem;
+  .item {
+    position: relative;
+    display: block;
 
-  background-color: transparent;
-  border: none;
-  border-radius: 0.2rem;
+    $button-size: 1.7125rem;
+    width: $button-size;
+    height: $button-size;
+    padding: 0.25rem;
+    margin: 0.25rem 0.0625rem;
 
-  &:hover {
-    background-color: #f2f2fc;
-  }
-
-  &.active {
-    background-color: #dadee6;
-  }
-
-  &:disabled {
-    .icon {
-      filter: invert(60%);
-    }
-  }
-
-  &.hidden {
-    display: none;
-  }
-
-  $tooltip-top-from: 90%;
-  $tooltip-top-to: 110%;
-  $tooltip-transition-duration: 200ms;
-  $tooltip-transition-delay: 350ms;
-
-  .tooltip {
-    opacity: 0;
-    visibility: hidden;
-
-    color: white;
-    background-color: #172b4d;
-
-    position: absolute;
-    //top: calc(100% + 0.7rem);
-    left: 50%;
-    transform: translateX(-50%);
-
-    top: $tooltip-top-from;
-    transition:
-      top $tooltip-transition-duration ease-in-out 0s,
-      opacity $tooltip-transition-duration ease-in-out 0s,
-      visibility $tooltip-transition-duration ease-in-out 0s;
-
-    width: max-content;
-    height: max-content;
-
-    font-size: 0.8rem;
-
-    padding: 0.25rem 0.4rem;
+    background-color: transparent;
+    border: none;
     border-radius: 0.2rem;
-  }
 
-  &:not(:disabled) {
-    cursor: pointer;
-  }
+    &:hover {
+      background-color: #f2f2fc;
+    }
 
-  &:hover .tooltip {
-    opacity: 1;
-    visibility: visible;
-    top: $tooltip-top-to;
-    transition-delay: $tooltip-transition-delay;
+    &.active {
+      background-color: #dadee6;
+    }
+
+    &[disabled] {
+      .icon {
+        filter: invert(60%);
+      }
+    }
+
+    &.hidden {
+      display: none;
+    }
+
+    $tooltip-top-from: 90%;
+    $tooltip-top-to: 110%;
+    $tooltip-transition-duration: 200ms;
+    $tooltip-transition-delay: 350ms;
+
+    .tooltip {
+      opacity: 0;
+      visibility: hidden;
+
+      color: white;
+      background-color: #172b4d;
+
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+
+      top: $tooltip-top-from;
+      transition:
+        top $tooltip-transition-duration ease-in-out 0s,
+        opacity $tooltip-transition-duration ease-in-out 0s,
+        visibility $tooltip-transition-duration ease-in-out 0s;
+
+      width: max-content;
+      height: max-content;
+
+      font-size: 0.8rem;
+
+      padding: 0.25rem 0.4rem;
+      border-radius: 0.2rem;
+
+      &.disabled {
+        display: none;
+        opacity: 1;
+        visibility: visible;
+        top: $tooltip-top-to;
+        transition: none;
+      }
+    }
+
+    &:not(:disabled) {
+      cursor: pointer;
+    }
+
+    &:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+      top: $tooltip-top-to;
+      transition-delay: $tooltip-transition-delay;
+    }
   }
 }

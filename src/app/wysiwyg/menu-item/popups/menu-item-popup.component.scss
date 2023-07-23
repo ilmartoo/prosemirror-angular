@@ -15,45 +15,13 @@
   &.show {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     row-gap: 0.5rem;
-  }
-
-  label {
-    font-weight: bold;
-    color: #172b4d;
-  }
-
-  input {
-   background-color: #dadada;
-
-    &:not(:read-only) {
-      border-bottom: 1px solid #dadada;
-
-      &:focus {
-        border-bottom-color: #172b4d;
-      }
-    }
   }
 
   .popup-actions {
     display: flex;
     justify-content: space-between;
-
-    button {
-      background-color: #172b4d;
-      color: white;
-
-      border-radius: 0.25rem;
-
-      padding: 0.25rem;
-
-      &[disabled] {
-        opacity: 0.3;
-      }
-
-      &:not([disabled]) {
-        cursor: pointer;
-      }
-    }
   }
 }

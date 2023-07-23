@@ -1,0 +1,32 @@
+app-menu-item-popup {
+  label {
+    font-weight: bold;
+    color: #172b4d;
+  }
+
+  input {
+    background-color: #dadada;
+    border-bottom: 1px solid #dadada;
+
+    &:focus {
+      border-bottom-color: #172b4d;
+    }
+  }
+
+  button {
+    background-color: #172b4d;
+    color: white;
+
+    border-radius: 0.25rem;
+
+    padding: 0.25rem;
+
+    &[disabled] {
+      opacity: 0.3;
+    }
+
+    &:not([disabled]) {
+      cursor: pointer;
+    }
+  }
+}

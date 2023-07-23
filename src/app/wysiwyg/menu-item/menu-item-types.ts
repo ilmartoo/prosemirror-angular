@@ -20,7 +20,7 @@ import {
   NodeTypeForLookup
 } from '../utilities/nodes-helper';
 import {decreaseIndent, increaseIndent, insertContent, listCommands, toggleWrapper} from '../utilities/commands';
-import {MenuItemActionPopupComponent} from './menu-item-action-popup.component';
+import {MenuItemActionPopupComponent} from './popups/menu-item-action-popup.component';
 import {MenuItemPopupLinkComponent} from './popups/menu-item-popup-link.component';
 
 /** Possible statuses of the menu item */

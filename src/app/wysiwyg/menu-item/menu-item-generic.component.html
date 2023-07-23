@@ -1,19 +1,24 @@
-<div class="base" (mousedown)="preventLosingEditorFocus($event)">
+<div #itemBase
+     class="base"
+     (mousedown)="preventLosingEditorFocus($event)"
+     (focusout)="popupFocusLost($event)"
+     tabindex="-1"
+>
   <button [ngClass]="{
             item: true,
             active: MenuItemStatus.ACTIVE === status,
             hidden: MenuItemStatus.HIDDEN === status
           }"
           [disabled]="MenuItemStatus.DISABLED === status"
-          (click)="!action.popup && onClick()"
+          (click)="popup ? popup.togglePopup() : executeCommand()"
   >
 
     <img *ngIf="icon" class="icon" [src]="iconPath(icon)" [alt]="tooltip ?? ''">
     <div *ngIf="text" class="text">{{ text }}</div>
 
-    <div *ngIf="tooltip && (!popup || !popup.isOpened)" class="tooltip" >{{ tooltip }}</div>
-
-    <ng-container #popupContainer></ng-container>
+    <div *ngIf="tooltip" [ngClass]="{ tooltip: true, disabled: popup?.isOpened }">{{ tooltip }}</div>
 
   </button>
+
+  <ng-container #popupContainer></ng-container>
 </div>

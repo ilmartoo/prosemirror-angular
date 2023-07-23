@@ -2,7 +2,7 @@ import {
   AfterViewInit,
   Component,
   ComponentRef,
-  createComponent,
+  createComponent, ElementRef,
   EnvironmentInjector,
   Input,
   ViewChild,
@@ -14,7 +14,7 @@ import {EditorView} from 'prosemirror-view';
 import {CursorActiveElements, MenuItemAction, MenuItemStatus} from './menu-item-types';
 import {Attrs} from 'prosemirror-model';
 import {MenuItemComponent} from './menu-item.component';
-import {MenuItemActionPopupComponent} from './menu-item-action-popup.component';
+import {MenuItemActionPopupComponent} from './popups/menu-item-action-popup.component';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
 @Component({
@@ -31,13 +31,13 @@ export class MenuItemGenericComponent implements AfterViewInit {
   @Input({ required: false }) text?: string;
   @Input({ required: false }) tooltip?: string;
 
+  @ViewChild('itemBase') itemBaseRef!: ElementRef<HTMLDivElement>;
   @ViewChild('popupContainer', { read: ViewContainerRef }) popupContainer!: ViewContainerRef;
 
   protected view?: EditorView;
   protected readonly MenuItemStatus = MenuItemStatus;
 
   private cachedStatus: MenuItemStatus = MenuItemStatus.DISABLED;
-  private cachedCommand: Command = () => false;
   private popupRef?: ComponentRef<MenuItemActionPopupComponent>;
 
   /**
@@ -48,7 +48,14 @@ export class MenuItemGenericComponent implements AfterViewInit {
   /**
    * Gets the element's command
    */
-  get command(): Command { return this.cachedCommand; }
+  get command(): Command {
+    if (this.view) {
+      const state = this.view.state;
+      const attrs = this.attrs;
+      return this.action.command({state, attrs});
+    }
+    return () => false; // Backup command for when update has not been called yet
+  }
 
   constructor(protected environmentInjector: EnvironmentInjector) { }
 
@@ -64,10 +71,13 @@ export class MenuItemGenericComponent implements AfterViewInit {
         this.popupContainer.insert(this.popupRef.hostView);
 
         // Update attrs
-        this.popup?.acceptedPopup.subscribe(attrs => this.attrs = ({
-          ...this.attrs,
-          attrs,
-        }));
+        this.popup?.acceptedPopup.subscribe(attrs => {
+          this.attrs = {
+            ...this.attrs,
+            attrs,
+          };
+          this.executeCommand();
+        });
       }
     });
   }
@@ -82,8 +92,6 @@ export class MenuItemGenericComponent implements AfterViewInit {
 
     const state = view.state;
     const attrs = this.attrs;
-
-    this.cachedCommand = this.action.command({state, attrs});
     this.cachedStatus = this.action.status({state, elements, attrs});
   }
 
@@ -120,19 +128,27 @@ export class MenuItemGenericComponent implements AfterViewInit {
   }
 
   /**
+   * Checks if the popup has lost focus, if any
+   * @param event Focus event
+   * @protected
+   */
+  protected popupFocusLost(event: FocusEvent) {
+    if (this.popup) {
+      const newlyFocussedElement = event.relatedTarget as HTMLElement;
+      if (!this.itemBaseRef.nativeElement.contains(newlyFocussedElement)) {
+        this.popup.close();
+      }
+    }
+  }
+
+  /**
    * Prevents losing editor focus when clicking on an editor item
    * @protected
    */
   protected preventLosingEditorFocus(event: MouseEvent) {
-    event.preventDefault();
-    this.focusEditor();
-  }
-
-  /**
-   * Callback to execute when the item is clicked
-   * @protected
-   */
-  protected onClick() {
-    this.executeCommand();
+    if (!this.popup) {
+      event.preventDefault();
+      this.focusEditor();
+    }
   }
 }

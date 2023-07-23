@@ -17,7 +17,7 @@ import {MenuCreateTableElementItemComponent} from './wysiwyg/menu-item/menu-crea
 import {MenuToggleTableHeaderComponent} from './wysiwyg/menu-item/menu-toggle-table-header-item.component';
 import {MenuItemGenericComponent} from './wysiwyg/menu-item/menu-item-generic.component';
 import {NgOptimizedImage} from '@angular/common';
-import {MenuItemActionPopupComponent} from './wysiwyg/menu-item/menu-item-action-popup.component';
+import {MenuItemActionPopupComponent} from './wysiwyg/menu-item/popups/menu-item-action-popup.component';
 import {MenuItemPopupComponent} from './wysiwyg/menu-item/popups/menu-item-popup.component';
 import {MenuItemPopupLinkComponent} from './wysiwyg/menu-item/popups/menu-item-popup-link.component';
 
