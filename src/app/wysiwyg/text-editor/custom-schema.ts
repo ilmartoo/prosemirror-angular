@@ -189,21 +189,31 @@ const customMarks = baseSchema.spec.marks
         tag: 'color',
         getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
           if (typeof(dom) === 'string') { return false; } // If string do not parse
-          return {
-            color: dom.style.color,
-            backgroundColor: dom.style.backgroundColor,
-          };
+
+          const color = dom.style.color;
+          const backgroundColor = dom.style.backgroundColor;
+
+          const attrs: { [attr: string]: string } = { };
+          if (color) { attrs['color'] = color; }
+          if (backgroundColor) { attrs['backgroundColor'] = backgroundColor; }
+
+          return Object.keys(attrs).length === 0 ? false : attrs;
         },
       },
       {
         tag: ':not(color)',
         consuming: false,
         getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
-          if (typeof(dom) === 'string') { return false; } // If string do not parse
-          return {
-            color: dom.style.color,
-            backgroundColor: dom.style.backgroundColor,
-          };
+          if (typeof (dom) === 'string') { return false; } // If string do not parse
+
+          const color = dom.style.color;
+          const backgroundColor = dom.style.backgroundColor;
+
+          const attrs: { [attr: string]: string } = { };
+          if (color) { attrs['color'] = color; }
+          if (backgroundColor) { attrs['backgroundColor'] = backgroundColor; }
+
+          return Object.keys(attrs).length === 0 ? false : attrs;
         },
       }
     ],

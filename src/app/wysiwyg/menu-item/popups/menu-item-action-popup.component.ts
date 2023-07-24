@@ -1,9 +1,22 @@
-import {AfterViewInit, Directive, ElementRef, EventEmitter, Output, QueryList, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
+import {EditorState} from 'prosemirror-state';
+import {MarkType, NodeType} from 'prosemirror-model';
 
 @Directive({ selector: 'app-menu-item-action-popup' })
-export class MenuItemActionPopupComponent implements AfterViewInit {
+export class MenuItemActionPopupComponent<T extends MarkType | NodeType = MarkType | NodeType> implements AfterViewInit {
 
+  @Input() type!: T;
   @Output() acceptedPopup = new EventEmitter<{ [input: string]: string }>();
+  @Output() focusEditor = new EventEmitter<void>();
 
   @ViewChildren('input') inputsRef!: QueryList<ElementRef<HTMLInputElement>>;
 
@@ -13,31 +26,35 @@ export class MenuItemActionPopupComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.inputsRef.forEach(item => this.inputs[item.nativeElement.name] = item.nativeElement);
-    this.reset();
   }
 
   /**
    * Toggles between open & closed popup
+   * @param state Editor state
    */
-  togglePopup() {
+  togglePopup(state: EditorState) {
     if (this.isPopupOpen) {
       this.close();
     } else {
-      this.open();
+      this.open(state);
     }
   }
 
   /**
    * Resets & opens the popup
+   * @param state Editor state
    */
-  open() {
-    this.reset();
+  open(state: EditorState) {
+    this.reset(state);
     this.isPopupOpen = true;
   }
 
-  /** Closes the popup */
+  /**
+   * Closes the popup
+   */
   close() {
     this.isPopupOpen = false;
+    this.focusEditor.emit();
   }
 
   /** Checks if the popup is opened */
@@ -66,10 +83,11 @@ export class MenuItemActionPopupComponent implements AfterViewInit {
   }
 
   /**
-   * Resets the state of the inputs. Is advised to override this method on extension.
+   * Resets the state of the inputs on popup opening. Is advised to override this method on extension.
+   * @param state Editor state
    * @protected
    */
-  protected reset() { }
+  protected reset(state: EditorState) { }
 
   /**
    * Checks if the input is valid. Is advised to override this method on extension.
@@ -87,7 +105,7 @@ export class MenuItemActionPopupComponent implements AfterViewInit {
    * @protected
    * @returns List of transformed values
    */
-  protected transformValuesForOutput(inputs: { [input: string]: string }): { [attr: string]: string } {
+  protected transformValuesForOutput(inputs: { [input: string]: string }): { [attr: string]: any } {
     return inputs;
   }
 
@@ -103,6 +121,8 @@ export class MenuItemActionPopupComponent implements AfterViewInit {
 
     inputs = this.transformValuesForOutput(inputs);
     this.acceptedPopup.emit(inputs);
+
+    this.close();
   }
 
   /**

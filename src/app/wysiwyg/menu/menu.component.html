@@ -34,15 +34,16 @@
     <div class="section">
       <app-menu-item-generic [action]="MENU_ITEM_TYPES.link"
                              icon="link"
-                             tooltip="Hyperlink"
+                             tooltip="Create link"
       ></app-menu-item-generic>
-      <app-menu-remove-element-item [type]="MARK_TYPES.link"
-                                    payload="link-remove"
-                                    tooltip="Delete hyperlink"
-      ></app-menu-remove-element-item>
-      <app-menu-image-item payload="image"
-                           tooltip="Add image"
-      ></app-menu-image-item>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.remove_link"
+                             icon="link-remove"
+                             tooltip="Delete link"
+      ></app-menu-item-generic>
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.image"
+                             icon="image"
+                             tooltip="Insert image"
+      ></app-menu-item-generic>
     </div>
 
     <div class="section">
@@ -100,18 +101,15 @@
                              icon="paragraph"
                              tooltip="Paragraph"
       ></app-menu-item-generic>
-      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading"
-                             [attrs]="{ level: 1 }"
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading_1"
                              icon="header1"
                              tooltip="Header 1"
       ></app-menu-item-generic>
-      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading"
-                             [attrs]="{ level: 2 }"
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading_2"
                              icon="header2"
                              tooltip="Header 2"
       ></app-menu-item-generic>
-      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading"
-                             [attrs]="{ level: 3 }"
+      <app-menu-item-generic [action]="MENU_ITEM_TYPES.heading_3"
                              icon="header3"
                              tooltip="Header 3"
       ></app-menu-item-generic>

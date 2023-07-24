@@ -41,6 +41,7 @@
     .tooltip {
       opacity: 0;
       visibility: hidden;
+      z-index: 100;
 
       color: white;
       background-color: #172b4d;

@@ -10,7 +10,7 @@
             hidden: MenuItemStatus.HIDDEN === status
           }"
           [disabled]="MenuItemStatus.DISABLED === status"
-          (click)="popup ? popup.togglePopup() : executeCommand()"
+          (click)="view && (popup ? popup.togglePopup(view.state) : executeCommand())"
   >
 
     <img *ngIf="icon" class="icon" [src]="iconPath(icon)" [alt]="tooltip ?? ''">

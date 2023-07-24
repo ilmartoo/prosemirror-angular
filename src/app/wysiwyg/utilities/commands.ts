@@ -68,9 +68,6 @@ export function replaceWithMarkedText(text: string, marks: Mark[], from: number,
   }
 
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
-    if (!text) {
-      return false;
-    } // Text must not be empty
     if (dispatch) {
       const tr = state.tr;
 
