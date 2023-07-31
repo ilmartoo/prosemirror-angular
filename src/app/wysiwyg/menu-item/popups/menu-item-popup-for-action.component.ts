@@ -1,6 +1,6 @@
 import {
   AfterViewInit,
-  Directive,
+  Component,
   ElementRef,
   EventEmitter,
   Input,
@@ -11,9 +11,11 @@ import {
 import {EditorState} from 'prosemirror-state';
 import {MarkType, NodeType} from 'prosemirror-model';
 
-@Directive({ selector: 'app-menu-item-action-popup' })
-export class MenuItemActionPopupComponent<T extends MarkType | NodeType = MarkType | NodeType> implements AfterViewInit {
-
+@Component({
+  selector: 'app-menu-item-action-popup',
+  template: '',
+})
+export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = MarkType | NodeType> implements AfterViewInit {
   @Input() type!: T;
   @Output() acceptedPopup = new EventEmitter<{ [input: string]: string }>();
   @Output() focusEditor = new EventEmitter<void>();
@@ -46,6 +48,7 @@ export class MenuItemActionPopupComponent<T extends MarkType | NodeType = MarkTy
    */
   open(state: EditorState) {
     this.reset(state);
+    this.validate();
     this.isPopupOpen = true;
   }
 
@@ -63,13 +66,14 @@ export class MenuItemActionPopupComponent<T extends MarkType | NodeType = MarkTy
   }
 
   /**
-   * Retrieves the trimmed value of an input
-   * @param name Name of the input to retrieve
+   * Dictionary of values for every input for any given time
    * @protected
-   * @returns Trimmed value of the input
+   * @returns Dictionary of current values for every input
    */
-  protected getValue(name: string): string {
-    return this.inputs[name].value.trim()
+  protected get values(): { [p: string]: string } {
+    const values: { [p: string]: string } = { };
+    this.inputsRef.forEach(item => values[item.nativeElement.name] = item.nativeElement.value);
+    return values;
   }
 
   /**
@@ -90,11 +94,23 @@ export class MenuItemActionPopupComponent<T extends MarkType | NodeType = MarkTy
   protected reset(state: EditorState) { }
 
   /**
-   * Checks if the input is valid. Is advised to override this method on extension.
+   * Checks if the input is valid & updates isValid value accordingly. Is advised to override this method on extension.
    * @protected
+   * @returns Returns the new value of isValid to reduce `if` checks:
+   * ```
+   * // DO THIS
+   * if (this.validate()) {
+   *   // ...
+   * }
+   * // INSTEAD OF THIS
+   * this.validate();
+   * if (this.isValid) {
+   *   // ...
+   * }
+   * ```
    */
-  protected validate() {
-    this.isValid = true;
+  protected validate(): boolean {
+    return (this.isValid = true);
   }
 
   /**
@@ -114,15 +130,12 @@ export class MenuItemActionPopupComponent<T extends MarkType | NodeType = MarkTy
    * @internal
    */
   protected acceptPopup() {
+    if (this.validate()) {
+      const inputs = this.transformValuesForOutput(this.values);
+      this.acceptedPopup.emit(inputs);
 
-    let inputs: { [input: string]: string } = { };
-
-    Object.keys(this.inputs).forEach(name => inputs[name] = this.getValue(name));
-
-    inputs = this.transformValuesForOutput(inputs);
-    this.acceptedPopup.emit(inputs);
-
-    this.close();
+      this.close();
+    }
   }
 
   /**

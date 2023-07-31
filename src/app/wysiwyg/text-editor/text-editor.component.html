@@ -1,6 +1,8 @@
 <div class="text-editor">
   <!-- Editor menu -->
-  <app-menu #menu></app-menu>
+  <app-menu #menu>
+    <ng-content></ng-content>
+  </app-menu>
 
   <!-- Editor ProseMirror -->
   <div class="__ProseMirror-text-editor" #prosemirror></div>

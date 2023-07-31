@@ -1,0 +1,14 @@
+<div class="base" (mousedown)="preventLosingEditorFocus($event)">
+  <button [ngClass]="{
+    item: true,
+    active: MenuItemStatus.ACTIVE === status,
+    hidden: MenuItemStatus.HIDDEN === status
+  }" [disabled]="MenuItemStatus.DISABLED === status" (click)="onClick()">
+
+    <img *ngIf="icon" class="icon" [src]="iconPath(icon)" [alt]="tooltip ?? ''">
+    <div *ngIf="text" class="text">{{ text }}</div>
+
+    <div *ngIf="tooltip" [ngClass]="{ tooltip: true }">{{ tooltip }}</div>
+
+  </button>
+</div>

@@ -3,34 +3,47 @@ import {MARK_TYPES, NODE_TYPES} from '../text-editor/custom-schema';
 import {Attrs, Mark, MarkType, NodeType} from 'prosemirror-model';
 import {setBlockType, toggleMark} from 'prosemirror-commands';
 import {
-  activeMarksInSelectionEnd,
-  areMarksEquals,
-  areMarkTypesEquals,
-  MarkForLookup,
-  MarkTypeForLookup
+	activeMarksInSelectionEnd,
+	areMarksEquals,
+	areMarkTypesEquals,
+	MarkForLookup,
+	MarkTypeForLookup
 } from '../utilities/marks-helper';
 import {
-  AncestorNode,
-  ancestorNodesAtCursor,
-  AncestorsList,
-  areNodesEquals,
-  areNodeTypesEquals,
-  isListNode,
-  NodeForLookup,
-  NodeTypeForLookup
+	AncestorNode,
+	ancestorNodesAtCursor,
+	AncestorsList,
+	areNodesEquals,
+	areNodeTypesEquals,
+	isListNode,
+	NodeForLookup,
+	NodeTypeForLookup
 } from '../utilities/nodes-helper';
 import {
-  decreaseIndent,
-  expandAndRemoveMarks,
-  increaseIndent,
-  insertContent,
-  listCommands,
-  replaceWithMarkedText,
-  toggleWrapper
+	decreaseIndent,
+	expandAndRemoveMarks,
+	increaseIndent,
+	insertContent,
+	insertTable,
+	listCommands,
+	replaceWithMarkedText,
+	toggleWrapper
 } from '../utilities/commands';
-import {MenuItemActionPopupComponent} from './popups/menu-item-action-popup.component';
+import {MenuItemPopupForActionComponent} from './popups/menu-item-popup-for-action.component';
 import {MenuItemPopupLinkComponent} from './popups/menu-item-popup-link.component';
 import {MenuItemPopupImageComponent} from './popups/menu-item-popup-image.component';
+import {Type} from '@angular/core';
+import {MenuItemPopupTableComponent} from './popups/menu-item-popup-table.component';
+import {
+	addColumnAfter,
+	addColumnBefore,
+	addRowAfter,
+	addRowBefore,
+	deleteColumn,
+	deleteRow,
+	deleteTable,
+	TableMap
+} from 'prosemirror-tables';
 
 /** Possible statuses of the menu item */
 export enum MenuItemStatus {
@@ -71,19 +84,19 @@ export class CursorActiveElements {
   /**
    * Checks if the node is active
    * @param node Node to check
-   * @returns True if the node is inside the active elements
+   * @returns Node if the node is inside the active elements or undefined if not found
    */
-  hasNode(node: NodeForLookup): boolean {
-    return !!this.ancestors.find(n => areNodesEquals(n, node));
+  hasNode(node: NodeForLookup): AncestorNode | undefined {
+    return this.ancestors.find(n => areNodesEquals(n, node));
   }
 
   /**
    * Checks if the node type is active
    * @param type Node type to check
-   * @returns True if the node type is inside the active elements
+   * @returns Node if the node type is inside the active elements or undefined if not found
    */
-  hasNodeType(type: NodeTypeForLookup): boolean {
-    return !!this.ancestors.find(n => areNodeTypesEquals(n.type, type));
+  hasNodeType(type: NodeTypeForLookup): AncestorNode | undefined {
+    return this.ancestors.find(n => areNodeTypesEquals(n.type, type));
   }
 
   /**
@@ -125,7 +138,7 @@ export type MenuItemBasicAction = {
 /** Type declaration of a menu item type element action */
 export type MenuItemTypeAction<
   T extends MarkType | NodeType = MarkType | NodeType,
-  P extends MenuItemActionPopupComponent = MenuItemActionPopupComponent,
+  P extends MenuItemPopupForActionComponent = MenuItemPopupForActionComponent,
 > = {
   /** Mark or node type of the menu item */
   type: T;
@@ -136,7 +149,7 @@ export type MenuItemTypeAction<
   /** Status of the menu item on a given status */
   status(data: { state: EditorState, elements: CursorActiveElements, attrs?: Attrs }): MenuItemStatus;
   /** Optional popup compiled angular class type for a middle step */
-  popup?: ({ new(...args: any[]): P });
+  popup?: Type<P>;
 }
 
 export type MarkMenuItemActions =
@@ -149,7 +162,8 @@ export type MarkMenuItemActions =
   | 'italic'
   | 'bold'
   | 'superscript'
-  | 'subscript';
+  | 'subscript'
+  ;
 export type NodeMenuItemActions =
   | 'image'
   | 'blockquote'
@@ -162,9 +176,18 @@ export type NodeMenuItemActions =
   | 'code_block'
   | 'ordered_list'
   | 'bullet_list'
-  | 'check_list';
+  | 'check_list'
+  | 'create_table'
+  | 'delete_table'
+  | 'add_table_row_before'
+  | 'add_table_row_after'
+  | 'add_table_column_before'
+  | 'add_table_column_after'
+  | 'delete_table_row'
+  | 'delete_table_column'
+  ;
 export type MenuItemTypes =
-  { readonly [action in NodeMenuItemActions]: MenuItemTypeAction<NodeType> }
+  & { readonly [action in NodeMenuItemActions]: MenuItemTypeAction<NodeType> }
   & { readonly [action in MarkMenuItemActions]: MenuItemTypeAction<MarkType> };
 
 /** List of predefined basic menu item types */
@@ -426,47 +449,110 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
   },
+
+  create_table: {
+    type: NODE_TYPES.table,
+    attrs({ attrs }) {
+      return {
+        rows: 2,
+        cols: 2,
+        ...attrs,
+      };
+    },
+    command(data: { state: EditorState, attrs?: { rows: number, cols: number } & Attrs }) {
+      const {rows, cols} = this.attrs({ state: data.state, attrs: data.attrs });
+      return insertTable(data.state.selection.head, rows, cols);
+    },
+    status({state, attrs}) {
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+    },
+    popup: MenuItemPopupTableComponent
+  },
+
+  delete_table: {
+    type: NODE_TYPES.table,
+    attrs({attrs}) { return attrs ?? {}; },
+    command() {
+      return deleteTable;
+    },
+    status({state, attrs}) {
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.HIDDEN;
+    },
+  },
+
+  add_table_row_before: add_table_element(true, true),
+  add_table_row_after: add_table_element(true, false),
+  add_table_column_before: add_table_element(false, true),
+  add_table_column_after: add_table_element(false, false),
+
+  delete_table_row: delete_table_element(true),
+  delete_table_column: delete_table_element(false),
 }
-// CREATE_TABLE: {
-//   type: NODE_TYPES.table,
-//   command({ state, attrs }): Command {},
-//   status({ state, elements, attrs }): MenuItemStatus {},
-// },
-//
-// REMOVE_TABLE: {
-//
-// },
-//
-// CREATE_TABLE_ROW: {
-//   type: NODE_TYPES.table_row,
-//   command({ state, attrs }): Command {},
-//   status({ state, elements, attrs }): MenuItemStatus {},
-// },
-//
-// REMOVE_TABLE_ROW: {
-//   type: NODE_TYPES.table_row,
-//   command({ state, attrs }): Command {},
-//   status({ state, elements, attrs }): MenuItemStatus {},
-// },
-//
-// HEADER: {
-//   type: NODE_TYPES.table_header,
-//   command({ state, attrs }): Command {},
-//   status({ state, elements, attrs }): MenuItemStatus {},
-// }
 
 // Heading action function
 function heading_action(level: number): MenuItemTypeAction<NodeType> {
-  const attrs = { level };
+  const baseAttrs = { level };
   return {
     type: NODE_TYPES.heading,
+    attrs({attrs}) {
+      return {
+        ...baseAttrs,
+        ...attrs,
+		  };
+    },
+    command({state, attrs}): Command {
+      return setBlockType(this.type, this.attrs({state, attrs}));
+    },
+    status({state, elements, attrs}): MenuItemStatus {
+      const node: NodeForLookup = {type: this.type, attrs: this.attrs({state, attrs})};
+      if (elements.hasNode(node)) { return MenuItemStatus.ACTIVE; }
+
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+    },
+  }
+}
+
+// Table element addition action function
+function add_table_element(isRow: boolean, isBefore: boolean): MenuItemTypeAction<NodeType> {
+  const commands = isRow
+    ? { before: addRowBefore, after: addRowAfter }
+    : { before: addColumnBefore, after: addColumnAfter };
+  const command = isBefore ? commands.after : commands.before;
+
+  return {
+    type: NODE_TYPES.table,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
-      return setBlockType(this.type, attrs);
+      return command;
     },
-    status({state, elements}): MenuItemStatus {
-      return elements.hasNode({type: this.type, attrs}) ? MenuItemStatus.ACTIVE
-        : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
+    status({state, elements, attrs}): MenuItemStatus {
+      // Check if it is inside a table
+      if (!elements.hasNodeType(this.type)) { return MenuItemStatus.HIDDEN; }
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.HIDDEN;
+    },
+  }
+}
+
+// Table element deleting action function
+function delete_table_element(isRow: boolean): MenuItemTypeAction<NodeType> {
+  const command = isRow ? deleteRow : deleteColumn;
+
+  return {
+    type: NODE_TYPES.table,
+    attrs({attrs}) { return attrs ?? {}; },
+    command(): Command {
+      return command;
+    },
+    status({elements}): MenuItemStatus {
+      // Check if it is inside a table
+      const tableNode = elements.hasNodeType(this.type);
+      if (!tableNode) { return MenuItemStatus.HIDDEN; }
+
+      const tableMap = TableMap.get(tableNode);
+
+      // Check if at least one row or column will be left when deleting
+      const canDelete = isRow ? tableMap.height > 1 : tableMap.width > 1;
+      return canDelete ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
     },
   }
 }

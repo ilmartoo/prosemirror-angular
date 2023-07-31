@@ -1,4 +1,4 @@
-import {MenuItemActionPopupComponent} from './menu-item-action-popup.component';
+import {MenuItemPopupForActionComponent} from './menu-item-popup-for-action.component';
 import {Component} from '@angular/core';
 import {EditorState} from 'prosemirror-state';
 import {MarkType} from 'prosemirror-model';
@@ -8,7 +8,7 @@ import {MarkType} from 'prosemirror-model';
   templateUrl: './menu-item-popup-image.component.html',
   styleUrls: ['./menu-item-action-popup.component.scss'],
 })
-export class MenuItemPopupImageComponent extends MenuItemActionPopupComponent<MarkType> {
+export class MenuItemPopupImageComponent extends MenuItemPopupForActionComponent<MarkType> {
   protected readonly INPUTS = {
     TITLE: 'title',
     REFERENCE: 'reference',
@@ -19,8 +19,8 @@ export class MenuItemPopupImageComponent extends MenuItemActionPopupComponent<Ma
     this.setValue(this.INPUTS.REFERENCE, '');
   }
 
-  protected override validate() {
-    this.isValid = !!this.getValue(this.INPUTS.TITLE) && !!this.getValue(this.INPUTS.REFERENCE)
+  protected override validate(): boolean {
+    return (this.isValid = !!this.values[this.INPUTS.TITLE] && !!this.values[this.INPUTS.REFERENCE])
   }
 
   protected override transformValuesForOutput(inputs: { [input: string]: string }): { [input: string]: any } {

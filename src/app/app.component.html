@@ -1,4 +1,143 @@
 <div class="demo">
   <span class="title">prosemirror-angular DEMO</span>
-  <app-text-editor class="editor" [initialData]="initialData"></app-text-editor>
+  <app-text-editor class="editor" [initialData]="initialData">
+
+    <!-- Basic marks -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.bold"
+                              icon="bold"
+                              tooltip="Bold"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.italic"
+                              icon="italic"
+                              tooltip="Italic"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.underline"
+                              icon="underline"
+                              tooltip="Underline"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.strikethrough"
+                              icon="strikethrough"
+                              tooltip="Strikethrough"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.superscript"
+                              icon="superscript"
+                              tooltip="Superscript"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.subscript"
+                              icon="subscript"
+                              tooltip="Subscript"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.inline_code"
+                              icon="code"
+                              tooltip="Inline code"
+    ></app-menu-item-for-action>
+
+    <app-menu-item-separator></app-menu-item-separator>
+
+    <!-- Special marks & nodes -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.link"
+                              icon="link"
+                              tooltip="Create link"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.remove_link"
+                              icon="link-remove"
+                              tooltip="Delete link"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.image"
+                              icon="image"
+                              tooltip="Insert image"
+    ></app-menu-item-for-action>
+
+    <app-menu-item-separator></app-menu-item-separator>
+
+    <!-- Table -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.create_table"
+                              icon="table-plus"
+                              tooltip="Create table"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.delete_table"
+                              icon="table-remove"
+                              tooltip="Delete table"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_column_before"
+                              icon="table-column-plus-before"
+                              tooltip="Add column before"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_column_after"
+                              icon="table-column-plus-after"
+                              tooltip="Add column after"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.delete_table_row"
+                              icon="table-row-remove"
+                              tooltip="Delete row"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_row_before"
+                              icon="table-row-plus-before"
+                              tooltip="Add row before"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_row_after"
+                              icon="table-row-plus-after"
+                              tooltip="Add row after"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.delete_table_column"
+                              icon="table-column-remove"
+                              tooltip="Delete column"
+    ></app-menu-item-for-action>
+
+    <app-menu-item-separator></app-menu-item-separator>
+
+    <!-- Basic nodes -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.paragraph"
+                              icon="paragraph"
+                              tooltip="Paragraph"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.heading_1"
+                              icon="header1"
+                              tooltip="Header 1"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.heading_2"
+                              icon="header2"
+                              tooltip="Header 2"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.heading_3"
+                              icon="header3"
+                              tooltip="Header 3"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.blockquote"
+                              icon="blockquote"
+                              tooltip="Quote text"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.code_block"
+                              icon="code-block"
+                              tooltip="Code block"
+    ></app-menu-item-for-action>
+
+    <app-menu-item-separator></app-menu-item-separator>
+
+    <!-- Lists -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.bullet_list"
+                              icon="list-bullet"
+                              tooltip="Bullet list"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.ordered_list"
+                              icon="list-ordered"
+                              tooltip="Ordered list"
+    ></app-menu-item-for-action>
+    <!--  <app-menu-item [type]="view.state.schema.nodes['checklist']"-->
+    <!--                        [status]="getNodeStatus('checklist')"-->
+    <!--                        icon="list-check"-->
+    <!--                        tooltip="Checklist"-->
+    <!--  ></app-menu-item>-->
+
+    <!-- Indents -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.indent"
+                              icon="indent-decrease"
+                              tooltip="Decrease indent"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.deindent"
+                              icon="indent-increase"
+                              tooltip="Increase indent"
+    ></app-menu-item-for-action>
+
+  </app-text-editor>
 </div>

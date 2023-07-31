@@ -1,27 +1,23 @@
-import {Component, QueryList, ViewChildren} from '@angular/core';
-import {MenuItemComponent} from '../menu-item/menu-item.component';
+import {Component, ContentChildren, QueryList} from '@angular/core';
 import {EditorView} from 'prosemirror-view';
 import {EditorState, Plugin, PluginView} from 'prosemirror-state';
-import {MARK_TYPES, NODE_TYPES} from '../text-editor/custom-schema';
 import {fixTables} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
-import {CursorActiveElements, MENU_ITEM_TYPES} from '../menu-item/menu-item-types';
+import {CursorActiveElements} from '../menu-item/menu-item-types';
+import {MenuItem} from '../menu-item/menu-item';
 
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements PluginView {
 
-  @ViewChildren(MenuItemComponent) items!: QueryList<MenuItemComponent>;
+  @ContentChildren(MenuItem) items!: QueryList<MenuItem>;
 
   protected view?: EditorView;
-  protected readonly MENU_ITEM_TYPES = MENU_ITEM_TYPES;
-  protected readonly NODE_TYPES = NODE_TYPES;
-  protected readonly MARK_TYPES = MARK_TYPES;
 
   /******************* ProseMirror Plugin creation & PluginView methods *******************/
 

@@ -2,17 +2,19 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Command} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
 import {CursorActiveElements, MenuItemStatus} from './menu-item-types';
+import {MenuItem} from './menu-item';
 
 @Component({
-  selector: 'app-menu-item',
-  templateUrl: './menu-item.component.html',
-  styleUrls: ['./menu-item.component.scss'],
+  selector: 'app-menu-item-base',
+  templateUrl: './menu-item-base.component.html',
+  styleUrls: ['./menu-item-base.component.scss'],
+  providers: [{ provide: MenuItem, useExisting: MenuItemBaseComponent }],
 })
-export class MenuItemComponent implements OnInit {
+export class MenuItemBaseComponent extends MenuItem implements OnInit {
 
-  @Input({ required: true }) payload!: string;
-  @Input() isText = false;
-  @Input() tooltip?: string;
+  @Input({ required: false }) icon?: string;
+  @Input({ required: false }) text?: string;
+  @Input({ required: false }) tooltip?: string;
   @Input() command!: Command;
 
   protected isCommandFromInput = false;
@@ -21,7 +23,9 @@ export class MenuItemComponent implements OnInit {
   protected status = MenuItemStatus.ENABLED;
   protected readonly MenuItemStatus = MenuItemStatus;
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   public ngOnInit() {
     this.isCommandFromInput = !!this.command;
@@ -35,7 +39,7 @@ export class MenuItemComponent implements OnInit {
   }
 
 
-  public update(view: EditorView, activeElements: CursorActiveElements): void {
+  override update(view: EditorView, activeElements: CursorActiveElements): void {
     this.view = view; // Update to the current view
     if (!this.isCommandFromInput) {
       this.command = this.updatedCommand(view);

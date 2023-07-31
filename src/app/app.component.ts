@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MENU_ITEM_TYPES} from './wysiwyg/menu-item/menu-item-types';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +9,15 @@ import {Component} from '@angular/core';
 export class AppComponent {
   title = 'Prosemirror Demo';
 
-  initialData =
+  protected readonly MENU_ITEM_TYPES = MENU_ITEM_TYPES;
+  protected readonly initialData =
     '<h1><strong>[ TEXT STYLING ]</strong></h1>' +
     '<p>' +
     'Normal<br>' +
     '<strong>Bold</strong><br>' +
     '<em>Italic</em><br>' +
     '<u>Underline</u><br>' +
-    '<s>Strikethrough</s><br>' +
+    '<s>Striketdrough</s><br>' +
     '<code>Inline code</code><br>' +
     '<sup>Super</sup>script<br>' +
     '<sub>Sub</sub>script' +
@@ -83,7 +85,7 @@ export class AppComponent {
     '<p></p>' +
     '<indent>' +
     '  <p>Block identations</p>' +
-    '  <indent><p><em>Anything can be idented</em></p></indent>' +
+    '  <indent><p><em>Anytding can be idented</em></p></indent>' +
     '</indent>' +
 
     '<p></p>' +
@@ -91,14 +93,14 @@ export class AppComponent {
     '<h1><strong>[ TABLES ]</strong></h1>' +
     '<table>' +
     '  <tr>' +
-    '    <th>Test</th>' +
+    '    <td>Test</td>' +
     '    <td>for</td>' +
     '    <td>different</td>' +
     '    <td>nodes</td>' +
     '  </tr>' +
     '  <tr>' +
     '    <td><h1>Header 1</h1></td>' +
-    '    <th><h2>Header 2</h2></th>' +
+    '    <td><h2>Header 2</h2></td>' +
     '    <td><h3>Header 3</h3></td>' +
     '    <td>' +
     '      <ol>' +
@@ -114,7 +116,7 @@ export class AppComponent {
     '  <tr>' +
     '    <td><indent><p>Just an inchident</p></indent></td>' +
     '    <td><img alt="Leclerc" title="Leclerc" src="https://1000logos.net/wp-content/uploads/2018/02/Ferrari-Logo.png"></td>' +
-    '    <th><table><tr><td>13</td><td>21</td><td>34</td></tr><tr><td>8</td><td>1</td><td>1</td></tr><tr><td>5</td><td>3</td><td>2</td></tr></table></th>' +
+    '    <td><table><tr><td>13</td><td>21</td><td>34</td></tr><tr><td>8</td><td>1</td><td>1</td></tr><tr><td>5</td><td>3</td><td>2</td></tr></table></td>' +
     '    <td><sub><code>33</code> <sub>¿</sub><strong>Me</strong> <em>repites</em> <u>ese</u> <s>numerín</s><sup>?</sup></td>' +
     '  </tr>' +
     '  <tr>' +
@@ -126,7 +128,7 @@ export class AppComponent {
     '    </td>' +
     '    <td>Left aligned text TODO</td>' +
     '    <td>Center aligned text TODO</td>' +
-    '    <th>Right aligned text TODO</th>' +
+    '    <td>Right aligned text TODO</td>' +
     '  </tr>' +
     '</table>' +
     '';

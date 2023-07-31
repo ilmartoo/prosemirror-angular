@@ -1,4 +1,4 @@
-import {MenuItemActionPopupComponent} from './menu-item-action-popup.component';
+import {MenuItemPopupForActionComponent} from './menu-item-popup-for-action.component';
 import {Component} from '@angular/core';
 import {EditorState} from 'prosemirror-state';
 import {expandMarkActiveRange, searchForMarkTypeInSelection} from '../../utilities/marks-helper';
@@ -10,7 +10,7 @@ import {textBetween} from '../../utilities/node-content-helper';
   templateUrl: './menu-item-popup-link.component.html',
   styleUrls: ['./menu-item-action-popup.component.scss'],
 })
-export class MenuItemPopupLinkComponent extends MenuItemActionPopupComponent<MarkType> {
+export class MenuItemPopupLinkComponent extends MenuItemPopupForActionComponent<MarkType> {
   protected readonly INPUTS = {
     TITLE: 'title',
     REFERENCE: 'reference',
@@ -58,8 +58,8 @@ export class MenuItemPopupLinkComponent extends MenuItemActionPopupComponent<Mar
     }
   }
 
-  protected override validate() {
-    this.isValid = !!this.getValue(this.INPUTS.TITLE) && !!this.getValue(this.INPUTS.REFERENCE)
+  protected override validate(): boolean {
+    return (this.isValid = !!this.values[this.INPUTS.TITLE] && !!this.values[this.INPUTS.REFERENCE])
   }
 
   protected override transformValuesForOutput(inputs: { [input: string]: string }): { [input: string]: any } {

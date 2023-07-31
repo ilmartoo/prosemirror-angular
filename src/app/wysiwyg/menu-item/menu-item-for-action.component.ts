@@ -14,18 +14,18 @@ import {Command} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
 
 import {CursorActiveElements, MenuItemBasicAction, MenuItemStatus, MenuItemTypeAction} from './menu-item-types';
-import {MenuItemComponent} from './menu-item.component';
-import {MenuItemActionPopupComponent} from './popups/menu-item-action-popup.component';
+import {MenuItemPopupForActionComponent} from './popups/menu-item-popup-for-action.component';
 import {executeAfter} from '../utilities/multipurpose-helper';
 import {Attrs} from 'prosemirror-model';
+import {MenuItem} from './menu-item';
 
 @Component({
-  selector: 'app-menu-item-generic',
-  templateUrl: './menu-item-generic.component.html',
-  styleUrls: ['./menu-item.component.scss'],
-  providers: [{ provide: MenuItemComponent, useExisting: MenuItemGenericComponent }],
+  selector: 'app-menu-item-for-action',
+  templateUrl: './menu-item-for-action.component.html',
+  styleUrls: ['./menu-item-base.component.scss'],
+  providers: [{ provide: MenuItem, useExisting: MenuItemForActionComponent }],
 })
-export class MenuItemGenericComponent implements AfterViewInit, OnDestroy {
+export class MenuItemForActionComponent extends MenuItem implements AfterViewInit, OnDestroy {
 
   @Input({ required: true }) action!: MenuItemBasicAction | MenuItemTypeAction;
   @Input({ required: false }) icon?: string;
@@ -37,7 +37,7 @@ export class MenuItemGenericComponent implements AfterViewInit, OnDestroy {
 
   protected view?: EditorView;
   protected cachedStatus: MenuItemStatus = MenuItemStatus.DISABLED;
-  protected popupRef?: ComponentRef<MenuItemActionPopupComponent>;
+  protected popupRef?: ComponentRef<MenuItemPopupForActionComponent>;
 
   protected readonly MenuItemStatus = MenuItemStatus;
 
@@ -57,7 +57,9 @@ export class MenuItemGenericComponent implements AfterViewInit, OnDestroy {
     return () => false; // Backup command for when update has not been called yet
   }
 
-  constructor(protected environmentInjector: EnvironmentInjector) { }
+  constructor(protected environmentInjector: EnvironmentInjector) {
+    super();
+  }
 
   ngAfterViewInit() {
     executeAfter(() => {
@@ -94,7 +96,7 @@ export class MenuItemGenericComponent implements AfterViewInit, OnDestroy {
    * @param view Editor view
    * @param elements Active elements at cursor at editor view state
    */
-  public update(view: EditorView, elements: CursorActiveElements) {
+  override update(view: EditorView, elements: CursorActiveElements) {
     this.view = view; // Update to the current view
 
     const state = view.state;
@@ -116,7 +118,7 @@ export class MenuItemGenericComponent implements AfterViewInit, OnDestroy {
    * @protected
    * @returns Popup instance if it exists
    * */
-  protected get popup(): MenuItemActionPopupComponent | undefined {
+  protected get popup(): MenuItemPopupForActionComponent | undefined {
     return this.popupRef?.instance;
   }
 

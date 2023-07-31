@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ContentChildren,
+  ElementRef,
+  Input,
+  QueryList,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {DOMParser as ProseDOMParser} from 'prosemirror-model';
 import {EditorState} from 'prosemirror-state';
 import {history, redo, undo} from 'prosemirror-history';
@@ -10,6 +19,7 @@ import {customSchema} from './custom-schema';
 import {decreaseIndent, increaseIndent, newBlock, newLine} from '../utilities/commands';
 import {tableEditing} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
+import {MenuItem} from '../menu-item/menu-item';
 
 
 /**
@@ -36,12 +46,14 @@ export class TextEditorComponent implements AfterViewInit {
 
   @ViewChild('prosemirror') prosemirrorRef!: ElementRef<HTMLDivElement>;
   @ViewChild('menu') menuRef!: MenuComponent;
+  @ContentChildren(MenuItem) items!: QueryList<MenuItem>;
 
   protected view!: EditorView;
 
   constructor() { }
 
   ngAfterViewInit(): void {
+    this.menuRef.items = this.items;
     this.createEditor();
   }
 
