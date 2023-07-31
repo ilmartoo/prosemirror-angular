@@ -34,6 +34,18 @@
 
     <app-menu-item-separator></app-menu-item-separator>
 
+    <!-- Colors -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.text_color"
+                              icon="text-color"
+                              tooltip="Text color"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.background_color"
+                              icon="text-background"
+                              tooltip="Background color"
+    ></app-menu-item-for-action>
+
+    <app-menu-item-separator></app-menu-item-separator>
+
     <!-- Special marks & nodes -->
     <app-menu-item-for-action [action]="MENU_ITEM_TYPES.link"
                               icon="link"

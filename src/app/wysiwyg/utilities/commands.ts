@@ -505,7 +505,7 @@ export const newBlock: Command = chainCommands(newlineInCode, createParagraphNea
 
 /**
  * Changes the color mark of the text
- * @param color New color to change into or undefined if the color should be removed
+ * @param color New color to change the text into or undefined if the color should be removed
  * @returns False if the command cannot be executed
  */
 export function changeTextColor(color?: string): Command {
@@ -518,9 +518,35 @@ export function changeTextColor(color?: string): Command {
       const tr = state.tr;
 
       if (color) {
-        tr.addMark($from.pos, $to.pos, MARK_TYPES.color.create({ color }));
+        tr.addMark($from.pos, $to.pos, MARK_TYPES.txt_color.create({ color }));
       } else {
-        tr.removeMark($from.pos, $to.pos, MARK_TYPES.color);
+        tr.removeMark($from.pos, $to.pos, MARK_TYPES.txt_color);
+      }
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+/**
+ * Changes the color mark of the text
+ * @param color New color to change the background into or undefined if the color should be removed
+ * @returns False if the command cannot be executed
+ */
+export function changeBackgroundColor(color?: string): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const {$from, $to} = state.selection;
+    const range = $from.blockRange($to);
+    if (!range) { return false; }
+
+    if (dispatch) {
+      const tr = state.tr;
+
+      if (color) {
+        tr.addMark($from.pos, $to.pos, MARK_TYPES.bg_color.create({ color }));
+      } else {
+        tr.removeMark($from.pos, $to.pos, MARK_TYPES.bg_color);
       }
 
       dispatch(tr.scrollIntoView());

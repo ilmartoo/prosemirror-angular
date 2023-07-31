@@ -124,7 +124,8 @@ enum DecorationMarkSpecs {
   STRIKETHROUGH = 'strikethrough',
 }
 enum StyleMarkSpecs {
-  COLOR = 'color',
+  TEXT_COLOR = 'txt_color',
+  BACKGROUND_COLOR = 'bg_color',
   ITALIC = 'em',
   BOLD = 'strong',
   SUPERSCRIPT = 'superscript',
@@ -135,8 +136,10 @@ type CustomMarkSpecs = SpecialMarkSpecs | DecorationMarkSpecs | StyleMarkSpecs;
 // DOM specs
 const underlineDOM: DOMOutputSpec = ['u', 0];
 const strikethroughDOM: DOMOutputSpec = ['s', 0];
-const colorDOM = (txtColor?: string, bgColor?: string): DOMOutputSpec =>
-  ['color', { style: generateStyles({ color: txtColor, 'background-color': bgColor }) }, 0];
+const textColorDOM = (color?: string): DOMOutputSpec =>
+  ['span', { style: generateStyles({ color: color }) }, 0];
+const backgroundColorDOM = (color?: string): DOMOutputSpec =>
+  ['span', { style: generateStyles({ 'background-color': color }) }, 0];
 const superscriptDOM: DOMOutputSpec = ['sup', 0];
 const subscriptDOM: DOMOutputSpec = ['sub', 0];
 
@@ -178,46 +181,44 @@ const customMarks = baseSchema.spec.marks
     toDOM: (): DOMOutputSpec => strikethroughDOM,
   })
 
-  // Color
-  .update(StyleMarkSpecs.COLOR, {
+  // Text color
+  .update(StyleMarkSpecs.TEXT_COLOR, {
     attrs: {
       color: { default: undefined },
-      backgroundColor: { default: undefined },
     },
     parseDOM: [
       {
-        tag: 'color',
-        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
-          if (typeof(dom) === 'string') { return false; } // If string do not parse
-
-          const color = dom.style.color;
-          const backgroundColor = dom.style.backgroundColor;
-
-          const attrs: { [attr: string]: string } = { };
-          if (color) { attrs['color'] = color; }
-          if (backgroundColor) { attrs['backgroundColor'] = backgroundColor; }
-
-          return Object.keys(attrs).length === 0 ? false : attrs;
-        },
-      },
-      {
-        tag: ':not(color)',
+        tag: '*',
         consuming: false,
         getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
           if (typeof (dom) === 'string') { return false; } // If string do not parse
 
           const color = dom.style.color;
-          const backgroundColor = dom.style.backgroundColor;
-
-          const attrs: { [attr: string]: string } = { };
-          if (color) { attrs['color'] = color; }
-          if (backgroundColor) { attrs['backgroundColor'] = backgroundColor; }
-
-          return Object.keys(attrs).length === 0 ? false : attrs;
+          return color ? { color: color } : false;
         },
       }
     ],
-    toDOM: (mark): DOMOutputSpec => colorDOM(mark.attrs['color'], mark.attrs['backgroundColor']),
+    toDOM: (mark): DOMOutputSpec => textColorDOM(mark.attrs['color']),
+  })
+
+  // Background color
+  .update(StyleMarkSpecs.BACKGROUND_COLOR, {
+    attrs: {
+      color: { default: undefined },
+    },
+    parseDOM: [
+      {
+        tag: '*',
+        consuming: false,
+        getAttrs: (dom: string | HTMLElement): false | Attrs | null => {
+          if (typeof (dom) === 'string') { return false; } // If string do not parse
+
+          const color = dom.style.backgroundColor;
+          return color ? { color: color } : false;
+        },
+      }
+    ],
+    toDOM: (mark): DOMOutputSpec => backgroundColorDOM(mark.attrs['color']),
   })
 
   // Superscript
@@ -247,7 +248,8 @@ const customMarks = baseSchema.spec.marks
     // Excludes color, superscript & subscript of being active when an inline code mark is
     excludes: groupChain(
       SpecialMarkSpecs.INLINE_CODE,
-      StyleMarkSpecs.COLOR,
+      StyleMarkSpecs.TEXT_COLOR,
+      StyleMarkSpecs.BACKGROUND_COLOR,
       StyleMarkSpecs.SUPERSCRIPT,
       StyleMarkSpecs.SUBSCRIPT,
     ),
