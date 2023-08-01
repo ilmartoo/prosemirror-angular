@@ -44,7 +44,7 @@ import {MenuItem} from '../menu-item/menu-item';
 export class TextEditorComponent implements AfterViewInit {
   @Input() initialData?: string;
 
-  @ViewChild('prosemirror') prosemirrorRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('prosewrapper') prosewrapperRef!: ElementRef<HTMLDivElement>;
   @ViewChild('menu') menuRef!: MenuComponent;
   @ContentChildren(MenuItem) items!: QueryList<MenuItem>;
 
@@ -97,8 +97,8 @@ export class TextEditorComponent implements AfterViewInit {
     })
 
     executeAfter(() => {
-      // View - Referencia al elemento introducido en el DOM
-      this.view = new EditorView(this.prosemirrorRef.nativeElement, {
+      // View - Object with all the information about the editor & DOM related element
+      this.view = new EditorView(this.prosewrapperRef.nativeElement, {
         state: initialState,
       });
     });

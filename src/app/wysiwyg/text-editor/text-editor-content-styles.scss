@@ -1,10 +1,10 @@
-.text-editor > .__ProseMirror-text-editor > .ProseMirror {
+.ProseMirror {
   color: black;
 
   line-height: 1.5;
   text-align: left;
 
-  indent, h1, h2, h3, p, table, ol, ul,
+  h1, h2, h3, p, table, ol, ul,
   pre, img, blockquote {
     display: block;
     margin: 0.5rem 0;
@@ -13,9 +13,8 @@
   indent {
     margin: 0;
 
-    $indent-base: 1.5rem;
     --indent-level: 1;
-    padding-left: calc($indent-base * var(--indent-level));
+    padding-left: calc(1.5rem * var(--indent-level));
   }
 
   em, i {
@@ -55,11 +54,12 @@
 
   pre {
     padding: 0.25rem 0.4rem;
+    margin: 0.5rem 0;
     background-color: #f5f5f5;
 
     overflow-x: auto;
 
-    & > code {
+    > code {
       color: inherit;
       background-color: initial;
 
@@ -68,16 +68,13 @@
     }
   }
 
-  & > blockquote {
+  > blockquote {
     opacity: 0.75;
   }
 
   blockquote {
     border-left: 0.25rem solid #EBECF0;
     padding: 0.25rem 0 0.25rem 0.5rem;
-  }
-
-  pre, blockquote {
     margin: 0.5rem 0;
   }
 
@@ -87,22 +84,21 @@
     min-width: 1rem;
   }
 
-  h1, h2, h3 {
-    margin-top: 0.75rem;
-  }
-
   h1 {
     font-size: xx-large;
+    margin-top: 0.75rem;
     margin-bottom: 1rem;
   }
 
   h2 {
     font-size: x-large;
+    margin-top: 0.75rem;
     margin-bottom: 0.75rem;
   }
 
   h3 {
     font-size: large;
+    margin-top: 0.75rem;
     margin-bottom: 0.5rem;
   }
 
@@ -128,13 +124,9 @@
     }
   }
 
-  ol, ul,
-  table {
-    margin: 1rem 0;
-  }
-
   ol, ul {
     padding-left: 1.125rem;
+    margin: 1rem 0;
 
     ol, ul {
       margin: 0.5rem;
@@ -147,6 +139,7 @@
     table-layout: fixed;
 
     max-width: 100%;
+    margin: 1rem 0;
 
     tr {
       width: 100%;

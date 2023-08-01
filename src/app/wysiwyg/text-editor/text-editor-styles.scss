@@ -18,16 +18,16 @@
     outline: none;
   }
 
-  .__ProseMirror-text-editor {
+  .prosemirror-wrapper {
     overflow: auto; // Element that scrolls
     overflow-wrap: normal;
 
     padding-inline: 0.25rem;
 
-    & > .ProseMirror {
+    .ProseMirror {
 
       &.ProseMirror-focused {
-        border: inherit;
+        border: initial;
       }
 
       .selection {
