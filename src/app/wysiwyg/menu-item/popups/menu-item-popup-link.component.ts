@@ -70,8 +70,4 @@ export class MenuItemPopupLinkComponent extends MenuItemPopupForActionComponent<
       to: this.selection!.to,
     };
   }
-
-  protected override acceptPopupLabel(): string {
-    return 'Create link';
-  }
 }

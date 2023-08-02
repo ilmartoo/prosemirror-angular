@@ -1,18 +1,10 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, QueryList, ViewChildren} from '@angular/core';
 import {EditorState} from 'prosemirror-state';
 import {MarkType, NodeType} from 'prosemirror-model';
+import {MenuItemPopupInputComponent} from '../popup-inputs/menu-item-popup-input.component';
 
 @Component({
-  selector: 'app-menu-item-action-popup',
+  selector: 'app-menu-item-popup-for-action',
   template: '',
 })
 export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = MarkType | NodeType> implements AfterViewInit {
@@ -20,14 +12,14 @@ export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = Mar
   @Output() acceptedPopup = new EventEmitter<{ [input: string]: string }>();
   @Output() focusEditor = new EventEmitter<void>();
 
-  @ViewChildren('input') inputsRef!: QueryList<ElementRef<HTMLInputElement>>;
+  @ViewChildren(MenuItemPopupInputComponent) inputsRef!: QueryList<MenuItemPopupInputComponent>;
 
   protected isPopupOpen = false;
   protected isValid = false;
-  protected inputs: { [input: string]: HTMLInputElement } = { };
+  protected inputs: { [input: string]: MenuItemPopupInputComponent } = { };
 
   ngAfterViewInit() {
-    this.inputsRef.forEach(item => this.inputs[item.nativeElement.name] = item.nativeElement);
+    this.inputsRef.forEach(item => this.inputs[item.name] = item);
   }
 
   /**
@@ -72,7 +64,7 @@ export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = Mar
    */
   protected get values(): { [p: string]: string } {
     const values: { [p: string]: string } = { };
-    this.inputsRef.forEach(item => values[item.nativeElement.name] = item.nativeElement.value);
+    this.inputsRef?.forEach(item => values[item.name] = item.value);
     return values;
   }
 
@@ -137,13 +129,4 @@ export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = Mar
       this.close();
     }
   }
-
-  /**
-   * Generates the label for the accept button. Is advised to override this method on extension.
-   * @protected
-   * @returns Label for the acceptance button
-   */
-  protected acceptPopupLabel(): string {
-    return 'Valid';
-  };
 }

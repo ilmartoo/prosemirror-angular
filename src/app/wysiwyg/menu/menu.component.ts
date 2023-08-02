@@ -5,7 +5,7 @@ import {fixTables} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
 
 import {CursorActiveElements} from '../menu-item/menu-item-types';
-import {MenuItem} from '../menu-item/menu-item';
+import {UpdatableItem} from '../menu-item/updatable-item';
 
 
 @Component({
@@ -15,7 +15,7 @@ import {MenuItem} from '../menu-item/menu-item';
 })
 export class MenuComponent implements PluginView {
 
-  @ContentChildren(MenuItem) items!: QueryList<MenuItem>;
+  @ContentChildren(UpdatableItem) items!: QueryList<UpdatableItem>;
 
   protected view?: EditorView;
 

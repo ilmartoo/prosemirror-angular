@@ -17,7 +17,7 @@ export class AppComponent {
     '<strong>Bold</strong><br>' +
     '<em>Italic</em><br>' +
     '<u>Underline</u><br>' +
-    '<s>Striketdrough</s><br>' +
+    '<s>Strikethrough</s><br>' +
     '<code>Inline code</code><br>' +
     '<sup>Super</sup>script<br>' +
     '<sub>Sub</sub>script' +

@@ -19,7 +19,7 @@ import {customSchema} from './custom-schema';
 import {decreaseIndent, increaseIndent, newBlock, newLine} from '../utilities/commands';
 import {tableEditing} from 'prosemirror-tables';
 import {executeAfter} from '../utilities/multipurpose-helper';
-import {MenuItem} from '../menu-item/menu-item';
+import {UpdatableItem} from '../menu-item/updatable-item';
 
 
 /**
@@ -46,7 +46,7 @@ export class TextEditorComponent implements AfterViewInit {
 
   @ViewChild('prosewrapper') prosewrapperRef!: ElementRef<HTMLDivElement>;
   @ViewChild('menu') menuRef!: MenuComponent;
-  @ContentChildren(MenuItem) items!: QueryList<MenuItem>;
+  @ContentChildren(UpdatableItem) items!: QueryList<UpdatableItem>;
 
   protected view!: EditorView;
 

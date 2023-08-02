@@ -13,12 +13,22 @@ import {MenuItemPopupLinkComponent} from './wysiwyg/menu-item/popups/menu-item-p
 import {MenuItemPopupImageComponent} from './wysiwyg/menu-item/popups/menu-item-popup-image.component';
 import {MenuItemPopupTableComponent} from './wysiwyg/menu-item/popups/menu-item-popup-table.component';
 import {MenuItemSeparatorComponent} from './wysiwyg/menu-item/menu-item-separator.component';
+import {SvgIconComponent} from './wysiwyg/icon/svg-icon.component';
+import {HttpClientModule} from '@angular/common/http';
+import {MenuItemPopupInputComponent} from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input.component';
+import {MenuItemPopupInputTextComponent} from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input-text.component';
+import {
+  MenuItemPopupInputColorPaletteComponent
+} from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input-color-palette.component';
+import {FormsModule} from '@angular/forms';
+import {MenuItemPopupColorComponent} from './wysiwyg/menu-item/popups/menu-item-popup-color.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TextEditorComponent,
     MenuComponent,
+    SvgIconComponent,
     MenuItemSeparatorComponent,
     MenuItemBaseComponent,
     MenuItemForActionComponent,
@@ -27,10 +37,16 @@ import {MenuItemSeparatorComponent} from './wysiwyg/menu-item/menu-item-separato
     MenuItemPopupLinkComponent,
     MenuItemPopupImageComponent,
     MenuItemPopupTableComponent,
+    MenuItemPopupColorComponent,
+    MenuItemPopupInputComponent,
+    MenuItemPopupInputTextComponent,
+    MenuItemPopupInputColorPaletteComponent,
   ],
   imports: [
     BrowserModule,
     NgOptimizedImage,
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

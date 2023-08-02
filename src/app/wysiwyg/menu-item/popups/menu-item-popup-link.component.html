@@ -1,9 +1,9 @@
 <app-menu-item-base-popup [isOpened]="isPopupOpen" (input)="validate()">
   <ng-container inputs>
-    <label>Name</label><input #input type="text" [name]="INPUTS.TITLE">
-    <label>Reference</label><input #input type="text" [name]="INPUTS.REFERENCE">
+    <label [for]="INPUTS.TITLE">Name</label><input #input type="text" [name]="INPUTS.TITLE">
+    <label [for]="INPUTS.REFERENCE">Reference</label><input #input type="text" [name]="INPUTS.REFERENCE">
   </ng-container>
   <ng-container actions>
-    <button [disabled]="!isValid" (click)="acceptPopup()">{{ acceptPopupLabel() }}</button>
+    <button [disabled]="!isValid" (click)="acceptPopup()">Create link</button>
   </ng-container>
 </app-menu-item-base-popup>

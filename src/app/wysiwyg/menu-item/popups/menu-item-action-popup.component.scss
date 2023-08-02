@@ -1,18 +1,4 @@
 app-menu-item-base-popup {
-  label {
-    font-weight: bold;
-    color: #172b4d;
-  }
-
-  input {
-    background-color: #dadada;
-    border-bottom: 1px solid #dadada;
-
-    &:focus {
-      border-bottom-color: #172b4d;
-    }
-  }
-
   button {
     background-color: #172b4d;
     color: white;

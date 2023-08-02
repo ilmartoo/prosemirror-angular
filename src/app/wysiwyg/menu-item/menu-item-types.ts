@@ -46,6 +46,7 @@ import {
   deleteTable,
   TableMap
 } from 'prosemirror-tables';
+import {MenuItemPopupColorComponent} from './popups/menu-item-popup-color.component';
 
 /** Possible statuses of the menu item */
 export enum MenuItemStatus {
@@ -68,25 +69,25 @@ export class CursorActiveElements {
   /**
    * Checks if the mark is active
    * @param mark Mark to check
-   * @returns True if the mark is inside the active elements
+   * @returns The active mark if the mark is inside the active elements or undefined if not found
    */
-  hasMark(mark: MarkForLookup): boolean {
-    return !!this.marks.find(m => areMarksEquals(m, mark));
+  hasMark(mark: MarkForLookup): Mark | undefined {
+    return this.marks.find(m => areMarksEquals(m, mark));
   }
 
   /**
    * Checks if the mark type is active
    * @param type Mark type to check
-   * @returns True if the mark type is inside the active elements
+   * @returns The active mark if the mark type is inside the active elements or undefined if not found
    */
-  hasMarkType(type: MarkTypeForLookup): boolean {
-    return !!this.marks.find(m => areMarkTypesEquals(m.type, type));
+  hasMarkType(type: MarkTypeForLookup): Mark | undefined {
+    return this.marks.find(m => areMarkTypesEquals(m.type, type));
   }
 
   /**
    * Checks if the node is active
    * @param node Node to check
-   * @returns Node if the node is inside the active elements or undefined if not found
+   * @returns The active node if the node is inside the active elements or undefined if not found
    */
   hasNode(node: NodeForLookup): AncestorNode | undefined {
     return this.ancestors.find(n => areNodesEquals(n, node));
@@ -95,7 +96,7 @@ export class CursorActiveElements {
   /**
    * Checks if the node type is active
    * @param type Node type to check
-   * @returns Node if the node type is inside the active elements or undefined if not found
+   * @returns The active node if the node type is inside the active elements or undefined if not found
    */
   hasNodeType(type: NodeTypeForLookup): AncestorNode | undefined {
     return this.ancestors.find(n => areNodeTypesEquals(n.type, type));
@@ -554,8 +555,8 @@ function deleteTableElement(isRow: boolean): MenuItemTypeAction<NodeType> {
 // Table element deleting action function
 function changeColor(isTextColor: boolean): MenuItemTypeAction<MarkType> {
 	const target = isTextColor
-    ? { type: MARK_TYPES.txt_color, command: changeTextColor, popup: undefined }
-    : { type: MARK_TYPES.bg_color, command: changeBackgroundColor, popup: undefined };
+    ? { type: MARK_TYPES.txt_color, command: changeTextColor, popup: MenuItemPopupColorComponent }
+    : { type: MARK_TYPES.bg_color, command: changeBackgroundColor, popup: MenuItemPopupColorComponent };
 
 	return {
 		type: target.type,

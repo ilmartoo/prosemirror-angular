@@ -5,7 +5,7 @@
     hidden: MenuItemStatus.HIDDEN === status
   }" [disabled]="MenuItemStatus.DISABLED === status" (click)="onClick()">
 
-    <img *ngIf="icon" class="icon" [src]="iconPath(icon)" [alt]="tooltip ?? ''">
+    <app-svg-icon *ngIf="icon" class="icon" [name]="icon"></app-svg-icon>
     <div *ngIf="text" class="text">{{ text }}</div>
 
     <div *ngIf="tooltip" [ngClass]="{ tooltip: true }">{{ tooltip }}</div>

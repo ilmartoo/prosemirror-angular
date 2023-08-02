@@ -29,8 +29,4 @@ export class MenuItemPopupImageComponent extends MenuItemPopupForActionComponent
       src: inputs[this.INPUTS.REFERENCE],
     };
   }
-
-  protected override acceptPopupLabel(): string {
-    return 'Insert image';
-  }
 }

@@ -2,15 +2,15 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Command} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
 import {CursorActiveElements, MenuItemStatus} from './menu-item-types';
-import {MenuItem} from './menu-item';
+import {UpdatableItem} from './updatable-item';
 
 @Component({
   selector: 'app-menu-item-base',
   templateUrl: './menu-item-base.component.html',
   styleUrls: ['./menu-item-base.component.scss'],
-  providers: [{ provide: MenuItem, useExisting: MenuItemBaseComponent }],
+  providers: [{ provide: UpdatableItem, useExisting: MenuItemBaseComponent }],
 })
-export class MenuItemBaseComponent extends MenuItem implements OnInit {
+export class MenuItemBaseComponent extends UpdatableItem implements OnInit {
 
   @Input({ required: false }) icon?: string;
   @Input({ required: false }) text?: string;
@@ -32,10 +32,6 @@ export class MenuItemBaseComponent extends MenuItem implements OnInit {
     if (!this.isCommandFromInput) {
       this.command = () => false; // Default command, to be updated
     }
-  }
-
-  protected iconPath(iconName: string): string {
-    return `./assets/${iconName}.svg`;
   }
 
 

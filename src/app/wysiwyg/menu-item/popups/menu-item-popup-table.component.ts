@@ -36,8 +36,4 @@ export class MenuItemPopupTableComponent extends MenuItemPopupForActionComponent
       cols: +inputs[this.INPUTS.COLS],
     };
   }
-
-  protected override acceptPopupLabel(): string {
-    return 'Create table';
-  }
 }

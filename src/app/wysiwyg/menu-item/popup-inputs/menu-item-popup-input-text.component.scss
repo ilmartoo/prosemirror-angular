@@ -1,0 +1,15 @@
+.popup-input {
+  label {
+    font-weight: bold;
+    color: #172b4d;
+  }
+
+  input {
+    background-color: #dadada;
+    border-bottom: 1px solid #dadada;
+
+    &:focus {
+      border-bottom-color: #172b4d;
+    }
+  }
+}

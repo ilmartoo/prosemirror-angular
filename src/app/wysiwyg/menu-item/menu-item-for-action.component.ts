@@ -17,15 +17,15 @@ import {CursorActiveElements, MenuItemBasicAction, MenuItemStatus, MenuItemTypeA
 import {MenuItemPopupForActionComponent} from './popups/menu-item-popup-for-action.component';
 import {executeAfter} from '../utilities/multipurpose-helper';
 import {Attrs} from 'prosemirror-model';
-import {MenuItem} from './menu-item';
+import {UpdatableItem} from './updatable-item';
 
 @Component({
   selector: 'app-menu-item-for-action',
   templateUrl: './menu-item-for-action.component.html',
   styleUrls: ['./menu-item-base.component.scss'],
-  providers: [{ provide: MenuItem, useExisting: MenuItemForActionComponent }],
+  providers: [{ provide: UpdatableItem, useExisting: MenuItemForActionComponent }],
 })
-export class MenuItemForActionComponent extends MenuItem implements AfterViewInit, OnDestroy {
+export class MenuItemForActionComponent extends UpdatableItem implements AfterViewInit, OnDestroy {
 
   @Input({ required: true }) action!: MenuItemBasicAction | MenuItemTypeAction;
   @Input({ required: false }) icon?: string;
@@ -120,16 +120,6 @@ export class MenuItemForActionComponent extends MenuItem implements AfterViewIni
    * */
   protected get popup(): MenuItemPopupForActionComponent | undefined {
     return this.popupRef?.instance;
-  }
-
-  /**
-   * Retrieves the SVG icon path
-   * @param iconName Name of the SVG icon file without extension
-   * @protected
-   * @returns Path to the icon
-   */
-  protected iconPath(iconName: string): string {
-    return `./assets/${iconName}.svg`;
   }
 
   /**

@@ -1,0 +1,20 @@
+<div class="popup-input">
+  <input *ngIf="palette.primary; let primaryColor"
+         class="radio-button primary"
+         type="radio"
+         [name]="name"
+         [value]="primaryColor.value"
+         [(ngModel)]="_value"
+         [required]="required"
+         [ngStyle]="{ '--palette-color': primaryColor.display }"
+  >
+  <input *ngFor="let color of palette.others"
+         class="radio-button"
+         type="radio"
+         [name]="name"
+         [value]="color.value"
+         [(ngModel)]="_value"
+         [required]="required"
+         [ngStyle]="{ '--palette-color': color.display }"
+  >
+</div>

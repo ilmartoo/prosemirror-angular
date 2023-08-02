@@ -1,5 +1,7 @@
 .ProseMirror {
-  color: black;
+  --base-text-color: black;
+  --base-background-color: transparent;
+  color: var(--base-text-color, black);
 
   line-height: 1.5;
   text-align: left;
