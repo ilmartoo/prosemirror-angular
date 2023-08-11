@@ -126,6 +126,26 @@
 
     <app-menu-item-separator></app-menu-item-separator>
 
+    <!-- Text alignment -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.left_alignment"
+                              icon="align_left"
+                              tooltip="Left align text"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.centered_alignment"
+                              icon="align_centered"
+                              tooltip="Center text"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.right_alignment"
+                              icon="align_right"
+                              tooltip="Right align text"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.justified_alignment"
+                              icon="align_justified"
+                              tooltip="Justify text"
+    ></app-menu-item-for-action>
+
+    <app-menu-item-separator></app-menu-item-separator>
+
     <!-- Lists -->
     <app-menu-item-for-action [action]="MENU_ITEM_TYPES.bullet_list"
                               icon="list-bullet"
@@ -142,11 +162,11 @@
     <!--  ></app-menu-item>-->
 
     <!-- Indents -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.indent"
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.deindent"
                               icon="indent-decrease"
                               tooltip="Decrease indent"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.deindent"
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.indent"
                               icon="indent-increase"
                               tooltip="Increase indent"
     ></app-menu-item-for-action>

@@ -1,45 +1,63 @@
-export function rgbColor(r: number, g: number, b: number, a?: number, isDefault = false): Color {
-  return ColorFactory.rgb(r, g, b, a, isDefault);
+export function rgbColor(r: number, g: number, b: number, a?: number, options?: ColorOptions): Color {
+  return ColorFactory.rgb(r, g, b, a, options);
 }
 
-export function hslColor(h: number, s: number, l: number, a?: number, isDefault = false): Color {
-  return ColorFactory.hsl(h, s, l, a, isDefault);
+export function hslColor(h: number, s: number, l: number, a?: number, options?: ColorOptions): Color {
+  return ColorFactory.hsl(h, s, l, a, options);
 }
 
-export function hexColor(hexColor: `#${string}`, isDefault = false): Color {
-  return ColorFactory.hex(hexColor, isDefault);
+export function hexColor(hexColor: `#${string}`, options?: ColorOptions): Color {
+  return ColorFactory.hex(hexColor, options);
 }
 
-export function cssColor(cssColor: string, isDefault = false): Color {
-  return ColorFactory.css(cssColor, isDefault);
+export function cssColor(cssColor: string, options?: ColorOptions): Color {
+  return ColorFactory.css(cssColor, options);
 }
 
-export interface Color {
+export type Color = {
   display: string;
   value: string;
-}
+  dark: boolean;
+	framed: boolean,
+  tooltip?: string;
+};
+
+export type ColorPalette = {
+  primary?: Color,
+  list: Color[],
+};
+
+export type ColorOptions = {
+  default?: boolean,
+  dark?: boolean,
+  framed?: boolean,
+	tooltip?: string,
+};
 
 class ColorFactory {
-  private static newColor(display: string, isDefault: boolean): Color {
+  private static newColor(display: string, options: ColorOptions = {}): Color {
     return {
       display,
-      value: isDefault ? '' : display
+      value: options.default ? '' : display,
+      dark: options.dark ?? false,
+      framed: options.framed ?? false,
+      tooltip: options.tooltip,
     };
   }
 
-  static rgb(r: number, g: number, b: number, a?: number, isDefault = false): Color {
-    return ColorFactory.newColor(`rgb(${r},${g},${b},${a ?? 1})`, isDefault);
+  static rgb(r: number, g: number, b: number, a?: number, options: ColorOptions = {}): Color {
+    return ColorFactory.newColor(`rgb(${r},${g},${b},${a ?? 1})`, options);
   }
 
-  static hsl(h: number, s: number, l: number, a?: number, isDefault = false): Color {
-    return ColorFactory.newColor(`hsl(${h},${s},${l},${a ?? 1})`, isDefault);
+  static hsl(h: number, s: number, l: number, a?: number, options: ColorOptions = {}): Color {
+    return ColorFactory.newColor(`hsl(${h},${s},${l},${a ?? 1})`, options);
   }
 
-  static hex(hexColor: `#${string}`, isDefault = false): Color {
-    return ColorFactory.newColor(hexColor, isDefault)
+  static hex(hexColor: `#${string}`, options: ColorOptions = {}): Color {
+    return ColorFactory.newColor(hexColor, options)
   }
 
-  static css(cssColor: string, isDefault = false): Color {
-    return ColorFactory.newColor(cssColor, isDefault)
+  static css(cssColor: string, options: ColorOptions = {}): Color {
+    return ColorFactory.newColor(cssColor, options)
   }
 }

@@ -21,7 +21,13 @@ import {
   MenuItemPopupInputColorPaletteComponent
 } from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input-color-palette.component';
 import {FormsModule} from '@angular/forms';
-import {MenuItemPopupColorComponent} from './wysiwyg/menu-item/popups/menu-item-popup-color.component';
+import {MenuItemPopupTextColorComponent} from './wysiwyg/menu-item/popups/menu-item-popup-text-color.component';
+import {
+  MenuItemPopupInputNumberComponent
+} from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input-number.component';
+import {
+  MenuItemPopupBackgroundColorComponent
+} from './wysiwyg/menu-item/popups/menu-item-popup-background-color.component';
 
 @NgModule({
   declarations: [
@@ -37,9 +43,11 @@ import {MenuItemPopupColorComponent} from './wysiwyg/menu-item/popups/menu-item-
     MenuItemPopupLinkComponent,
     MenuItemPopupImageComponent,
     MenuItemPopupTableComponent,
-    MenuItemPopupColorComponent,
+    MenuItemPopupTextColorComponent,
+    MenuItemPopupBackgroundColorComponent,
     MenuItemPopupInputComponent,
     MenuItemPopupInputTextComponent,
+    MenuItemPopupInputNumberComponent,
     MenuItemPopupInputColorPaletteComponent,
   ],
   imports: [

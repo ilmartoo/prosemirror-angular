@@ -5,7 +5,7 @@
 import {Attrs, Node as ProseNode, NodeRange, NodeType, ResolvedPos} from "prosemirror-model";
 import {EditorState} from "prosemirror-state";
 import {addProps, areEquals} from "./multipurpose-helper";
-import {listGroup} from '../text-editor/custom-schema';
+import {NodeGroups} from '../text-editor/custom-schema';
 
 /** Alias for the needed Node elements to perform a ProseMirrorHelper node lookup */
 export type NodeForLookup = ProseNode | { type: { name: string }, attrs?: Attrs };
@@ -37,7 +37,7 @@ export class AncestorsList extends Array<AncestorNode> {
 
   constructor(...ancestors: ExtendedNode[]) {
     super();
-    super.push(...this.link(ancestors));
+    super.push(...AncestorsList.link(ancestors));
   }
 
   /**
@@ -46,21 +46,27 @@ export class AncestorsList extends Array<AncestorNode> {
    * @returns Updated length of the ancestor list
    */
   override push(...ancestors: ExtendedNode[]): number {
-    super.push(...this.link(ancestors));
+    super.push(...AncestorsList.link(ancestors));
     return this.length;
   }
 
-  /**
+  override unshift(...ancestors: ExtendedNode[]): number {
+		super.unshift(...AncestorsList.link(ancestors), this[0]);
+		return this.length;
+	}
+
+	/**
    * Links the array of nodes as ancestors by the order established in the array --> [1] will be the parent of [0] and so on
    * @param ancestors Array of ancestors
+   * @param last Node to link from the last ancestor
    * @returns Array of linked ancestors
    * @private
    */
-  private link(ancestors: ExtendedNode[]): AncestorNode[] {
+  private static link(ancestors: ExtendedNode[], last?: AncestorNode): AncestorNode[] {
     const linkedAncestors: AncestorNode[] = [];
 
     for (let i = 0; i < ancestors.length; i++) {
-      linkedAncestors.push(addProps<AncestorNode>(ancestors[i], {parent: ancestors[i + 1]}));
+      linkedAncestors.push(addProps<AncestorNode>(ancestors[i], {parent: ancestors[i + 1] ?? last}));
     }
 
     return linkedAncestors;
@@ -82,7 +88,7 @@ export class AncestorsList extends Array<AncestorNode> {
  * @param depth Depth of the node
  * @returns Reference to the extended node for chaining
  */
-export function extendNode(node: ProseNode, $pos: ResolvedPos, depth: number): ExtendedNode {
+export function extendNode(node: ProseNode, $pos: ResolvedPos, depth: number = $pos.depth): ExtendedNode {
   const extendedNodeRef = node as ExtendedNode;
   return addProps<ExtendedNode>(node, {
     before: depth < 1 ? $pos.start(depth) : $pos.before(depth),
@@ -119,7 +125,15 @@ export function ancestorNodesInRange(range: NodeRange): AncestorsList {
  * @return Ancestor nodes at cursor position
  */
 export function ancestorNodesAtCursor(state: EditorState): AncestorsList {
-  return ancestorNodesAt(state.selection.$to);
+  const ancestorsAtCursor = ancestorNodesAt(state.selection.$to);
+
+  // Ad-Hoc for atom nodes
+  const selectedNode = state.selection.$from.nodeAfter === state.selection.$to.nodeBefore ? state.selection.$from.nodeAfter : null;
+  if (selectedNode && selectedNode.type.spec.atom) {
+		ancestorsAtCursor.unshift(extendNode(selectedNode, state.doc.resolve(state.selection.from + 1)));
+  }
+
+  return ancestorsAtCursor;
 }
 
 /**
@@ -244,5 +258,67 @@ export function childNodesInRange(range: NodeRange): ExtendedNode[] {
  * @returns True if the node is a list node
  */
 export function isListNode(node: ProseNode): boolean {
-  return !!node.type.spec.group?.includes(listGroup);
+  return !!node.type.spec.group?.includes(NodeGroups.LIST);
+}
+
+/**
+ * Checks if given node is alignable
+ * @param node Node to check
+ * @returns True if the node is alignable
+ */
+export function isAlignableNode(node: ProseNode): boolean {
+  return !!node.type.spec.group?.includes(NodeGroups.ALIGNABLE);
+}
+
+/**
+ * Finds a node between the positions that satisfies the given condition
+ * @param $from Starting position for lookup
+ * @param $to Finish position for lookup
+ * @param isValid Function to check if the child is valid
+ * @returns Child node that satisfies the condition or undefined if not found
+ */
+export function findNodeBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number) => boolean): ExtendedNode | undefined {
+  const resolve = (pos: number) => $from.node(0).resolve(pos);
+  for (let pos = $from.pos; pos <= $to.pos; pos++) {
+    const $pos = resolve(pos);
+    const node = $pos.node();
+
+    // If node is valid, return it
+    if (isValid(node, pos)) {
+      return extendNode(node, $pos);
+    }
+
+    // Skip other positions of the node
+    if (node.childCount === 0) {
+      pos += node.nodeSize - 1;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Finds a node between the positions that satisfies the given condition
+ * @param $from Starting position for lookup
+ * @param $to Finish position for lookup
+ * @param isValid Function to check if the child is valid
+ * @returns Child node that satisfies the condition or undefined if not found
+ */
+export function findAllNodesBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number) => boolean): ExtendedNode[] {
+  const nodes: ExtendedNode[] = [];
+  const resolve = (pos: number) => $from.node(0).resolve(pos);
+  for (let pos = $from.pos; pos <= $to.pos; pos++) {
+    const $pos = resolve(pos);
+    const node = $pos.node();
+
+    // If node is valid, return it
+    if (isValid(node, pos)) {
+      nodes.push(extendNode(node, $pos));
+    }
+
+    // Skip other positions of the node
+    if (node.childCount === 0) {
+      pos += node.nodeSize - 1;
+    }
+  }
+  return nodes;
 }

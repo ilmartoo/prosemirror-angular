@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {MenuItemPopupInputComponent} from './menu-item-popup-input.component';
-import {Color} from './color';
+import {ColorPalette} from './color';
 
 @Component({
   selector: 'app-menu-item-popup-input-color-palette',
@@ -10,6 +10,5 @@ import {Color} from './color';
 })
 export class MenuItemPopupInputColorPaletteComponent extends MenuItemPopupInputComponent {
 
-  @Input({ required: true }) palette!: { primary?: Color, others: Color[] };
-  @Input() required = false;
+  @Input({ required: true }) palette!: ColorPalette;
 }

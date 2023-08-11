@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output, QueryList, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  QueryList,
+  ViewChildren,
+  ViewContainerRef
+} from '@angular/core';
 import {EditorState} from 'prosemirror-state';
 import {MarkType, NodeType} from 'prosemirror-model';
 import {MenuItemPopupInputComponent} from '../popup-inputs/menu-item-popup-input.component';
@@ -10,13 +19,15 @@ import {MenuItemPopupInputComponent} from '../popup-inputs/menu-item-popup-input
 export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = MarkType | NodeType> implements AfterViewInit {
   @Input() type!: T;
   @Output() acceptedPopup = new EventEmitter<{ [input: string]: string }>();
-  @Output() focusEditor = new EventEmitter<void>();
 
   @ViewChildren(MenuItemPopupInputComponent) inputsRef!: QueryList<MenuItemPopupInputComponent>;
 
   protected isPopupOpen = false;
   protected isValid = false;
   protected inputs: { [input: string]: MenuItemPopupInputComponent } = { };
+
+  constructor(protected viewRef: ViewContainerRef) {
+  }
 
   ngAfterViewInit() {
     this.inputsRef.forEach(item => this.inputs[item.name] = item);
@@ -49,7 +60,7 @@ export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = Mar
    */
   close() {
     this.isPopupOpen = false;
-    this.focusEditor.emit();
+    this.isValid = false;
   }
 
   /** Checks if the popup is opened */

@@ -25,17 +25,10 @@
     padding-inline: 0.25rem;
 
     .ProseMirror {
+      white-space: pre-wrap;
 
       &.ProseMirror-focused {
         border: initial;
-      }
-
-      .selection {
-        text-decoration: underline wavy lightgrey;
-      }
-
-      .current-element {
-        text-decoration: underline wavy #ff8080;
       }
     }
   }

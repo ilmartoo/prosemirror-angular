@@ -1,35 +1,37 @@
 import {Command, EditorState} from 'prosemirror-state';
-import {MARK_TYPES, NODE_TYPES} from '../text-editor/custom-schema';
+import {AlignmentStyle, markTypes, nodeTypes} from '../text-editor/custom-schema';
 import {Attrs, Mark, MarkType, NodeType} from 'prosemirror-model';
 import {setBlockType, toggleMark} from 'prosemirror-commands';
 import {
-  activeMarksInSelectionEnd,
-  areMarksEquals,
-  areMarkTypesEquals,
-  MarkForLookup,
-  MarkTypeForLookup
+	activeMarksInSelectionEnd,
+	areMarksEquals,
+	areMarkTypesEquals,
+	MarkForLookup,
+	MarkTypeForLookup
 } from '../utilities/marks-helper';
 import {
-  AncestorNode,
-  ancestorNodesAtCursor,
-  AncestorsList,
-  areNodesEquals,
-  areNodeTypesEquals,
-  isListNode,
-  NodeForLookup,
-  NodeTypeForLookup
+	AncestorNode,
+	ancestorNodesAtCursor,
+	AncestorsList,
+	areNodesEquals,
+	areNodeTypesEquals,
+	isAlignableNode,
+	isListNode,
+	NodeForLookup,
+	NodeTypeForLookup
 } from '../utilities/nodes-helper';
 import {
-  changeBackgroundColor,
-  changeTextColor,
-  decreaseIndent,
-  expandAndRemoveMarks,
-  increaseIndent,
-  insertContent,
-  insertTable,
-  listCommands,
-  replaceWithMarkedText,
-  toggleWrapper
+	changeBackgroundColor,
+	changeTextAlignment,
+	changeTextColor,
+	decreaseIndent,
+	expandAndRemoveMarks,
+	increaseIndent,
+	insertContent,
+	insertTable,
+	listCommands,
+	replaceWithMarkedText,
+	toggleWrapper
 } from '../utilities/commands';
 import {MenuItemPopupForActionComponent} from './popups/menu-item-popup-for-action.component';
 import {MenuItemPopupLinkComponent} from './popups/menu-item-popup-link.component';
@@ -37,16 +39,17 @@ import {MenuItemPopupImageComponent} from './popups/menu-item-popup-image.compon
 import {Type} from '@angular/core';
 import {MenuItemPopupTableComponent} from './popups/menu-item-popup-table.component';
 import {
-  addColumnAfter,
-  addColumnBefore,
-  addRowAfter,
-  addRowBefore,
-  deleteColumn,
-  deleteRow,
-  deleteTable,
-  TableMap
+	addColumnAfter,
+	addColumnBefore,
+	addRowAfter,
+	addRowBefore,
+	deleteColumn,
+	deleteRow,
+	deleteTable,
+	TableMap
 } from 'prosemirror-tables';
-import {MenuItemPopupColorComponent} from './popups/menu-item-popup-color.component';
+import {MenuItemPopupTextColorComponent} from './popups/menu-item-popup-text-color.component';
+import {MenuItemPopupBackgroundColorComponent} from './popups/menu-item-popup-background-color.component';
 
 /** Possible statuses of the menu item */
 export enum MenuItemStatus {
@@ -180,7 +183,6 @@ export type NodeMenuItemActions =
   | 'code_block'
   | 'ordered_list'
   | 'bullet_list'
-  | 'check_list'
   | 'create_table'
   | 'delete_table'
   | 'add_table_row_before'
@@ -189,19 +191,23 @@ export type NodeMenuItemActions =
   | 'add_table_column_after'
   | 'delete_table_row'
 	| 'delete_table_column'
+	| 'left_alignment'
+	| 'centered_alignment'
+	| 'right_alignment'
+	| 'justified_alignment'
   ;
 export type MenuItemTypes =
   & { readonly [action in NodeMenuItemActions]: MenuItemTypeAction<NodeType> }
   & { readonly [action in MarkMenuItemActions]: MenuItemTypeAction<MarkType> };
 
 /** List of predefined basic menu item types */
-export const MENU_ITEM_TYPES: MenuItemTypes = {
+export const menuItemTypes: MenuItemTypes = {
 
-  ///
-  /// Marks
-  ///
+  /// MARKS ///
+
+  // Link related //
   link: {
-    type: MARK_TYPES.link,
+    type: markTypes.link,
     attrs({ state, attrs }): { title: string, href: string, from: number, to?: number } & Attrs {
       return {
         title: '',
@@ -222,9 +228,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
     popup: MenuItemPopupLinkComponent
   },
-
   remove_link: {
-    type: MARK_TYPES.link,
+    type: markTypes.link,
     attrs({attrs}) { return attrs ?? {}; },
     command({state}) {
       return expandAndRemoveMarks(state!.selection.head, [this.type]);
@@ -234,8 +239,9 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
+  // Code related //
   inline_code: {
-    type: MARK_TYPES.code,
+    type: markTypes.code,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -246,8 +252,9 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
+  // Line decoration related //
   underline: {
-    type: MARK_TYPES.underline,
+    type: markTypes.underline,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -257,9 +264,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
   },
-
   strikethrough: {
-    type: MARK_TYPES.strikethrough,
+    type: markTypes.strikethrough,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -270,8 +276,9 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
+  // Text styling related //
   italic: {
-    type: MARK_TYPES.em,
+    type: markTypes.em,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -281,9 +288,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
   },
-
   bold: {
-    type: MARK_TYPES.strong,
+    type: markTypes.strong,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -293,9 +299,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
   },
-
   superscript: {
-    type: MARK_TYPES.superscript,
+    type: markTypes.superscript,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -305,9 +310,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
   },
-
   subscript: {
-    type: MARK_TYPES.subscript,
+    type: markTypes.subscript,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -318,11 +322,11 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
-  ///
-  /// Nodes
-  ///
+  /// NODES ///
+
+  // Special content related //
   image: {
-    type: NODE_TYPES.image,
+    type: nodeTypes.image,
     attrs({ attrs}): { title: string, alt?: string, src: string } & Attrs {
       return {
         title: '',
@@ -336,13 +340,12 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
       return insertContent(state.selection.head, image);
     },
     status({state, attrs}): MenuItemStatus {
-      return this.command({state, attrs}) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
     },
     popup: MenuItemPopupImageComponent,
   },
-
   blockquote: {
-    type: NODE_TYPES.blockquote,
+    type: nodeTypes.blockquote,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleWrapper(this.type)
@@ -353,8 +356,22 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
+  // Text related //
+  paragraph: {
+    type: nodeTypes.paragraph,
+    attrs({attrs}) { return attrs ?? {}; },
+    command(): Command {
+      return setBlockType(this.type);
+    },
+    status({state, elements, attrs}): MenuItemStatus {
+      return elements.hasNodeType(this.type) ? MenuItemStatus.ACTIVE
+        : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
+    },
+  },
+
+  // Indent related //
   indent: {
-    type: NODE_TYPES.indent,
+    type: nodeTypes.indent,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return increaseIndent;
@@ -363,9 +380,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
       return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
     },
   },
-
   deindent: {
-    type: NODE_TYPES.indent,
+    type: nodeTypes.indent,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return decreaseIndent;
@@ -375,24 +391,14 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
-  paragraph: {
-    type: NODE_TYPES.paragraph,
-    attrs({attrs}) { return attrs ?? {}; },
-    command(): Command {
-      return setBlockType(this.type);
-    },
-    status({state, elements, attrs}): MenuItemStatus {
-      return elements.hasNodeType(this.type) ? MenuItemStatus.ACTIVE
-        : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
-    },
-  },
-
+  // Heading related //
   heading_1: heading_action(1),
   heading_2: heading_action(2),
   heading_3: heading_action(3),
 
+  // Code related //
   code_block: {
-    type: NODE_TYPES.code_block,
+    type: nodeTypes.code_block,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return setBlockType(this.type);
@@ -403,8 +409,9 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
+  // List related //
   ordered_list: {
-    type: NODE_TYPES.ordered_list,
+    type: nodeTypes.ordered_list,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return listCommands(this.type);
@@ -415,9 +422,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
   },
-
   bullet_list: {
-    type: NODE_TYPES.bullet_list,
+    type: nodeTypes.bullet_list,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return listCommands(this.type);
@@ -429,21 +435,9 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
   },
 
-  check_list: {
-    type: NODE_TYPES.check_list,
-    attrs({attrs}) { return attrs ?? {}; },
-    command(): Command {
-      return listCommands(this.type);
-    },
-    status({state, elements, attrs}): MenuItemStatus {
-      const isCurrentType = areMarkTypesEquals(elements.firstAncestor(isListNode)?.type, this.type);
-      return isCurrentType ? MenuItemStatus.ACTIVE
-        : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
-    },
-  },
-
+  // Table related //
   create_table: {
-    type: NODE_TYPES.table,
+    type: nodeTypes.table,
     attrs({ attrs }): { rows: number, cols: number } & Attrs {
       return {
         rows: 2,
@@ -460,9 +454,8 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
     },
     popup: MenuItemPopupTableComponent
   },
-
   delete_table: {
-    type: NODE_TYPES.table,
+    type: nodeTypes.table,
     attrs({attrs}) { return attrs ?? {}; },
     command() {
       return deleteTable;
@@ -471,24 +464,29 @@ export const MENU_ITEM_TYPES: MenuItemTypes = {
       return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.HIDDEN;
     },
   },
-
   add_table_row_before: addTableElement(true, true),
   add_table_row_after: addTableElement(true, false),
   add_table_column_before: addTableElement(false, true),
   add_table_column_after: addTableElement(false, false),
-
   delete_table_row: deleteTableElement(true),
   delete_table_column: deleteTableElement(false),
 
+  // Color related //
   text_color: changeColor(true),
   background_color: changeColor(false),
+
+  // Alignment related //
+  left_alignment: alignText(AlignmentStyle.LEFT),
+  centered_alignment: alignText(AlignmentStyle.CENTER),
+  right_alignment: alignText(AlignmentStyle.RIGHT),
+  justified_alignment: alignText(AlignmentStyle.JUSTIFY),
 }
 
 // Heading action function
 function heading_action(level: number): MenuItemTypeAction<NodeType> {
   const baseAttrs = { level };
   return {
-    type: NODE_TYPES.heading,
+    type: nodeTypes.heading,
     attrs({attrs}): { level: number } & Attrs {
       return {
         ...baseAttrs,
@@ -515,7 +513,7 @@ function addTableElement(isRow: boolean, isBefore: boolean): MenuItemTypeAction<
   const command = isBefore ? commands.after : commands.before;
 
   return {
-    type: NODE_TYPES.table,
+    type: nodeTypes.table,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return command;
@@ -533,7 +531,7 @@ function deleteTableElement(isRow: boolean): MenuItemTypeAction<NodeType> {
 	const command = isRow ? deleteRow : deleteColumn;
 
 	return {
-		type: NODE_TYPES.table,
+		type: nodeTypes.table,
 		attrs({attrs}) { return attrs ?? {}; },
 		command(): Command {
 			return command;
@@ -552,11 +550,11 @@ function deleteTableElement(isRow: boolean): MenuItemTypeAction<NodeType> {
 	}
 }
 
-// Table element deleting action function
+// Text & background color change action function
 function changeColor(isTextColor: boolean): MenuItemTypeAction<MarkType> {
 	const target = isTextColor
-    ? { type: MARK_TYPES.txt_color, command: changeTextColor, popup: MenuItemPopupColorComponent }
-    : { type: MARK_TYPES.bg_color, command: changeBackgroundColor, popup: MenuItemPopupColorComponent };
+    ? { type: markTypes.txt_color, command: changeTextColor, popup: MenuItemPopupTextColorComponent }
+    : { type: markTypes.bg_color, command: changeBackgroundColor, popup: MenuItemPopupBackgroundColorComponent };
 
 	return {
 		type: target.type,
@@ -571,8 +569,34 @@ function changeColor(isTextColor: boolean): MenuItemTypeAction<MarkType> {
       return target.command(color);
 		},
 		status({state, attrs}): MenuItemStatus {
-			return this.command({state, attrs}) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+			return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
 		},
     popup: target.popup
 	}
+}
+
+// Text alignment action function
+function alignText(alignment: AlignmentStyle): MenuItemTypeAction<NodeType> {
+  return {
+    type: nodeTypes.paragraph,
+    attrs({attrs}): { alignment?: AlignmentStyle } & Attrs {
+      return {
+        alignment: alignment,
+        ...attrs,
+      };
+    },
+    command({state, attrs}): Command {
+      const {alignment} = this.attrs({state, attrs});
+      return changeTextAlignment(alignment);
+    },
+    status({state, attrs, elements}): MenuItemStatus {
+      const {alignment} = this.attrs({state, attrs});
+      const alignableNode = elements.ancestors.find(node => isAlignableNode(node));
+      if (alignableNode?.attrs['alignment'] === alignment) {
+        return MenuItemStatus.ACTIVE;
+      }
+
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+    },
+  }
 }

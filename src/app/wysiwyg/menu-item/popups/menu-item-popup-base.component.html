@@ -1,6 +1,8 @@
 <div [ngClass]="{ 'popup': true, show: isOpened }" tabindex="-1">
 
-  <ng-content select="[inputs]"></ng-content>
+  <div class="popup-inputs">
+    <ng-content select="[inputs]"></ng-content>
+  </div>
 
   <div class="popup-actions">
     <ng-content select="[actions]"></ng-content>

@@ -4,26 +4,28 @@
 
 import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
 import {Attrs, Fragment, Mark, MarkType, Node as ProseNode, NodeRange, NodeType} from 'prosemirror-model';
-import {INDENT_LEVEL_STEP, MARK_TYPES, NODE_TYPES} from '../text-editor/custom-schema';
+import {AlignmentStyle, INDENT_LEVEL_STEP, markTypes, nodeTypes} from '../text-editor/custom-schema';
 import {
-  chainCommands,
-  createParagraphNear,
-  exitCode,
-  liftEmptyBlock,
-  newlineInCode,
-  splitBlock,
-  wrapIn
+	chainCommands,
+	createParagraphNear,
+	exitCode,
+	liftEmptyBlock,
+	newlineInCode,
+	splitBlock,
+	wrapIn
 } from 'prosemirror-commands';
 import {canJoin, findWrapping} from 'prosemirror-transform';
 import {extendTransaction} from "./transactions-helper";
 import {
-  ancestorAt,
-  areNodeTypesEquals,
-  ExtendedNode,
-  findAllAncestors,
-  findAncestor,
-  findAncestorOfType,
-  isListNode
+	ancestorAt,
+	areNodeTypesEquals,
+	ExtendedNode,
+	findAllAncestors,
+	findAllNodesBetween,
+	findAncestor,
+	findAncestorOfType,
+	isAlignableNode,
+	isListNode
 } from "./nodes-helper";
 import {expandMarkActiveRange, expandMarkTypeActiveRange} from './marks-helper';
 import {createTable} from './table-helper';
@@ -240,9 +242,9 @@ export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
   let range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  let wrapping = findWrapping(range, NODE_TYPES.indent);
+  let wrapping = findWrapping(range, nodeTypes.indent);
   if (!wrapping) {
-    const isIndentable = (node: ProseNode) => isValidContent(NODE_TYPES.indent, node);
+    const isIndentable = (node: ProseNode) => isValidContent(nodeTypes.indent, node);
     const indentableNode = findAncestor(range.$from, isIndentable, range.depth);
 
     // Cancel if no parent indentable node is found
@@ -251,7 +253,7 @@ export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
     const $from = state.doc.resolve(indentableNode.before);
     const $to = state.doc.resolve(indentableNode.after);
     range = new NodeRange($from, $to, indentableNode.depth);
-    wrapping = findWrapping(range, NODE_TYPES.indent);
+    wrapping = findWrapping(range, nodeTypes.indent);
   }
 
   // Cancel if no valid wrapping parent node is found
@@ -261,7 +263,7 @@ export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
     const tr = extendTransaction(state.tr);
 
     const parent = ancestorAt(range.$from, range.depth);
-    const isParentIndentNode = areNodeTypesEquals(parent.type, NODE_TYPES.indent)
+    const isParentIndentNode = areNodeTypesEquals(parent.type, nodeTypes.indent)
 
     // Update indent level if is already wrapped and is the only content of the indentation
     if (isParentIndentNode && parent.content.size === range.end - range.start) {
@@ -290,7 +292,7 @@ export const decreaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
   const range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  const indentNode = findAncestorOfType(range.$from, NODE_TYPES.indent);
+  const indentNode = findAncestorOfType(range.$from, nodeTypes.indent);
   if (!indentNode) { return false; }
 
   const updatedLevel = indentNode.attrs['level'] - INDENT_LEVEL_STEP;
@@ -329,7 +331,7 @@ export const increaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
   let range = $anchor.blockRange($head);
   if (!range) { return false; }
 
-  const isListItem = (node?: ProseNode | null) => areNodeTypesEquals(node?.type, NODE_TYPES.list_item);
+  const isListItem = (node?: ProseNode | null) => areNodeTypesEquals(node?.type, nodeTypes.list_item);
 
   const rangeParent = ancestorAt(range.$from, range.depth);
   let listNode: ExtendedNode;
@@ -473,7 +475,7 @@ export const newLineText: Command = (state: EditorState, dispatch?: (tr: Transac
   if (dispatch) {
     const tr = state.tr;
 
-    tr.replaceSelectionWith(state.schema.node(NODE_TYPES.hard_break), true);
+    tr.replaceSelectionWith(state.schema.node(nodeTypes.hard_break), true);
 
     dispatch(tr.scrollIntoView());
   }
@@ -518,9 +520,12 @@ export function changeTextColor(color?: string): Command {
       const tr = state.tr;
 
       if (color) {
-        tr.addMark($from.pos, $to.pos, MARK_TYPES.txt_color.create({ color }));
+        const mark = markTypes.txt_color.create({ color });
+        tr.addMark($from.pos, $to.pos, mark);
+        tr.addStoredMark(mark);
       } else {
-        tr.removeMark($from.pos, $to.pos, MARK_TYPES.txt_color);
+        tr.removeMark($from.pos, $to.pos, markTypes.txt_color);
+        tr.removeStoredMark(markTypes.txt_color);
       }
 
       dispatch(tr.scrollIntoView());
@@ -544,9 +549,39 @@ export function changeBackgroundColor(color?: string): Command {
       const tr = state.tr;
 
       if (color) {
-        tr.addMark($from.pos, $to.pos, MARK_TYPES.bg_color.create({ color }));
+        const mark = markTypes.bg_color.create({ color });
+        tr.addMark($from.pos, $to.pos, mark);
+        tr.addStoredMark(mark);
       } else {
-        tr.removeMark($from.pos, $to.pos, MARK_TYPES.bg_color);
+        tr.removeMark($from.pos, $to.pos, markTypes.bg_color);
+        tr.removeStoredMark(markTypes.bg_color);
+      }
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+/**
+ * Changes the text alignment of the paragraph
+ * @param alignment New alignment to use for the text paragraph
+ * @returns False if the command cannot be executed
+ */
+export function changeTextAlignment(alignment?: AlignmentStyle): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const {$from, $to} = state.selection;
+    const range = $from.blockRange($to);
+    if (!range) { return false; }
+
+    const alignableChildNodes = findAllNodesBetween($from, $to, isAlignableNode);
+    if (alignableChildNodes.length === 0) { return false; } // No alignment can be modified
+
+    if (dispatch) {
+      const tr = state.tr;
+
+      for (const paragraph of alignableChildNodes) {
+        tr.setNodeAttribute(paragraph.before, 'alignment',  alignment);
       }
 
       dispatch(tr.scrollIntoView());

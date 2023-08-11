@@ -1,22 +1,84 @@
 .ProseMirror {
-  --base-text-color: black;
-  --base-background-color: transparent;
-  color: var(--base-text-color, black);
+  $base-text-color: black;
+  $base-background-color: transparent;
+
+  $base-indent-level: 1;
+  $base-indent-padding: 1.5rem;
+
+  --text-color: $base-text-color;
+  --background-color: $base-background-color;
 
   line-height: 1.5;
   text-align: left;
 
+  * {
+    color: var(--text-color, $base-text-color);
+    background: var(--background-color, $base-background-color);
+    text-decoration-color: var(--text-color, $base-text-color);
+  }
+
+  // Hide insertion caret if a atom node is selected
+  &:has(.atom.ProseMirror-selectednode) {
+    caret-color: transparent;
+  }
+
   h1, h2, h3, p, table, ol, ul,
-  pre, img, blockquote {
+  pre, blockquote, .indent, .img-card {
     display: block;
     margin: 0.5rem 0;
   }
 
-  indent {
+  .indent {
     margin: 0;
 
-    --indent-level: 1;
-    padding-left: calc(1.5rem * var(--indent-level));
+    --indent-level: $base-indent-level;
+    padding-left: calc($base-indent-padding * var(--indent-level, $base-indent-level));
+  }
+
+  .img-wrapper {
+    &.ProseMirror-selectednode .img-card {
+      box-shadow: 0 0 6px 1px #0052CC;
+    }
+
+    .img-card {
+      position: relative;
+      width: fit-content;
+
+      box-shadow: 0 0 6px 1px #9a9a9a;
+      margin: 5px;
+      border-radius: 0.25rem;
+      overflow: hidden;
+
+      img {
+        display: block;
+      }
+
+      .img-title {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+
+        color: white;
+        text-align: center;
+        font-style: italic;
+
+        pointer-events: none;
+
+        background-color: #0005;
+
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: 100%;
+          left: 0;
+          height: 1rem;
+          width: 100%;
+          background-image: linear-gradient(#0000, #0005);
+        }
+      }
+    }
   }
 
   em, i {
@@ -27,17 +89,14 @@
     font-weight: bold;
   }
 
-  s {
+  s,
+  u sub,
+  sub u {
     text-decoration-line: line-through;
   }
 
   u {
     text-decoration-line: underline;
-  }
-
-  u sub,
-  sub u {
-    text-decoration-line: line-through;
   }
 
   sup, sub {

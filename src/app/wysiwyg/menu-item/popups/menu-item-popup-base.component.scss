@@ -6,22 +6,31 @@
   left: 50%;
   transform: translateX(-50%);
 
-  background-color: #f5f5f5;
-  border: 1px solid #172b4d;
+  background-color: white;
   border-radius: 0.5rem;
+  box-shadow: 0 0 5px 0 #202020;
 
   padding: 0.5rem;
 
   &.show {
+    display: block;
+  }
+
+  .popup-inputs {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+
     row-gap: 0.5rem;
   }
 
   .popup-actions {
     display: flex;
     justify-content: space-between;
+    margin-top: 0.75rem;
+
+    &:empty {
+      display: none;
+    }
   }
 }

@@ -38,3 +38,29 @@ export function selectedNodesDecorator(): Plugin {
     }
   })
 }
+
+export function debugSelection(): Plugin {
+  return new Plugin({
+    view: () =>  {
+      return {
+        update: (view, prevState) => {
+          // console.log('DEBUG Selection Plugin - previous $pos: (',
+          //   prevState.selection.from, prevState.selection.to,
+          //   ') (',
+          //   prevState.selection.$from, prevState.selection.$to,
+          //   ') (',
+          //   prevState.selection.$from.node(), prevState.selection.$to.node(),
+          //   ')'
+          // );
+          console.log('DEBUG Selection Plugin - current $pos: (',
+            view.state.selection.from, view.state.selection.to,
+            ') (',
+            view.state.selection.$from, view.state.selection.$to,
+            ') (',
+            view.state.selection.$from.node(), view.state.selection.$to.node(),
+            ')');
+        }
+      }
+    }
+  })
+}

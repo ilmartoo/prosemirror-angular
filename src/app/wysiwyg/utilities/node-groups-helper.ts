@@ -5,7 +5,7 @@
  * @param groups Array of group strings
  * @returns String of a concatenated group expression
  */
-export function groupChain(...groups: string[]): string {
+export function groupChain(...groups: [string, string, ...string[]]): string {
   return groups.join(' ');
 }
 
@@ -26,8 +26,8 @@ export function groupOr(groupA: string, ...groups: string[]): string {
  * @returns String of a repeat group expression
  */
 export function groupRepeat(group: string, rep: number): string {
-  if (rep > 0) { return `${group}{${rep}}`; }
-  return '';
+  if (rep > 0) { return `${group}{${rep}}`; } // group{rep}
+  return ''; // No rep wanted so no group should be returned
 }
 
 /**
@@ -38,7 +38,15 @@ export function groupRepeat(group: string, rep: number): string {
  * @returns String of a ranged group expression
  */
 export function groupRange(group: string, min: number, max?: number): string {
-  if (max && min <= max) { return `${group}{${min},${max ?? ''}}`; }
-  if (min >= 0) { return min > 1 ? `${group}{${min},}` : (min === 0 ? `${group}*` : `${group}+`); }
-  return '';
+  if (!max) {
+    if (min <= 0) { return `${group}*`; }       // group* -> [0, INF)
+    else if (min === 1) { return `${group}+`; } // group+ -> [1, INF]
+    else { return `${group}{${min},}`; }        // group{min,} -> [min, INF)
+  }
+
+  if (min > max) { return groupRange(group, max, min); } // min <-> max
+
+  return min === max
+    ? `${group}{${min}}`         // group{rep} -> min = max
+    : `${group}{${min},${max}}`; // group{min,max} -> [min, max]
 }

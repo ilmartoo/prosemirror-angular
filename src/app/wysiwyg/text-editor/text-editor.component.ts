@@ -1,12 +1,12 @@
 import {
-  AfterViewInit,
-  Component,
-  ContentChildren,
-  ElementRef,
-  Input,
-  QueryList,
-  ViewChild,
-  ViewEncapsulation
+	AfterViewInit,
+	Component,
+	ContentChildren,
+	ElementRef,
+	Input,
+	QueryList,
+	ViewChild,
+	ViewEncapsulation
 } from '@angular/core';
 import {DOMParser as ProseDOMParser} from 'prosemirror-model';
 import {EditorState} from 'prosemirror-state';
@@ -89,10 +89,9 @@ export class TextEditorComponent implements AfterViewInit {
           'Tab': increaseIndent,
           'Shift-Tab': decreaseIndent,
         }),
-        this.menuRef.asPlugin(),   // Menu bar
-        // currentElementDecorator(), // Decorator marking the current element
-        // selectedNodesDecorator(),  // Decorator marking the selected nodes
-        tableEditing(),            // Table management
+        tableEditing(),      // Table management
+        this.menuRef.plugin, // Menu bar
+        // debugSelection(),
       ],
     })
 

@@ -76,10 +76,10 @@ export class MenuItemForActionComponent extends UpdatableItem implements AfterVi
         this.popup!.type = this.action.type!;
 
         // Update attrs
-        this.popup!.acceptedPopup.subscribe(attrs => this.executeCommand(attrs));
-
-        // Focus on close
-        this.popup!.focusEditor.subscribe(() => this.focusEditor());
+        this.popup!.acceptedPopup.subscribe(attrs => {
+          this.executeCommand(attrs);
+          this.focusEditor();
+        });
 
         // Inserts the popup component into view
         this.popupContainer.insert(this.popupRef.hostView);
@@ -146,11 +146,9 @@ export class MenuItemForActionComponent extends UpdatableItem implements AfterVi
    * @protected
    */
   protected popupFocusLost(event: FocusEvent) {
-    if (this.popup) {
-      const newlyFocussedElement = event.relatedTarget as HTMLElement;
-      if (!this.itemBaseRef.nativeElement.contains(newlyFocussedElement)) {
-        this.popup.close();
-      }
+    const newlyFocussedElement = event.relatedTarget as HTMLElement;
+    if (!this.itemBaseRef.nativeElement.contains(newlyFocussedElement)) {
+      this.popup?.close();
     }
   }
 

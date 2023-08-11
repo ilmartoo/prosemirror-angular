@@ -1,7 +1,7 @@
 <div #itemBase
      class="base"
      (mousedown)="preventLosingEditorFocus($event)"
-     (focusout)="popupFocusLost($event)"
+     (focusout)="popup && popupFocusLost($event)"
      tabindex="-1"
 >
   <button [ngClass]="{

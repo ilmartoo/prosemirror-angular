@@ -1,0 +1,16 @@
+<app-menu-item-base-popup [isOpened]="isPopupOpen">
+  <ng-container inputs>
+    <!-- Clear color -->
+    <button class="clear-color"
+            (click)="colorCleared()">
+      <app-svg-icon class="icon" name="format-clear"></app-svg-icon>
+      Remove background
+    </button>
+
+    <!-- Palette -->
+    <app-menu-item-popup-input-color-palette [name]="INPUTS.COLOR"
+                                             [palette]="palette"
+                                             (change)="colorClicked()"
+    ></app-menu-item-popup-input-color-palette>
+  </ng-container>
+</app-menu-item-base-popup>
