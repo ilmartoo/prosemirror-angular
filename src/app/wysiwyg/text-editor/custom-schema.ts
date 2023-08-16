@@ -1,12 +1,12 @@
 import {
-	AttributeSpec,
-	Attrs,
-	DOMOutputSpec,
-	MarkSpec,
-	Node as ProseNode,
-	NodeSpec,
-	ParseRule,
-	Schema
+  AttributeSpec,
+  Attrs,
+  DOMOutputSpec,
+  MarkSpec,
+  Node as ProseNode,
+  NodeSpec,
+  ParseRule,
+  Schema
 } from 'prosemirror-model';
 import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
 import {groupChain, groupOr, groupRange} from "../utilities/node-groups-helper";
@@ -100,6 +100,10 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 		// DOMOutputSpec is a string
 		if (typeof(dom) === 'string') { return dom; } // Cannot change string -> Logic too complicated
 
+    const alignment = type === AlignmentType.BLOCK && node.attrs['alignment'] === AlignmentStyle.JUSTIFY
+      ? AlignmentStyle.LEFT
+      : node.attrs['alignment'];
+
 		// DOMOutputSpec is an array
 		if ('length' in dom) {
 			const appendAlignStyles = (domAttrs: {[p: string]: string} & {style?: string} = { }) => {
@@ -107,7 +111,6 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 
         // Align type logic
         let alignStyles = '';
-				const alignment = node.attrs['alignment'];
         if (type === AlignmentType.TEXT) {
 					alignStyles = generateStyles({
             'text-align': alignment
@@ -142,7 +145,7 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 
 		// DOMOutputSpec is a Node or an object with `dom` as a Node
 		const nodeHTML = ('dom' in dom ? dom.dom : dom) as HTMLElement;
-		nodeHTML.style.textAlign = node.attrs['alignment'];
+		nodeHTML.style.textAlign = alignment;
 		return dom;
 	}
 

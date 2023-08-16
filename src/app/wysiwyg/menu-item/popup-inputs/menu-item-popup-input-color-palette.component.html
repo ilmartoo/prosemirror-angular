@@ -3,6 +3,7 @@
        class="radio-base primary" [ngClass]="{ dark: primaryColor.dark, framed: primaryColor.framed }">
     <input class="radio-button"
            type="radio"
+           [id]="id + '-palette-' + (primaryColor.value || 'default')"
            [name]="name"
            [value]="primaryColor.value"
            [(ngModel)]="_value"
@@ -15,6 +16,7 @@
        class="radio-base" [ngClass]="{ dark: color.dark, framed: color.framed }">
     <input class="radio-button"
            type="radio"
+           [id]="id + '-palette-' + (color.value || 'default')"
            [name]="name"
            [value]="color.value"
            [(ngModel)]="_value"

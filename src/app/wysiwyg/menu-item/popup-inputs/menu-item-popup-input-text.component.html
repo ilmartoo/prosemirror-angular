@@ -1,4 +1,6 @@
 <div class="popup-input">
-  <label [for]="name">{{ label }}</label>
-  <input type="text" [name]="name" [(ngModel)]="_value">
+  <label>
+    {{ label }}
+    <input type="text" [id]="id"  [name]="name" [(ngModel)]="_value">
+  </label>
 </div>

@@ -1,7 +1,7 @@
 <app-menu-item-base-popup [isOpened]="isPopupOpen" (input)="validate()">
   <ng-container inputs>
-    <app-menu-item-popup-input-text [name]="INPUTS.TITLE" label="Name"></app-menu-item-popup-input-text>
-    <app-menu-item-popup-input-text [name]="INPUTS.REFERENCE" label="Reference"></app-menu-item-popup-input-text>
+    <app-menu-item-popup-input-text id="link-title" [name]="INPUTS.TITLE" label="Name"></app-menu-item-popup-input-text>
+    <app-menu-item-popup-input-text id="link-href" [name]="INPUTS.REFERENCE" label="Reference"></app-menu-item-popup-input-text>
   </ng-container>
   <ng-container actions>
     <button [disabled]="!isValid" (click)="acceptPopup()">Create link</button>

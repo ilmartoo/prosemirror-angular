@@ -7,6 +7,7 @@ import {Component, Input} from '@angular/core';
 export class MenuItemPopupInputComponent {
 
   @Input({ required: true }) name!: string;
+  @Input({ required: true }) id!: string;
 
   protected _value: string = '';
 

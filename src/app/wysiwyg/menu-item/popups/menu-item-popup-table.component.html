@@ -1,7 +1,7 @@
 <app-menu-item-base-popup [isOpened]="isPopupOpen" (input)="validate()">
   <ng-container inputs>
-    <app-menu-item-popup-input-number [name]="INPUTS.ROWS" label="Rows" [min]="MIN_ROWS"></app-menu-item-popup-input-number>
-    <app-menu-item-popup-input-number [name]="INPUTS.COLS" label="Columns" [min]="MIN_COLS"></app-menu-item-popup-input-number>
+    <app-menu-item-popup-input-number id="table-rows" [name]="INPUTS.ROWS" label="Rows" [min]="MIN_ROWS"></app-menu-item-popup-input-number>
+    <app-menu-item-popup-input-number id="table-cols" [name]="INPUTS.COLS" label="Columns" [min]="MIN_COLS"></app-menu-item-popup-input-number>
   </ng-container>
   <ng-container actions>
     <button [disabled]="!isValid" (click)="acceptPopup()">Create table</button>
