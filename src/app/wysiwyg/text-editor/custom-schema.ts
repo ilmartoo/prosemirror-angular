@@ -1,17 +1,22 @@
 import {
-  AttributeSpec,
-  Attrs,
-  DOMOutputSpec,
-  MarkSpec,
-  Node as ProseNode,
-  NodeSpec,
-  ParseRule,
-  Schema
+	AttributeSpec,
+	Attrs,
+	DOMOutputSpec,
+	MarkSpec,
+	Node as ProseNode,
+	NodeSpec,
+	ParseRule,
+	Schema
 } from 'prosemirror-model';
 import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
 import {groupChain, groupOr, groupRange} from "../utilities/node-groups-helper";
 import {tableNodes} from 'prosemirror-tables';
 import {generateStyles} from '../utilities/multipurpose-helper';
+
+//// KaTeX import //////////////
+const katex = require('katex');
+require('katex/contrib/mhchem');
+////////////////////////////////
 
 /**
  * Helper function to ease the toDOM function declaration.
@@ -179,6 +184,7 @@ export enum NodeSpecs {
   ROW = 'table_row',
   CELL = 'table_cell',
   HEADER = 'table_header',
+  FORMULA = 'katex_formula',
 }
 
 // Node groups
@@ -297,11 +303,12 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
       title: { default: null },
     },
     group: NodeGroups.BLOCK,
-    content: groupRange(NodeGroups.INLINE, 0),
+		content: groupRange(NodeGroups.INLINE, 0),
     draggable: true,
     atom: true,
     isolating: true,
 		leafText: (node) => node.attrs['src'],
+		marks: '',
     parseDOM: [{
       tag: 'img[src]',
       getAttrs: (dom) => getDOMAttrs(dom, (dom) => ({
@@ -359,6 +366,41 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
     tableGroup: NodeGroups.BLOCK,
     cellContent: NodeGroups.BLOCK,
     cellAttributes: { }
+  }),
+  [NodeSpecs.FORMULA]: alignable(AlignmentType.BLOCK, {
+		attrs: {
+			formula: { default: '' }
+		},
+    group: NodeGroups.BLOCK,
+		content: groupRange(NodeGroups.INLINE, 0),
+		draggable: true,
+		atom: true,
+		isolating: true,
+		whitespace: 'pre',
+		definingForContent: true,
+		leafText: (node) => node.attrs['formula'],
+		marks: '',
+    parseDOM: [{
+      tag: '*.katex',
+			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+				const formula = dom.getAttribute('katex-formula')
+				return formula ? {formula} : false;
+			}),
+    }],
+    toDOM: (node) => {
+			const formula = node.attrs['formula'] as string;
+
+      const katexWrapper = document.createElement('span');
+			katex.render(formula, katexWrapper, {
+				throwOnError: false,
+				output: 'html',
+			});
+
+			const katexFormula = katexWrapper.firstElementChild! as HTMLSpanElement;
+			katexFormula.setAttribute('katex-formula', formula)
+
+      return toDOM('div', {class: 'katex-card atom'}, katexFormula);
+		},
   }),
 };
 

@@ -116,5 +116,4 @@ export function defineComponent<T = object, R = object>(
     ...data,
     providers: [...(data.providers ?? []), {provide: provider, useExisting: component}],
   })(component);
-
 }

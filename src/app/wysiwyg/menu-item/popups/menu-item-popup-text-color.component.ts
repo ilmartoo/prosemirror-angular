@@ -48,7 +48,6 @@ export class MenuItemPopupTextColorComponent extends MenuItemPopupForActionCompo
     const txtColorMark = plugin?.getState(state)?.hasMarkType(markTypes.txt_color);
     let color = txtColorMark ? txtColorMark.attrs['color'] as string : '';
 
-    console.log(txtColorMark, color);
     this.setValue(this.INPUTS.COLOR, color);
   }
 

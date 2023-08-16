@@ -3,35 +3,35 @@ import {AlignmentStyle, markTypes, nodeTypes} from '../text-editor/custom-schema
 import {Attrs, Mark, MarkType, NodeType} from 'prosemirror-model';
 import {setBlockType, toggleMark} from 'prosemirror-commands';
 import {
-	activeMarksInSelectionEnd,
-	areMarksEquals,
-	areMarkTypesEquals,
-	MarkForLookup,
-	MarkTypeForLookup
+  activeMarksInSelectionEnd,
+  areMarksEquals,
+  areMarkTypesEquals,
+  MarkForLookup,
+  MarkTypeForLookup
 } from '../utilities/marks-helper';
 import {
-	AncestorNode,
-	ancestorNodesAtCursor,
-	AncestorsList,
-	areNodesEquals,
-	areNodeTypesEquals,
-	isAlignableNode,
-	isListNode,
-	NodeForLookup,
-	NodeTypeForLookup
+  AncestorNode,
+  ancestorNodesAtCursor,
+  AncestorsList,
+  areNodesEquals,
+  areNodeTypesEquals,
+  isAlignableNode,
+  isListNode,
+  NodeForLookup,
+  NodeTypeForLookup
 } from '../utilities/nodes-helper';
 import {
-	changeBackgroundColor,
-	changeTextAlignment,
-	changeTextColor,
-	decreaseIndent,
-	expandAndRemoveMarks,
-	increaseIndent,
-	insertContent,
-	insertTable,
-	listCommands,
-	replaceWithMarkedText,
-	toggleWrapper
+  changeBackgroundColor,
+  changeTextAlignment,
+  changeTextColor,
+  decreaseIndent,
+  expandAndRemoveMarks,
+  increaseIndent,
+  insertContent,
+  insertTable,
+  listCommands,
+  replaceWithMarkedText,
+  toggleWrapper
 } from '../utilities/commands';
 import {MenuItemPopupForActionComponent} from './popups/menu-item-popup-for-action.component';
 import {MenuItemPopupLinkComponent} from './popups/menu-item-popup-link.component';
@@ -39,17 +39,18 @@ import {MenuItemPopupImageComponent} from './popups/menu-item-popup-image.compon
 import {Type} from '@angular/core';
 import {MenuItemPopupTableComponent} from './popups/menu-item-popup-table.component';
 import {
-	addColumnAfter,
-	addColumnBefore,
-	addRowAfter,
-	addRowBefore,
-	deleteColumn,
-	deleteRow,
-	deleteTable,
-	TableMap
+  addColumnAfter,
+  addColumnBefore,
+  addRowAfter,
+  addRowBefore,
+  deleteColumn,
+  deleteRow,
+  deleteTable,
+  TableMap
 } from 'prosemirror-tables';
 import {MenuItemPopupTextColorComponent} from './popups/menu-item-popup-text-color.component';
 import {MenuItemPopupBackgroundColorComponent} from './popups/menu-item-popup-background-color.component';
+import {MenuItemPopupFormulaComponent} from './popups/menu-item-popup-formula.component';
 
 /** Possible statuses of the menu item */
 export enum MenuItemStatus {
@@ -195,6 +196,7 @@ export type NodeMenuItemActions =
 	| 'centered_alignment'
 	| 'right_alignment'
 	| 'justified_alignment'
+  | 'katex_formula'
   ;
 export type MenuItemTypes =
   & { readonly [action in NodeMenuItemActions]: MenuItemTypeAction<NodeType> }
@@ -480,6 +482,26 @@ export const menuItemTypes: MenuItemTypes = {
   centered_alignment: alignText(AlignmentStyle.CENTER),
   right_alignment: alignText(AlignmentStyle.RIGHT),
   justified_alignment: alignText(AlignmentStyle.JUSTIFY),
+
+  // KaTeX //
+  katex_formula: {
+		type: nodeTypes.katex_formula,
+		attrs({attrs}) {
+      return {
+        formula: '',
+        ...attrs,
+      };
+    },
+		command({state, attrs}) {
+			const {formula} = this.attrs({state, attrs});
+			const katex_formula = this.type.create({formula});
+			return insertContent(state.selection.head, katex_formula);
+		},
+		status({state, attrs}) {
+			return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+		},
+    popup: MenuItemPopupFormulaComponent,
+  }
 }
 
 // Heading action function

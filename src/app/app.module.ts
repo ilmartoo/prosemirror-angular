@@ -28,6 +28,7 @@ import {
 import {
   MenuItemPopupBackgroundColorComponent
 } from './wysiwyg/menu-item/popups/menu-item-popup-background-color.component';
+import {MenuItemPopupFormulaComponent} from './wysiwyg/menu-item/popups/menu-item-popup-formula.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {
     MenuItemPopupTableComponent,
     MenuItemPopupTextColorComponent,
     MenuItemPopupBackgroundColorComponent,
+    MenuItemPopupFormulaComponent,
     MenuItemPopupInputComponent,
     MenuItemPopupInputTextComponent,
     MenuItemPopupInputNumberComponent,

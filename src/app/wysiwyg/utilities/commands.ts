@@ -6,26 +6,27 @@ import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-stat
 import {Attrs, Fragment, Mark, MarkType, Node as ProseNode, NodeRange, NodeType} from 'prosemirror-model';
 import {AlignmentStyle, INDENT_LEVEL_STEP, markTypes, nodeTypes} from '../text-editor/custom-schema';
 import {
-	chainCommands,
-	createParagraphNear,
-	exitCode,
-	liftEmptyBlock,
-	newlineInCode,
-	splitBlock,
-	wrapIn
+  chainCommands,
+  createParagraphNear,
+  exitCode,
+  liftEmptyBlock,
+  newlineInCode,
+  splitBlock,
+  splitBlockKeepMarks,
+  wrapIn
 } from 'prosemirror-commands';
 import {canJoin, findWrapping} from 'prosemirror-transform';
 import {extendTransaction} from "./transactions-helper";
 import {
-	ancestorAt,
-	areNodeTypesEquals,
-	ExtendedNode,
-	findAllAncestors,
-	findAllNodesBetween,
-	findAncestor,
-	findAncestorOfType,
-	isAlignableNode,
-	isListNode
+  ancestorAt,
+  areNodeTypesEquals,
+  ExtendedNode,
+  findAllAncestors,
+  findAllNodesBetween,
+  findAncestor,
+  findAncestorOfType,
+  isAlignableNode,
+  isListNode
 } from "./nodes-helper";
 import {expandMarkActiveRange, expandMarkTypeActiveRange} from './marks-helper';
 import {createTable} from './table-helper';
@@ -171,8 +172,10 @@ export function insertContent(at: number, content: ProseNode | Fragment | readon
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
     const fragment = Fragment.from(content);
     const $at = state.doc.resolve(at);
-    // Cancel if content cannot be inserted at the position specified
-    if ($at.node().type.validContent(fragment)) { return false; }
+
+    const ancestor = findAncestor($at, (node) => node.type.validContent(fragment))
+    if (!ancestor) { return false; } // Cancel if content cannot be inserted at the position specified
+
 
     if (dispatch) {
       const tr = state.tr;
@@ -498,12 +501,13 @@ export const newLine: Command = chainCommands(exitCode, newLineText);
  * - createParagraphNear
  * - liftEmptyBlock
  * - newListItem
+ * - splitBlockKeepMarks
  * - splitBlock
  * @param state State of the editor
  * @param dispatch Dispatch function
  * @returns False if the command cannot be executed
  */
-export const newBlock: Command = chainCommands(newlineInCode, createParagraphNear, liftEmptyBlock, newListItem, splitBlock);
+export const newBlock: Command = chainCommands(newlineInCode, createParagraphNear, liftEmptyBlock, newListItem, splitBlockKeepMarks, splitBlock);
 
 /**
  * Changes the color mark of the text

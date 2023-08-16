@@ -33,6 +33,13 @@ export class AppComponent {
 
     '<p></p>' +
 
+    '<h1><strong>[ FORMULAS ]</strong></h1>' +
+    '<span class="katex" katex-formula="x^2 + y^2 = z^2"></span>' +
+    '<span class="katex" katex-formula="\\begin{bmatrix} a & 2 & 3 \\\\ a & b & c \\end{bmatrix}"></span>' +
+    '<span class="katex" katex-formula="\\ce{CO2 + C -> 2 C0}"></span>' +
+
+    '<p></p>' +
+
     '<h1><strong>[ REFERENCES ]</strong></h1>' +
     '<a href="https://example.com" title="https://example.com">Link to example.com</a>' +
     '<img alt="Example image" title="Example image" src="https://picsum.photos/seed/picsum/600/400">' +

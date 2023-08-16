@@ -62,6 +62,14 @@
 
     <app-menu-item-separator></app-menu-item-separator>
 
+    <!-- KaTeX -->
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.katex_formula"
+                              icon="function"
+                              tooltip="Function"
+    ></app-menu-item-for-action>
+
+    <app-menu-item-separator></app-menu-item-separator>
+
     <!-- Table -->
     <app-menu-item-for-action [action]="MENU_ITEM_TYPES.create_table"
                               icon="table-plus"
