@@ -329,10 +329,11 @@ export const menuItemTypes: MenuItemTypes = {
   // Special content related //
   image: {
     type: nodeTypes.image,
-    attrs({ attrs}): { title: string, alt?: string, src: string } & Attrs {
+    attrs({ state, attrs}): { title: string, alt?: string, src: string } & Attrs {
       return {
         title: '',
         src: '',
+        from: state.selection.from,
         ...attrs,
       }
     },
