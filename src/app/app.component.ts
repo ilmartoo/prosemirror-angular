@@ -34,9 +34,9 @@ export class AppComponent {
     '<p></p>' +
 
     '<h1><strong>[ FORMULAS ]</strong></h1>' +
-    '<span class="katex" katex-formula="x^2 + y^2 = z^2"></span>' +
-    '<span class="katex" katex-formula="\\begin{bmatrix} a & 2 & 3 \\\\ a & b & c \\end{bmatrix}"></span>' +
-    '<span class="katex" katex-formula="\\ce{CO2 + C -> 2 C0}"></span>' +
+    '<div katex-formula="x^2 + y^2 = z^2"></div>' +
+    '<div katex-formula="\\begin{bmatrix} a & 2 & 3 \\\\ a & b & c \\end{bmatrix}"></div>' +
+    '<div katex-formula="\\ce{CO2 + C -> 2 C0}"></div>' +
 
     '<p></p>' +
 
@@ -133,9 +133,9 @@ export class AppComponent {
              '$ sudo rm -rf /*' +
     '      </code></pre>' +
     '    </td>' +
-    '    <td>Left aligned text TODO</td>' +
-    '    <td>Center aligned text TODO</td>' +
-    '    <td>Right aligned text TODO</td>' +
+    '    <td><p style="text-align: left">Left aligned text TODO</p></td>' +
+    '    <td><p style="text-align: center">Center aligned text TODO</p></td>' +
+    '    <td><p style="text-align: right">Right aligned text TODO</p></td>' +
     '  </tr>' +
     '</table>' +
     '';

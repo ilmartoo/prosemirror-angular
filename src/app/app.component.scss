@@ -6,11 +6,6 @@
 
   padding: 2rem;
 
-  // Overflow pass
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-
   .title {
     font-size: 4rem;
     background: linear-gradient(45deg, #2f79c0, #00d4ff, #2f79c0);
@@ -28,9 +23,7 @@
 
   .editor {
     // Overflow pass
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
+    position: sticky;
   }
 
   & > * {

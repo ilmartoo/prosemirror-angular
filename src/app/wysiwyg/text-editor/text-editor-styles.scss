@@ -1,14 +1,12 @@
-@import "node_modules/katex/dist/katex.css";
+@use "node_modules/katex/dist/katex.css" as katex;
 
 .text-editor {
   // Overflow pass
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
 
   app-menu {
     position: sticky;
     top: 0;
+    z-index: 1;
 
     display: block;
     margin-bottom: 0.5rem;
@@ -21,7 +19,7 @@
   }
 
   .prosemirror-wrapper {
-    overflow: auto; // Element that scrolls
+    overflow: hidden auto; // Element that scrolls
     overflow-wrap: normal;
 
     padding-inline: 0.25rem;
@@ -31,6 +29,10 @@
 
       &.ProseMirror-focused {
         border: initial;
+      }
+
+      .ProseMirror-separator {
+        display: none;
       }
     }
   }

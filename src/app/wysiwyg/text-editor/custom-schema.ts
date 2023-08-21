@@ -1,12 +1,12 @@
 import {
-	AttributeSpec,
-	Attrs,
-	DOMOutputSpec,
-	MarkSpec,
-	Node as ProseNode,
-	NodeSpec,
-	ParseRule,
-	Schema
+  AttributeSpec,
+  Attrs,
+  DOMOutputSpec,
+  MarkSpec,
+  Node as ProseNode,
+  NodeSpec,
+  ParseRule,
+  Schema
 } from 'prosemirror-model';
 import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
 import {groupChain, groupOr, groupRange} from "../utilities/node-groups-helper";
@@ -71,7 +71,7 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 			if (attrs === false) { return false; } // Do not parse if original parser cancels
 
 			// Align type logic
-      let alignment = {};
+      let alignment;
       if (type === AlignmentType.TEXT) {
 			  const alignStyle = dom.style.textAlign;
         if (alignStyle.includes('center')) {
@@ -96,7 +96,7 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
       }
 			///////////////////
 
-			return { ...attrs, ...alignment };
+			return { ...attrs, alignment };
 		})
 	}));
 	const toDOM: (node: ProseNode) => DOMOutputSpec = (node) => {
@@ -303,9 +303,10 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
       title: { default: null },
     },
     group: NodeGroups.BLOCK,
-		content: groupRange(NodeGroups.INLINE, 0),
+		content: groupRange(NodeGroups.INLINE, 0, 0),
     draggable: true,
     atom: true,
+    selectable: true,
     isolating: true,
 		leafText: (node) => node.attrs['src'],
 		marks: '',
@@ -367,21 +368,21 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
     cellContent: NodeGroups.BLOCK,
     cellAttributes: { }
   }),
-  [NodeSpecs.FORMULA]: alignable(AlignmentType.BLOCK, {
+  [NodeSpecs.FORMULA]: {
 		attrs: {
 			formula: { default: '' }
 		},
-    group: NodeGroups.BLOCK,
-		content: groupRange(NodeGroups.INLINE, 0),
+    group: NodeGroups.INLINE,
+    content: groupRange(NodeGroups.INLINE, 0, 0),
+    inline: true,
 		draggable: true,
 		atom: true,
+    selectable: true,
 		isolating: true,
-		whitespace: 'pre',
-		definingForContent: true,
 		leafText: (node) => node.attrs['formula'],
 		marks: '',
     parseDOM: [{
-      tag: '*.katex',
+      tag: '*[katex-formula]',
 			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
 				const formula = dom.getAttribute('katex-formula')
 				return formula ? {formula} : false;
@@ -390,18 +391,17 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
     toDOM: (node) => {
 			const formula = node.attrs['formula'] as string;
 
-      const katexWrapper = document.createElement('span');
-			katex.render(formula, katexWrapper, {
+      const katexWrapper = document.createElement('div');
+      katex.render(formula, katexWrapper, {
 				throwOnError: false,
 				output: 'html',
 			});
-
-			const katexFormula = katexWrapper.firstElementChild! as HTMLSpanElement;
-			katexFormula.setAttribute('katex-formula', formula)
-
-      return toDOM('div', {class: 'katex-card atom'}, katexFormula);
+      const katexNode = katexWrapper.firstElementChild! as HTMLSpanElement;
+      katexNode.setAttribute('katex-formula', formula); // Add formula
+      katexNode.classList.add('atom'); // Add atom class
+      return katexNode;
 		},
-  }),
+  },
 };
 
 // MARKS //

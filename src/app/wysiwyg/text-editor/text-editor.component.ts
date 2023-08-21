@@ -1,12 +1,12 @@
 import {
-	AfterViewInit,
-	Component,
-	ContentChildren,
-	ElementRef,
-	Input,
-	QueryList,
-	ViewChild,
-	ViewEncapsulation
+  AfterViewInit,
+  Component,
+  ContentChildren,
+  ElementRef,
+  Input,
+  QueryList,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {DOMParser as ProseDOMParser} from 'prosemirror-model';
 import {EditorState} from 'prosemirror-state';

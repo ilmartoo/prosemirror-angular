@@ -128,9 +128,9 @@ export function ancestorNodesAtCursor(state: EditorState): AncestorsList {
   const ancestorsAtCursor = ancestorNodesAt(state.selection.$to);
 
   // Ad-Hoc for atom nodes
-  const selectedNode = state.selection.$from.nodeAfter === state.selection.$to.nodeBefore ? state.selection.$from.nodeAfter : null;
-  if (selectedNode && selectedNode.type.spec.atom) {
-		ancestorsAtCursor.unshift(extendNode(selectedNode, state.doc.resolve(state.selection.from + 1)));
+  const atomNode = isAtomNodeBetween(state.selection.$from, state.selection.$to);
+  if (atomNode) {
+		ancestorsAtCursor.unshift(atomNode);
   }
 
   return ancestorsAtCursor;
@@ -321,4 +321,20 @@ export function findAllNodesBetween($from: ResolvedPos, $to: ResolvedPos, isVali
     }
   }
   return nodes;
+}
+
+/**
+ * Checks if an atom node is strictly between the positions given
+ * @param $from Start position
+ * @param $to End position
+ * @returns The atom node between the positions or undefined if none exists
+ */
+export function isAtomNodeBetween($from: ResolvedPos, $to: ResolvedPos): ExtendedNode | undefined {
+  if ($from.pos > $to.pos) { return isAtomNodeBetween($to, $from); } // In case of accidental misuse
+  const sameNode = $from.nodeAfter === $to.nodeBefore;
+  const selectedNode = sameNode ? $from.nodeAfter : null;
+  if (selectedNode && selectedNode.type.spec.atom) {
+   return extendNode(selectedNode, $from.doc.resolve($from.pos + 1));
+  }
+  return undefined;
 }

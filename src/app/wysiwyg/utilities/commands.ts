@@ -173,7 +173,7 @@ export function insertContent(at: number, content: ProseNode | Fragment | readon
     const fragment = Fragment.from(content);
     const $at = state.doc.resolve(at);
 
-    const ancestor = findAncestor($at, (node) => node.type.validContent(fragment))
+    const ancestor = findAncestor($at, (node) => node.type.validContent(fragment));
     if (!ancestor) { return false; } // Cancel if content cannot be inserted at the position specified
 
 
@@ -181,6 +181,60 @@ export function insertContent(at: number, content: ProseNode | Fragment | readon
       const tr = state.tr;
       tr.insert(at, fragment);
       dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+
+
+/**
+ * Replaces the content in the given selection with the content provided.
+ * If no end position is passed, the content will be inserted
+ * @param content Content to insert
+ * @param from Start of the range
+ * @param to End of the range
+ * @returns Command to replace the content
+ */
+export function editContent(content: ProseNode | Fragment | readonly ProseNode[], from: number, to?: number): Command {
+  if (to && from > to) {
+    return editContent(content, to, from);
+  }
+
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const fragment = Fragment.from(content);
+    const $from = state.doc.resolve(from);
+
+    // Insert mode
+    if (to == null) {
+      const ancestor = findAncestor($from, (node) => node.type.validContent(fragment));
+      if (!ancestor) { return false; } // Cancel if content cannot be inserted at the position specified
+
+      if (dispatch) {
+        const tr = state.tr;
+        tr.insert(from, fragment);
+        dispatch(tr.scrollIntoView());
+      }
+    }
+    // Replace mode
+    else {
+      const $to = state.doc.resolve(to);
+
+      const range = $from.blockRange($to);
+      if (!range) { return false; } // Cancel if range do not exist
+
+      const ancestor = findAncestor(
+        $from,
+        (node) => node.type.validContent(fragment),
+        range.depth
+      );
+      if (!ancestor) { return false; } // Cancel if content cannot be inserted at the position specified
+
+      if (dispatch) {
+        const tr = state.tr;
+        tr.replaceWith(from, to, fragment);
+        dispatch(tr.scrollIntoView());
+      }
     }
     return true;
   }

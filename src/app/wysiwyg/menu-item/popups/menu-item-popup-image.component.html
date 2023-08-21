@@ -4,6 +4,6 @@
     <app-menu-item-popup-input-text id="image-href" [name]="INPUTS.REFERENCE" label="Image URL"></app-menu-item-popup-input-text>
   </ng-container>
   <ng-container actions>
-    <button [disabled]="!isValid" (click)="acceptPopup()">Insert image</button>
+    <button [disabled]="!isValid" (click)="acceptPopup()">{{selection?.isImage ? 'Update image' : 'Insert image'}}</button>
   </ng-container>
 </app-menu-item-base-popup>

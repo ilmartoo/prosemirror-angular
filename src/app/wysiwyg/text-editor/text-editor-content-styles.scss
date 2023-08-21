@@ -2,6 +2,10 @@
   $base-text-color: black;
   $base-background-color: transparent;
 
+  $unselected-border: 2px solid $base-background-color;
+  $selected-color: rgb(115, 171, 255);
+  $selected-border: 2px solid $selected-color;
+
   $base-indent-level: 1;
   $base-indent-padding: 1.5rem;
 
@@ -14,7 +18,6 @@
   * {
     color: var(--text-color, $base-text-color);
     background: var(--background-color, $base-background-color);
-    text-decoration-color: var(--text-color, $base-text-color);
   }
 
   // Hide insertion caret if a atom node is selected
@@ -23,7 +26,7 @@
   }
 
   h1, h2, h3, p, table, ol, ul,
-  pre, blockquote, .indent, .img-card .katex-card {
+  pre, blockquote, .indent, .img-card {
     display: block;
     margin: 0.5rem 0;
   }
@@ -36,16 +39,16 @@
   }
 
   .img-wrapper {
-    &.ProseMirror-selectednode .img-card {
-      box-shadow: 0 0 6px 1px #0052CC;
+    &.ProseMirror-selectednode .img-card,
+    .img-card:hover {
+      border: $selected-border;
     }
 
     .img-card {
       position: relative;
       width: fit-content;
 
-      box-shadow: 0 0 6px 1px #9a9a9a;
-      margin: 5px;
+      border: $unselected-border;
       border-radius: 0.25rem;
       overflow: hidden;
 
@@ -81,15 +84,21 @@
     }
   }
 
-  .katex-card {
-    .katex {
-      display: inline-block;
-      padding: 0.25rem 0.125rem;
-      border: 1px solid transparent;
+  .katex {
+    display: inline-block;
+    padding: 0.25rem 0.125rem;
+    border-radius: 0.125rem;
+    border: $unselected-border;
+
+    overflow: clip;
+
+    & * {
+      background: $base-background-color;
     }
 
-    &.ProseMirror-selectednode .katex {
-      border: 1px solid #0052CC;
+    &.ProseMirror-selectednode,
+    &:hover {
+      border: $selected-border;
     }
   }
 
@@ -177,23 +186,10 @@
 
   a {
     cursor: pointer;
-
     color: #0052CC;
-    background-color: white;
-
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    text-decoration-skip-ink: auto;
-    text-decoration: none;
-
-    padding: 0.125rem 0.25em;
-    border-radius: 0.125rem;
-    box-shadow: 0 1px 1px rgba(black, 0.22), 0 0 1px 1px rgba(black, 0.10);
-
-    transition: all 0.1s ease-in-out 0s;
 
     &:hover {
-      color: #0065FF;
-      text-decoration: underline;
+      color: #3385ff;
     }
   }
 

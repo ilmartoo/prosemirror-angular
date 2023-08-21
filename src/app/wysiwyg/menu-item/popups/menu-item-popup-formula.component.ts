@@ -2,6 +2,8 @@ import {MenuItemPopupForActionComponent} from './menu-item-popup-for-action.comp
 import {Component} from '@angular/core';
 import {EditorState} from 'prosemirror-state';
 import {MarkType} from 'prosemirror-model';
+import {areNodeTypesEquals, isAtomNodeBetween} from '../../utilities/nodes-helper';
+import {nodeTypes} from '../../text-editor/custom-schema';
 
 @Component({
   selector: 'app-menu-item-popup-link',
@@ -13,8 +15,35 @@ export class MenuItemPopupFormulaComponent extends MenuItemPopupForActionCompone
     FORMULA: 'formula',
   }
 
+  protected selection?:
+    | { from: number, to: number, isFormula: true }
+    | { from: number, to?: number, isFormula: false };
+
   protected override reset(state: EditorState) {
-    this.setValue(this.INPUTS.FORMULA, '');
+    const selection = state.selection;
+    const atomNode = isAtomNodeBetween(selection.$from, selection.$to);
+
+    // Formula selected
+    if (atomNode && areNodeTypesEquals(atomNode.type, nodeTypes.katex_formula)) {
+      this.setValue(this.INPUTS.FORMULA, atomNode.attrs['formula'] || '');
+
+      this.selection = {
+        from: atomNode.before,
+        to: atomNode.after,
+        isFormula: true,
+      };
+      return;
+    }
+    // No formula selected
+    else {
+      this.setValue(this.INPUTS.FORMULA, '');
+
+      this.selection = {
+        from: selection.from,
+        to: selection.empty ? undefined : selection.to,
+        isFormula: false,
+      };
+    }
   }
 
   protected override validate(): boolean {
@@ -24,6 +53,8 @@ export class MenuItemPopupFormulaComponent extends MenuItemPopupForActionCompone
   protected override transformValuesForOutput(inputs: { [input: string]: string }): { [input: string]: any } {
     return {
       formula: inputs[this.INPUTS.FORMULA],
+      from: this.selection!.from,
+      to: this.selection!.to,
     };
   }
 }

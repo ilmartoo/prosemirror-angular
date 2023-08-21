@@ -25,9 +25,9 @@ import {
   changeTextAlignment,
   changeTextColor,
   decreaseIndent,
+  editContent,
   expandAndRemoveMarks,
   increaseIndent,
-  insertContent,
   insertTable,
   listCommands,
   replaceWithMarkedText,
@@ -337,11 +337,12 @@ export const menuItemTypes: MenuItemTypes = {
       }
     },
     command({state, attrs}): Command {
-      const {title, alt, src} = this.attrs({state, attrs});
+      const {title, alt, src, from, to} = this.attrs({state, attrs});
       const image = this.type.create({title, alt, src});
-      return insertContent(state.selection.head, image);
+      return editContent(image, from, to);
     },
-    status({state, attrs}): MenuItemStatus {
+    status({state, attrs, elements}): MenuItemStatus {
+      if (elements.hasNodeType(nodeTypes.image)) { return MenuItemStatus.ACTIVE; }
       return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
     },
     popup: MenuItemPopupImageComponent,
@@ -486,18 +487,20 @@ export const menuItemTypes: MenuItemTypes = {
   // KaTeX //
   katex_formula: {
 		type: nodeTypes.katex_formula,
-		attrs({attrs}) {
+		attrs({state, attrs}): { formula: string, from: number, to?: number } & Attrs {
       return {
         formula: '',
+        from: state.selection.from,
         ...attrs,
       };
     },
 		command({state, attrs}) {
-			const {formula} = this.attrs({state, attrs});
+			const {formula, from, to} = this.attrs({state, attrs});
 			const katex_formula = this.type.create({formula});
-			return insertContent(state.selection.head, katex_formula);
+      return editContent(katex_formula, from, to)
 		},
-		status({state, attrs}) {
+		status({state, attrs, elements}) {
+      if (elements.hasNodeType(nodeTypes.katex_formula)) { return MenuItemStatus.ACTIVE; }
 			return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
 		},
     popup: MenuItemPopupFormulaComponent,
