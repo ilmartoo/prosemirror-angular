@@ -324,6 +324,10 @@ export const menuItemTypes: MenuItemTypes = {
     },
   },
 
+  // Color related //
+  text_color: changeColor(true),
+  background_color: changeColor(false),
+
   /// NODES ///
 
   // Special content related //
@@ -475,10 +479,6 @@ export const menuItemTypes: MenuItemTypes = {
   delete_table_row: deleteTableElement(true),
   delete_table_column: deleteTableElement(false),
 
-  // Color related //
-  text_color: changeColor(true),
-  background_color: changeColor(false),
-
   // Alignment related //
   left_alignment: alignText(AlignmentStyle.LEFT),
   centered_alignment: alignText(AlignmentStyle.CENTER),
@@ -536,7 +536,7 @@ function addTableElement(isRow: boolean, isBefore: boolean): MenuItemTypeAction<
   const commands = isRow
     ? { before: addRowBefore, after: addRowAfter }
     : { before: addColumnBefore, after: addColumnAfter };
-  const command = isBefore ? commands.after : commands.before;
+  const command = isBefore ? commands.before : commands.after;
 
   return {
     type: nodeTypes.table,

@@ -56,10 +56,9 @@ export function getDOMAttrs(dom: string | HTMLElement, f: (dom: HTMLElement) => 
  * @returns Updated NodeSpec
  */
 export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
-	if (!spec.group || !spec.group.includes(NodeGroups.BLOCK)) { return spec; } // If not block node, cannot be aligned
 	if (!spec.toDOM) { return spec; } // If no transformation to DOM nodes present, cannot be aligned
 
-	const group: string = groupChain(spec.group, NodeGroups.ALIGNABLE);
+	const group: string = groupChain(spec.group || '', NodeGroups.ALIGNABLE);
 	const attrs: {[attr: string]: AttributeSpec} = {
 		...spec.attrs,
 		alignment: { default: AlignmentStyle.LEFT },
@@ -72,6 +71,7 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 
 			// Align type logic
       let alignment;
+      // Text
       if (type === AlignmentType.TEXT) {
 			  const alignStyle = dom.style.textAlign;
         if (alignStyle.includes('center')) {
@@ -84,7 +84,8 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
           alignment = AlignmentStyle.JUSTIFY;
         }
       }
-      else if (type === AlignmentType.BLOCK) {
+      // Block or Cell
+      else {
 				const alignStyle = dom.style.justifyContent;
 				if (alignStyle.includes('center')) {
 					alignment = AlignmentStyle.CENTER;
@@ -105,7 +106,7 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 		// DOMOutputSpec is a string
 		if (typeof(dom) === 'string') { return dom; } // Cannot change string -> Logic too complicated
 
-    const alignment = type === AlignmentType.BLOCK && node.attrs['alignment'] === AlignmentStyle.JUSTIFY
+    const alignment = type !== AlignmentType.TEXT && node.attrs['alignment'] === AlignmentStyle.JUSTIFY
       ? AlignmentStyle.LEFT
       : node.attrs['alignment'];
 
@@ -116,17 +117,19 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 
         // Align type logic
         let alignStyles = '';
+        // Text
         if (type === AlignmentType.TEXT) {
 					alignStyles = generateStyles({
             'text-align': alignment
           });
         }
+        // Block
         else if (type === AlignmentType.BLOCK) {
-					alignStyles = generateStyles({
-						'display': 'grid',
+          alignStyles = generateStyles({
+            'display': 'grid',
             'justify-content': alignment
           });
-				}
+        }
 				///////////////////
 
 				return {
@@ -150,7 +153,16 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 
 		// DOMOutputSpec is a Node or an object with `dom` as a Node
 		const nodeHTML = ('dom' in dom ? dom.dom : dom) as HTMLElement;
-		nodeHTML.style.textAlign = alignment;
+
+    if (type === AlignmentType.TEXT) {
+      nodeHTML.style.textAlign = alignment;
+    }
+    // Block
+    else if (type === AlignmentType.BLOCK) {
+      nodeHTML.style.display = 'grid';
+      nodeHTML.style.justifyContent = alignment;
+    }
+
 		return dom;
 	}
 
@@ -216,6 +228,12 @@ export enum AlignmentType {
 	BLOCK = 'block',
 	TEXT = 'text',
 }
+
+const tableNodesMap = tableNodes({
+  tableGroup: NodeGroups.BLOCK,
+  cellContent: NodeGroups.BLOCK,
+  cellAttributes: { }
+});
 
 // Schema nodes
 export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
@@ -363,11 +381,11 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
 		}, 0),
   },
   // Table nodes
-  ...tableNodes({
-    tableGroup: NodeGroups.BLOCK,
-    cellContent: NodeGroups.BLOCK,
-    cellAttributes: { }
-  }),
+  [NodeSpecs.TABLE]: tableNodesMap.table,
+  [NodeSpecs.ROW]: tableNodesMap.table_row,
+  [NodeSpecs.HEADER]: tableNodesMap.table_header,
+  [NodeSpecs.CELL]: tableNodesMap.table_cell,
+  // KaTeX formula
   [NodeSpecs.FORMULA]: {
 		attrs: {
 			formula: { default: '' }
@@ -435,7 +453,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
     }],
     toDOM: (mark) => toDOM('a', mark.attrs, 0),
     // Excludes underline of being active when a link mark is
-    excludes: groupChain(MarkSpecs.LINK, MarkSpecs.UNDERLINE),
+    excludes: groupChain(MarkSpecs.LINK, MarkSpecs.UNDERLINE, MarkSpecs.TEXT_COLOR),
   },
   // Italic
   [MarkSpecs.ITALIC]: {

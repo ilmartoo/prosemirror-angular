@@ -11,4 +11,8 @@ import {ColorPalette} from './color';
 export class MenuItemPopupInputColorPaletteComponent extends MenuItemPopupInputComponent {
 
   @Input({ required: true }) palette!: ColorPalette;
+
+  protected onChange(event: Event) {
+    this.value = (event.target as HTMLInputElement).value;
+  }
 }

@@ -6,7 +6,8 @@
            [id]="id + '-palette-' + (primaryColor.value || 'default')"
            [name]="name"
            [value]="primaryColor.value"
-           [(ngModel)]="_value"
+           (change)="onChange($event)"
+           [checked]="_value === primaryColor.value"
            [title]="primaryColor.tooltip"
            [ngStyle]="{ '--palette-color': primaryColor.display }"
     >
@@ -19,7 +20,8 @@
            [id]="id + '-palette-' + (color.value || 'default')"
            [name]="name"
            [value]="color.value"
-           [(ngModel)]="_value"
+           (change)="onChange($event)"
+           [checked]="_value === color.value"
            [title]="color.tooltip"
            [ngStyle]="{ '--palette-color': color.display }"
     >

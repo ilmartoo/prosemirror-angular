@@ -1,10 +1,11 @@
 .popup {
   position: absolute;
-  display: none;
-
   top: 120%;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 100;
+
+  display: none;
 
   background-color: white;
   border-radius: 0.5rem;
