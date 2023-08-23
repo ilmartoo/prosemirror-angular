@@ -72,9 +72,19 @@ export class MenuComponent implements PluginView {
 /**
  * Retrieves the menu plugin from the plugin array of the editor state
  * @param state Editor state
- * @returns Menu plugin if exists
+ * @returns Menu plugin (Not null -> Active elements plugin must be passed at editor initialization)
  */
-export function retrieveMenuPlugin(state: EditorState): Plugin<CursorActiveElements> | undefined {
+export function retrieveMenuPlugin(state: EditorState): Plugin<CursorActiveElements> {
   const plugin = state.plugins.find(p => p.spec.key === MenuComponent.PLUGIN_KEY);
-  return plugin as Plugin<CursorActiveElements> | undefined;
+  return plugin!;
+}
+
+/**
+ * Retrieves the active elements at cursor from a given state
+ * @param state Editor state
+ * @returns Active elements (Not null -> Active elements plugin must be passed at editor initialization)
+ */
+export function retrieveActiveElements(state: EditorState): CursorActiveElements {
+  const elements = retrieveMenuPlugin(state).getState(state);
+  return elements!;
 }

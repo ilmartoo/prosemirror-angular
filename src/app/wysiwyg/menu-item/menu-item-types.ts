@@ -21,9 +21,11 @@ import {
   NodeTypeForLookup
 } from '../utilities/nodes-helper';
 import {
-  changeBackgroundColor,
+  changeFontBackground,
+  changeFontColor,
+  changeFontFamily,
+  changeFontSize,
   changeTextAlignment,
-  changeTextColor,
   decreaseIndent,
   editContent,
   expandAndRemoveMarks,
@@ -48,9 +50,12 @@ import {
   deleteTable,
   TableMap
 } from 'prosemirror-tables';
-import {MenuItemPopupTextColorComponent} from './popups/menu-item-popup-text-color.component';
-import {MenuItemPopupBackgroundColorComponent} from './popups/menu-item-popup-background-color.component';
+import {MenuItemPopupFontColorComponent} from './popups/menu-item-popup-font-color.component';
+import {MenuItemPopupFontBackgroundComponent} from './popups/menu-item-popup-font-background.component';
 import {MenuItemPopupFormulaComponent} from './popups/menu-item-popup-formula.component';
+import {FilterKeys} from '../utilities/multipurpose-helper';
+import {MenuItemPopupFontFamilyComponent} from './popups/menu-item-popup-font-family.component';
+import {MenuItemPopupFontSizeComponent} from './popups/menu-item-popup-font-size.component';
 
 /** Possible statuses of the menu item */
 export enum MenuItemStatus {
@@ -73,10 +78,11 @@ export class CursorActiveElements {
   /**
    * Checks if the mark is active
    * @param mark Mark to check
+   * @param filter Keys to filter by
    * @returns The active mark if the mark is inside the active elements or undefined if not found
    */
-  hasMark(mark: MarkForLookup): Mark | undefined {
-    return this.marks.find(m => areMarksEquals(m, mark));
+  hasMark(mark: MarkForLookup, filter?: FilterKeys<Attrs>): Mark | undefined {
+    return this.marks.find(m => areMarksEquals(m, mark, filter));
   }
 
   /**
@@ -91,10 +97,11 @@ export class CursorActiveElements {
   /**
    * Checks if the node is active
    * @param node Node to check
+   * @param filter Keys to filter by
    * @returns The active node if the node is inside the active elements or undefined if not found
    */
-  hasNode(node: NodeForLookup): AncestorNode | undefined {
-    return this.ancestors.find(n => areNodesEquals(n, node));
+  hasNode(node: NodeForLookup, filter?: FilterKeys<Attrs>): AncestorNode | undefined {
+    return this.ancestors.find(n => areNodesEquals(n, node, filter));
   }
 
   /**
@@ -140,24 +147,29 @@ export type MenuItemBasicAction = {
   command(data: { state: EditorState, attrs?: Attrs }): Command;
   /** Status of the menu item on a given status */
   status(data: { state: EditorState, elements: CursorActiveElements, attrs?: Attrs }): MenuItemStatus;
+  /** Color of the menu item on a given status */
+  color?(data: { state: EditorState, elements: CursorActiveElements }): string | undefined;
 }
 
 /** Type declaration of a menu item type element action */
-export type MenuItemTypeAction<
+export type MenuItemTypeAction<T extends MarkType | NodeType = MarkType | NodeType> = (
+  & MenuItemBasicAction
+  & {
+    /** Mark or node type of the menu item */
+    type: T;
+  }
+)
+/** Type declaration of a menu item popup element action */
+export type MenuItemPopupAction<
   T extends MarkType | NodeType = MarkType | NodeType,
-  P extends MenuItemPopupForActionComponent = MenuItemPopupForActionComponent,
-> = {
-  /** Mark or node type of the menu item */
-  type: T;
-  /** Attrs generator for status & command calculation */
-  attrs(data: { state: EditorState, attrs?: Attrs }): Attrs;
-  /** Command to execute when clicked on the menu item */
-  command(data: { state: EditorState, attrs?: Attrs }): Command;
-  /** Status of the menu item on a given status */
-  status(data: { state: EditorState, elements: CursorActiveElements, attrs?: Attrs }): MenuItemStatus;
-  /** Optional popup compiled angular class type for a middle step */
-  popup?: Type<P>;
-}
+  P extends MenuItemPopupForActionComponent = MenuItemPopupForActionComponent
+> = (
+  & MenuItemTypeAction<T>
+  & {
+    /** Optional popup compiled angular class type for a middle step */
+    popup: Type<P>;
+  }
+)
 
 export type MarkMenuItemActions =
   | 'link'
@@ -169,8 +181,10 @@ export type MarkMenuItemActions =
   | 'bold'
   | 'superscript'
   | 'subscript'
-	| 'text_color'
-	| 'background_color'
+	| 'font_color'
+	| 'font_background'
+  | 'font_family'
+  | 'font_size'
   ;
 export type NodeMenuItemActions =
   | 'image'
@@ -199,8 +213,8 @@ export type NodeMenuItemActions =
   | 'katex_formula'
   ;
 export type MenuItemTypes =
-  & { readonly [action in NodeMenuItemActions]: MenuItemTypeAction<NodeType> }
-  & { readonly [action in MarkMenuItemActions]: MenuItemTypeAction<MarkType> };
+  & { readonly [action in NodeMenuItemActions]: MenuItemTypeAction<NodeType> | MenuItemPopupAction<NodeType> }
+  & { readonly [action in MarkMenuItemActions]: MenuItemTypeAction<MarkType> | MenuItemPopupAction<MarkType> };
 
 /** List of predefined basic menu item types */
 export const menuItemTypes: MenuItemTypes = {
@@ -280,7 +294,7 @@ export const menuItemTypes: MenuItemTypes = {
 
   // Text styling related //
   italic: {
-    type: markTypes.em,
+    type: markTypes.italic,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -291,7 +305,7 @@ export const menuItemTypes: MenuItemTypes = {
     },
   },
   bold: {
-    type: markTypes.strong,
+    type: markTypes.bold,
     attrs({attrs}) { return attrs ?? {}; },
     command(): Command {
       return toggleMark(this.type);
@@ -325,8 +339,43 @@ export const menuItemTypes: MenuItemTypes = {
   },
 
   // Color related //
-  text_color: changeColor(true),
-  background_color: changeColor(false),
+  // Font related //
+  font_color: changeColor(true),
+  font_background: changeColor(false),
+  font_family: {
+    type: markTypes.font_family,
+    attrs({attrs}): { family?: string } & Attrs {
+      return {
+        family: undefined,
+        ...attrs,
+      };
+    },
+    command({state, attrs}): Command {
+      const {family} = this.attrs({state, attrs});
+      return changeFontFamily(family);
+    },
+    status({state, attrs}): MenuItemStatus {
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+    },
+    popup: MenuItemPopupFontFamilyComponent,
+  },
+  font_size: {
+    type: markTypes.font_size,
+    attrs({attrs}): { size?: string } & Attrs {
+      return {
+        size: undefined,
+        ...attrs,
+      };
+    },
+    command({state, attrs}): Command {
+      const {size} = this.attrs({state, attrs});
+      return changeFontSize(size);
+    },
+    status({state, attrs}): MenuItemStatus {
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+    },
+    popup: MenuItemPopupFontSizeComponent,
+  },
 
   /// NODES ///
 
@@ -487,7 +536,7 @@ export const menuItemTypes: MenuItemTypes = {
 
   // KaTeX //
   katex_formula: {
-		type: nodeTypes.katex_formula,
+		type: nodeTypes.equation,
 		attrs({state, attrs}): { formula: string, from: number, to?: number } & Attrs {
       return {
         formula: '',
@@ -501,7 +550,7 @@ export const menuItemTypes: MenuItemTypes = {
       return editContent(katex_formula, from, to)
 		},
 		status({state, attrs, elements}) {
-      if (elements.hasNodeType(nodeTypes.katex_formula)) { return MenuItemStatus.ACTIVE; }
+      if (elements.hasNodeType(nodeTypes.equation)) { return MenuItemStatus.ACTIVE; }
 			return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
 		},
     popup: MenuItemPopupFormulaComponent,
@@ -524,7 +573,7 @@ function heading_action(level: number): MenuItemTypeAction<NodeType> {
     },
     status({state, elements, attrs}): MenuItemStatus {
       const node: NodeForLookup = {type: this.type, attrs: this.attrs({state, attrs})};
-      if (elements.hasNode(node)) { return MenuItemStatus.ACTIVE; }
+      if (elements.hasNode(node,  {exclude: ['alignment']})) { return MenuItemStatus.ACTIVE; }
 
       return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
     },
@@ -577,10 +626,10 @@ function deleteTableElement(isRow: boolean): MenuItemTypeAction<NodeType> {
 }
 
 // Text & background color change action function
-function changeColor(isTextColor: boolean): MenuItemTypeAction<MarkType> {
+function changeColor(isTextColor: boolean): MenuItemPopupAction<MarkType> {
 	const target = isTextColor
-    ? { type: markTypes.txt_color, command: changeTextColor, popup: MenuItemPopupTextColorComponent }
-    : { type: markTypes.bg_color, command: changeBackgroundColor, popup: MenuItemPopupBackgroundColorComponent };
+    ? { type: markTypes.font_color, command: changeFontColor, popup: MenuItemPopupFontColorComponent }
+    : { type: markTypes.font_background, command: changeFontBackground, popup: MenuItemPopupFontBackgroundComponent };
 
 	return {
 		type: target.type,
@@ -597,6 +646,11 @@ function changeColor(isTextColor: boolean): MenuItemTypeAction<MarkType> {
 		status({state, attrs}): MenuItemStatus {
 			return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
 		},
+    color({elements}): string | undefined {
+      const colorMark = elements.hasMarkType(target.type);
+      if (colorMark) { return colorMark.attrs['color'] }
+      return undefined;
+    },
     popup: target.popup
 	}
 }

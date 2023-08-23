@@ -177,7 +177,9 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 
 /// Custom schema's nodes & marks definitions ///
 
-// NODES //
+// SPECS //
+
+// Node specs
 export enum NodeSpecs {
   DOC = 'doc',
   TEXT = 'text',
@@ -196,7 +198,23 @@ export enum NodeSpecs {
   ROW = 'table_row',
   CELL = 'table_cell',
   HEADER = 'table_header',
-  FORMULA = 'katex_formula',
+  EQUATION = 'equation',
+}
+
+// Mark specs
+export enum MarkSpecs {
+  LINK = 'link',
+  CODE = 'code',
+  ITALIC = 'italic',
+  BOLD = 'bold',
+  UNDERLINE = 'underline',
+  STRIKETHROUGH = 'strikethrough',
+  SUPERSCRIPT = 'superscript',
+  SUBSCRIPT = 'subscript',
+  FONT_COLOR = 'font_color',
+  FONT_BACKGROUND = 'font_background',
+  FONT_FAMILY = 'font_family',
+  FONT_SIZE = 'font_size',
 }
 
 // Node groups
@@ -235,7 +253,7 @@ const tableNodesMap = tableNodes({
   cellAttributes: { }
 });
 
-// Schema nodes
+// Schema nodes //
 export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
   // Doc -> Top node
   [NodeSpecs.DOC]: {
@@ -304,7 +322,7 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
   [NodeSpecs.CODE_BLOCK]: {
     content: groupRange(NodeGroups.TEXT, 0),
     group: NodeGroups.BLOCK,
-    marks: '',
+    marks: MarkSpecs.FONT_SIZE,
     code: true,
     defining: true,
     parseDOM: [{
@@ -386,9 +404,9 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
   [NodeSpecs.HEADER]: tableNodesMap.table_header,
   [NodeSpecs.CELL]: tableNodesMap.table_cell,
   // KaTeX formula
-  [NodeSpecs.FORMULA]: {
+  [NodeSpecs.EQUATION]: {
 		attrs: {
-			formula: { default: '' }
+			formula: { }
 		},
     group: NodeGroups.INLINE,
     content: groupRange(NodeGroups.INLINE, 0, 0),
@@ -422,21 +440,7 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
   },
 };
 
-// MARKS //
-export enum MarkSpecs {
-  LINK = 'link',
-  INLINE_CODE = 'code',
-  UNDERLINE = 'underline',
-  STRIKETHROUGH = 'strikethrough',
-  TEXT_COLOR = 'txt_color',
-  BACKGROUND_COLOR = 'bg_color',
-  ITALIC = 'em',
-  BOLD = 'strong',
-  SUPERSCRIPT = 'superscript',
-  SUBSCRIPT = 'subscript',
-}
-
-// Schema marks
+// Schema marks //
 export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
   // Link
   [MarkSpecs.LINK]: {
@@ -453,7 +457,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
     }],
     toDOM: (mark) => toDOM('a', mark.attrs, 0),
     // Excludes underline of being active when a link mark is
-    excludes: groupChain(MarkSpecs.LINK, MarkSpecs.UNDERLINE, MarkSpecs.TEXT_COLOR),
+    excludes: groupChain(MarkSpecs.LINK, MarkSpecs.UNDERLINE, MarkSpecs.FONT_COLOR),
   },
   // Italic
   [MarkSpecs.ITALIC]: {
@@ -486,16 +490,16 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
     toDOM: () => toDOM('strong', null, 0),
   },
   // Code
-  [MarkSpecs.INLINE_CODE]: {
+  [MarkSpecs.CODE]: {
     parseDOM: [{
       tag: 'code'
     }],
     toDOM: () => toDOM('code', null, 0),
     // Excludes all text modification marks
     excludes: groupChain(
-      MarkSpecs.INLINE_CODE,
-      MarkSpecs.TEXT_COLOR,
-      MarkSpecs.BACKGROUND_COLOR,
+      MarkSpecs.CODE,
+      MarkSpecs.FONT_COLOR,
+      MarkSpecs.FONT_BACKGROUND,
       MarkSpecs.SUPERSCRIPT,
       MarkSpecs.SUBSCRIPT,
     ),
@@ -515,6 +519,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
       },
     ],
     toDOM: () => toDOM('u', null, 0),
+    excludes: MarkSpecs.FONT_SIZE,
   },
   // Strikethrough
   [MarkSpecs.STRIKETHROUGH]: {
@@ -531,6 +536,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
       },
     ],
     toDOM: () => toDOM('s', null, 0),
+    excludes: MarkSpecs.FONT_SIZE,
   },
   // Superscript
   [MarkSpecs.SUPERSCRIPT]: {
@@ -540,7 +546,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
     toDOM: () => toDOM('sup', null, 0),
     excludes: groupChain(
       MarkSpecs.SUBSCRIPT,
-      MarkSpecs.SUPERSCRIPT
+      MarkSpecs.SUPERSCRIPT,
     ),
   },
   // Subscript
@@ -551,11 +557,11 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
     toDOM: () => toDOM('sub', null, 0),
     excludes: groupChain(
       MarkSpecs.SUBSCRIPT,
-      MarkSpecs.SUPERSCRIPT
+      MarkSpecs.SUPERSCRIPT,
     ),
   },
   // Text color
-  [MarkSpecs.TEXT_COLOR]: {
+  [MarkSpecs.FONT_COLOR]: {
     attrs: {
       color: { },
     },
@@ -564,30 +570,64 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
       consuming: false,
       getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
         const color = dom.style.color;
-        return color ? { color: color } : false;
+        return color ? { color } : false;
       }),
     }],
     toDOM: (mark) => toDOM('span', {
-      style: generateStyles({'--text-color': mark.attrs['color']})
+      style: generateStyles({'--font-color': mark.attrs['color']})
     }, 0),
   },
-  // Background color
-  [MarkSpecs.BACKGROUND_COLOR]: {
-    attrs: {
-      color: { },
-    },
-    parseDOM: [{
-      tag: '*',
-      consuming: false,
-      getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
-        const color = dom.style.backgroundColor;
-        return color ? { color: color } : false;
-      }),
-    }],
-    toDOM: (mark) => toDOM('span', {
-      style: generateStyles({'--background-color': mark.attrs['color']})
-    }, 0),
-  },
+	// Background color
+	[MarkSpecs.FONT_BACKGROUND]: {
+		attrs: {
+			color: { },
+		},
+		parseDOM: [{
+			tag: '*',
+			consuming: false,
+			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+				const color = dom.style.backgroundColor;
+				return color ? { color } : false;
+			}),
+		}],
+		toDOM: (mark) => toDOM('span', {
+			style: generateStyles({'--font-background': mark.attrs['color']})
+		}, 0),
+	},
+	// Font family
+	[MarkSpecs.FONT_FAMILY]: {
+		attrs: {
+			family: { },
+		},
+		parseDOM: [{
+			tag: '*',
+			consuming: false,
+			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+				const family = dom.style.fontFamily;
+				return family ? { family } : false;
+			}),
+		}],
+		toDOM: (mark) => toDOM('span', {
+			style: generateStyles({'--font-family': mark.attrs['family']})
+		}, 0),
+	},
+	// Font size
+	[MarkSpecs.FONT_SIZE]: {
+		attrs: {
+			size: { },
+		},
+		parseDOM: [{
+			tag: '*',
+			consuming: false,
+			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+				const size = dom.style.fontSize;
+				return size ? { size } : false;
+			}),
+		}],
+		toDOM: (mark) => toDOM('span', {
+			style: generateStyles({'--font-size': mark.attrs['size']})
+		}, 0),
+	},
 };
 
 /// CUSTOM SCHEMA ///

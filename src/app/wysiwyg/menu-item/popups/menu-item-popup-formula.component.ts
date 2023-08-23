@@ -24,7 +24,7 @@ export class MenuItemPopupFormulaComponent extends MenuItemPopupForActionCompone
     const atomNode = isAtomNodeBetween(selection.$from, selection.$to);
 
     // Formula selected
-    if (atomNode && areNodeTypesEquals(atomNode.type, nodeTypes.katex_formula)) {
+    if (atomNode && areNodeTypesEquals(atomNode.type, nodeTypes.equation)) {
       this.setValue(this.INPUTS.FORMULA, atomNode.attrs['formula'] || '');
 
       this.selection = {

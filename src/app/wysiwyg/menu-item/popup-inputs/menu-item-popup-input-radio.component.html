@@ -1,0 +1,17 @@
+<div class="popup-input">
+  <label *ngFor="let displayValue of radio"
+         class="radio-base"
+         [ngClass]="{ selected: _value === displayValue.value }"
+         [style]="styles?.(displayValue)"
+  >
+    {{displayValue.display}}
+    <input class="radio-button"
+           type="radio"
+           [id]="id + '-radio-' + (displayValue.value || 'default')"
+           [name]="name"
+           [value]="displayValue.value"
+           (click)="onClick($event)"
+           [checked]="_value === displayValue.value"
+    >
+  </label>
+</div>

@@ -1,23 +1,32 @@
 .ProseMirror {
   $base-text-color: black;
-  $base-background-color: transparent;
+  $base-background: transparent;
+  $base-font-family: Helvetica, serif;
+  $base-font-size: 16px;
 
-  $unselected-border: 2px solid $base-background-color;
+  $unselected-border: 2px solid $base-background;
   $selected-color: rgb(115, 171, 255);
   $selected-border: 2px solid $selected-color;
 
   $base-indent-level: 1;
   $base-indent-padding: 1.5rem;
 
-  --text-color: $base-text-color;
-  --background-color: $base-background-color;
+  --font-color: $base-text-color;
+  --font-background: $base-background;
+  --font-family: $base-font-family;
+  --font-size: $base-font-size;
 
   line-height: 1.5;
   text-align: left;
 
+  -webkit-user-select: auto;
+  user-select: auto;
+
   * {
-    color: var(--text-color, $base-text-color);
-    background: var(--background-color, $base-background-color);
+    color: var(--font-color, inherit);
+    background: var(--font-background, inherit);
+    font-family: var(--font-family, inherit);
+    font-size: var(--font-size, inherit);
   }
 
   // Hide insertion caret if a atom node is selected
@@ -87,14 +96,13 @@
   .katex {
     display: inline-block;
     padding: 0.125rem;
-    margin: 0 0.075rem;
     border-radius: 0.125rem;
     border: $unselected-border;
 
     overflow: clip;
 
     & * {
-      background: $base-background-color;
+      background: $base-background;
     }
 
     &.ProseMirror-selectednode,
@@ -215,10 +223,6 @@
       width: 100%;
       min-height: 1rem;
 
-      th {
-        font-weight: bold;
-      }
-
       td, th {
         border: black solid 1px;
 
@@ -230,6 +234,14 @@
         padding: 0.25rem 0.5rem;
 
         overflow: auto;
+
+        &.selectedCell {
+          background-color: rgb(217, 232, 255);
+
+          *::selection {
+            background-color: $base-background;
+          }
+        }
       }
     }
   }

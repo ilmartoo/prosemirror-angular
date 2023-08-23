@@ -10,6 +10,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 export class SvgIconComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) name!: string;
+  @Input() color?: string;
   @ViewChild('wrapper') wrapperRef!: ElementRef<HTMLSpanElement>;
 
   protected svg?: SafeHtml;
@@ -23,7 +24,7 @@ export class SvgIconComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const nameChanges = changes['name'];
-    if (nameChanges.currentValue !== nameChanges.previousValue) {
+    if (nameChanges && nameChanges.currentValue !== nameChanges.previousValue) {
       this.reloadSVG();
     }
   }

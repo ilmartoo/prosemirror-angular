@@ -28,7 +28,7 @@ import {
   isAlignableNode,
   isListNode
 } from "./nodes-helper";
-import {expandMarkActiveRange, expandMarkTypeActiveRange} from './marks-helper';
+import {expandMarkActiveRange, expandMarkTypeActiveRange, isMarkAllowed} from './marks-helper';
 import {createTable} from './table-helper';
 import {isValidContent} from './node-content-helper';
 import {wrapInList} from 'prosemirror-schema-list';
@@ -564,55 +564,62 @@ export const newLine: Command = chainCommands(exitCode, newLineText);
 export const newBlock: Command = chainCommands(newlineInCode, createParagraphNear, liftEmptyBlock, newListItem, splitBlockKeepMarks, splitBlock);
 
 /**
- * Changes the color mark of the text
- * @param color New color to change the text into or undefined if the color should be removed
+ * Changes the color of the text
+ * @param color New color to change the text into or undefined if the standard color should be used
  * @returns False if the command cannot be executed
  */
-export function changeTextColor(color?: string): Command {
-  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
-    const {$from, $to} = state.selection;
-    const range = $from.blockRange($to);
-    if (!range) { return false; }
-
-    if (dispatch) {
-      const tr = state.tr;
-
-      if (color) {
-        const mark = markTypes.txt_color.create({ color });
-        tr.addMark($from.pos, $to.pos, mark);
-        tr.addStoredMark(mark);
-      } else {
-        tr.removeMark($from.pos, $to.pos, markTypes.txt_color);
-        tr.removeStoredMark(markTypes.txt_color);
-      }
-
-      dispatch(tr.scrollIntoView());
-    }
-    return true;
-  }
+export function changeFontColor(color?: string): Command {
+  return changeFontMark(markTypes.font_color, {color}, !!color?.trim())
 }
 
 /**
- * Changes the color mark of the text
+ * Changes the background of the text
  * @param color New color to change the background into or undefined if the color should be removed
  * @returns False if the command cannot be executed
  */
-export function changeBackgroundColor(color?: string): Command {
+export function changeFontBackground(color?: string): Command {
+  return changeFontMark(markTypes.font_background, {color}, !!color?.trim())
+}
+
+/**
+ * Changes the font family of the text
+ * @param family New font family to change the font into or undefined if the standard font family should be used
+ * @returns False if the command cannot be executed
+ */
+export function changeFontFamily(family?: string): Command {
+  return changeFontMark(markTypes.font_family, {family}, !!family?.trim())
+}
+
+/**
+ * Changes the font size of the text
+ * @param size New font size to change the font into or undefined if the standard font size should be used
+ * @returns False if the command cannot be executed
+ */
+export function changeFontSize(size: string): Command {
+  return changeFontMark(markTypes.font_size, {size}, !!size?.trim());
+}
+
+// Utility function for all font marks' commands
+function changeFontMark(type: MarkType, attrs: Attrs, isAddition: boolean): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
     const {$from, $to} = state.selection;
     const range = $from.blockRange($to);
     if (!range) { return false; }
 
+    const allowsMark = (node: ProseNode) => isMarkAllowed(node, type);
+    const validNodes = findAllNodesBetween($from, $to, allowsMark);
+    if (validNodes.length === 0) { return false; } // No nodes allow this mark
+
     if (dispatch) {
       const tr = state.tr;
 
-      if (color) {
-        const mark = markTypes.bg_color.create({ color });
+      if (isAddition) {
+        const mark = type.create(attrs);
         tr.addMark($from.pos, $to.pos, mark);
         tr.addStoredMark(mark);
       } else {
-        tr.removeMark($from.pos, $to.pos, markTypes.bg_color);
-        tr.removeStoredMark(markTypes.bg_color);
+        tr.removeMark($from.pos, $to.pos, type);
+        tr.removeStoredMark(type);
       }
 
       dispatch(tr.scrollIntoView());

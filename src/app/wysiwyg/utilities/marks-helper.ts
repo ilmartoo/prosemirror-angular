@@ -4,7 +4,7 @@
 
 import {Attrs, Mark, MarkType, Node as ProseNode, NodeRange, ResolvedPos} from "prosemirror-model";
 import {EditorState} from "prosemirror-state";
-import {addProps, areEquals} from "./multipurpose-helper";
+import {addProps, areEquals, FilterKeys, filterProps} from "./multipurpose-helper";
 
 /** Alias for the needed Mark elements to perform a ProseMirrorHelper mark lookup */
 export type MarkForLookup = Mark | { type: { name: string }, attrs?: Attrs };
@@ -236,10 +236,17 @@ export function isMarkActiveInNodeAt(mark: MarkForLookup, node: ProseNode, pos: 
  * Checks if two marks are the same (taking into account attrs)
  * @param a Mark a
  * @param b Mark b
+ * @param filter Keys to filter by
  * @returns True if marks are the same
  */
-export function areMarksEquals(a?: MarkForLookup, b?: MarkForLookup): boolean {
-  return areMarkTypesEquals(a?.type, b?.type) && areEquals<Attrs>(a?.attrs, b?.attrs);
+export function areMarksEquals(
+  a?: MarkForLookup,
+  b?: MarkForLookup,
+  filter?: FilterKeys<Attrs>
+): boolean {
+  const attrsA = filterProps<Attrs>(a?.attrs, filter);
+  const attrsB = filterProps<Attrs>(b?.attrs, filter);
+  return areMarkTypesEquals(a?.type, b?.type) && areEquals<Attrs>(attrsA, attrsB);
 }
 
 /**
@@ -250,4 +257,14 @@ export function areMarksEquals(a?: MarkForLookup, b?: MarkForLookup): boolean {
  */
 export function areMarkTypesEquals(a?: MarkTypeForLookup, b?: MarkTypeForLookup): boolean {
   return a?.name === b?.name;
+}
+
+/**
+ * Checks if a mark type is allowed inside the specified node
+ * @param node Node to check if the mark is allowed
+ * @param markType Mark type for checking
+ * @returns Returns `true` if the mark is allowed, `false` otherwise
+ */
+export function isMarkAllowed(node: ProseNode, markType: MarkType): boolean {
+  return node.inlineContent && node.type.allowsMarkType(markType);
 }

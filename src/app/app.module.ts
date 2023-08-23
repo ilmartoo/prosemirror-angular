@@ -21,14 +21,17 @@ import {
   MenuItemPopupInputColorPaletteComponent
 } from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input-color-palette.component';
 import {FormsModule} from '@angular/forms';
-import {MenuItemPopupTextColorComponent} from './wysiwyg/menu-item/popups/menu-item-popup-text-color.component';
+import {MenuItemPopupFontColorComponent} from './wysiwyg/menu-item/popups/menu-item-popup-font-color.component';
 import {
   MenuItemPopupInputNumberComponent
 } from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input-number.component';
 import {
-  MenuItemPopupBackgroundColorComponent
-} from './wysiwyg/menu-item/popups/menu-item-popup-background-color.component';
+  MenuItemPopupFontBackgroundComponent
+} from './wysiwyg/menu-item/popups/menu-item-popup-font-background.component';
 import {MenuItemPopupFormulaComponent} from './wysiwyg/menu-item/popups/menu-item-popup-formula.component';
+import {MenuItemPopupInputRadioComponent} from './wysiwyg/menu-item/popup-inputs/menu-item-popup-input-radio.component';
+import {MenuItemPopupFontFamilyComponent} from './wysiwyg/menu-item/popups/menu-item-popup-font-family.component';
+import {MenuItemPopupFontSizeComponent} from './wysiwyg/menu-item/popups/menu-item-popup-font-size.component';
 
 @NgModule({
   declarations: [
@@ -44,13 +47,16 @@ import {MenuItemPopupFormulaComponent} from './wysiwyg/menu-item/popups/menu-ite
     MenuItemPopupLinkComponent,
     MenuItemPopupImageComponent,
     MenuItemPopupTableComponent,
-    MenuItemPopupTextColorComponent,
-    MenuItemPopupBackgroundColorComponent,
+    MenuItemPopupFontColorComponent,
+    MenuItemPopupFontBackgroundComponent,
+    MenuItemPopupFontFamilyComponent,
+    MenuItemPopupFontSizeComponent,
     MenuItemPopupFormulaComponent,
     MenuItemPopupInputComponent,
     MenuItemPopupInputTextComponent,
     MenuItemPopupInputNumberComponent,
     MenuItemPopupInputColorPaletteComponent,
+    MenuItemPopupInputRadioComponent,
   ],
   imports: [
     BrowserModule,

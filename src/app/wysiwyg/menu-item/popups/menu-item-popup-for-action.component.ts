@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  QueryList,
-  ViewChildren,
-  ViewContainerRef
-} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, QueryList, ViewChildren} from '@angular/core';
 import {EditorState} from 'prosemirror-state';
 import {MarkType, NodeType} from 'prosemirror-model';
 import {MenuItemPopupInputComponent} from '../popup-inputs/menu-item-popup-input.component';
@@ -25,9 +16,6 @@ export class MenuItemPopupForActionComponent<T extends MarkType | NodeType = Mar
   protected isPopupOpen = false;
   protected isValid = false;
   protected inputs: { [input: string]: MenuItemPopupInputComponent } = { };
-
-  constructor(protected viewRef: ViewContainerRef) {
-  }
 
   ngAfterViewInit() {
     this.inputsRef.forEach(item => this.inputs[item.name] = item);

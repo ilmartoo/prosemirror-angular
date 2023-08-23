@@ -1,19 +1,17 @@
 /** Multipurpose helper functions */
 
-import {Component} from '@angular/core';
-
 /**
  * Adds the given props to the given object
  * @param item Object to which props will be added
  * @param props Properties to add
  * @returns Reference to the given object with the updated props for chaining
  */
-export function addProps<T extends object = object>(item: object, props: { [p in keyof T]?: T[p] }): T {
-  const ref = item as { [p in keyof T]: T[p] };
+export function addProps<R extends object = object>(item: object, props: { [p in keyof R]?: R[p] }): R {
+  const ref = item as R;
   for (let prop in props) {
     ref[prop] = props[prop]!;
   }
-  return item as T;
+  return ref;
 }
 
 /**
@@ -102,18 +100,31 @@ export function generateStyles(styleAttrs: { [s: string]: string | number | unde
 }
 
 /**
- * Defines an Angular component dynamically
- * @param data Data to pass to @Component decorator
- * @param component Component class to generate
- * @param provider Optional provider shorthand to append a provider to @Component providers param
- * @returns Definition of an Angular component
+ * Creates a new object filtering its properties by the given filter
+ * @param props Object to filter
+ * @param filter Type of filter to use:
+ * @param filter | include filter: array of keys to include in the new object
+ * @param filter | exclude filter: array of keys to remove from the new object
+ * @returns New object with the filter properties
  */
-export function defineComponent<T = object, R = object>(
-  data: { [p in keyof Component]: Component[p] },
-  component: new(...args: any[]) => T,
-  provider?: new(...args: any[]) => R): { new(...args: any[]): T } {
-  return Component({
-    ...data,
-    providers: [...(data.providers ?? []), {provide: provider, useExisting: component}],
-  })(component);
+export function filterProps<
+  R extends object = object,
+  T extends R = R
+>(props: T | undefined, filter?: FilterKeys<T>): R | undefined {
+  if (!props || !filter) { return props; }
+
+  const isInclude = 'include' in filter;
+  const filteredProps: { [p: string]: any } = {};
+
+  for (const attr in props) {
+    if (isInclude ? filter.include.includes(attr) : !filter.exclude.includes(attr)) {
+      filteredProps[attr] = props[attr];
+    }
+  }
+  return filteredProps as R;
 }
+
+/** Filter keys type */
+export type FilterKeys<T> =
+  | { include: (keyof T)[] }
+  | { exclude: (keyof T)[] };

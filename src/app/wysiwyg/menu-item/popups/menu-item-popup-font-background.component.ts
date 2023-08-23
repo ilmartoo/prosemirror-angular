@@ -1,17 +1,17 @@
 import {MenuItemPopupForActionComponent} from './menu-item-popup-for-action.component';
 import {Component} from '@angular/core';
 import {MarkType} from 'prosemirror-model';
-import {ColorPalette, cssColor, hexColor} from '../popup-inputs/color';
+import {ColorPalette, cssColor, hexColor} from '../../utilities/color';
 import {EditorState} from 'prosemirror-state';
-import {retrieveMenuPlugin} from '../../menu/menu.component';
+import {retrieveActiveElements} from '../../menu/menu.component';
 import {markTypes} from '../../text-editor/custom-schema';
 
 @Component({
-  selector: 'app-menu-item-popup-background-color',
-  templateUrl: './menu-item-popup-background-color.component.html',
-  styleUrls: ['./menu-item-action-popup.component.scss', './menu-item-popup-background-color.component.scss'],
+  selector: 'app-menu-item-popup-font-background',
+  templateUrl: './menu-item-popup-font-background.component.html',
+  styleUrls: ['./menu-item-action-popup.component.scss', './menu-item-popup-font-background.component.scss'],
 })
-export class MenuItemPopupBackgroundColorComponent extends MenuItemPopupForActionComponent<MarkType> {
+export class MenuItemPopupFontBackgroundComponent extends MenuItemPopupForActionComponent<MarkType> {
   protected readonly INPUTS = {
     CLEAR: 'clear',
     COLOR: 'color',
@@ -63,11 +63,10 @@ export class MenuItemPopupBackgroundColorComponent extends MenuItemPopupForActio
 
   protected override reset(state: EditorState) {
     this.inputUsed = undefined;
+    const elements = retrieveActiveElements(state);
 
-    const plugin = retrieveMenuPlugin(state);
-
-    const bgColorMark = plugin?.getState(state)?.hasMarkType(markTypes.bg_color);
-    let color = bgColorMark ? bgColorMark.attrs['color'] as string : '';
+    const bgColorMark = elements.hasMarkType(markTypes.font_background);
+    let color = bgColorMark?.attrs['color'] as string || '';
     this.setValue(this.INPUTS.COLOR, color);
   }
 

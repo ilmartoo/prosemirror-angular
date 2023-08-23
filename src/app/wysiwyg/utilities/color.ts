@@ -14,6 +14,8 @@ export function cssColor(cssColor: string, options?: ColorOptions): Color {
   return ColorFactory.css(cssColor, options);
 }
 
+export const DEFAULT_COLOR = 'inherit';
+
 export type Color = {
   display: string;
   value: string;

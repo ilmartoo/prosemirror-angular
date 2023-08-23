@@ -4,7 +4,7 @@
 
 import {Attrs, Node as ProseNode, NodeRange, NodeType, ResolvedPos} from "prosemirror-model";
 import {EditorState} from "prosemirror-state";
-import {addProps, areEquals} from "./multipurpose-helper";
+import {addProps, areEquals, FilterKeys, filterProps} from "./multipurpose-helper";
 import {NodeGroups} from '../text-editor/custom-schema';
 
 /** Alias for the needed Node elements to perform a ProseMirrorHelper node lookup */
@@ -157,10 +157,17 @@ export function ancestorNodesInSelection(state: EditorState): AncestorsList {
  * Checks if two nodes are the same (taking into account attrs)
  * @param a Node a
  * @param b Node b
+ * @param filter Keys to filter by
  * @returns True if nodes are the same
  */
-export function areNodesEquals(a?: NodeForLookup, b?: NodeForLookup): boolean {
-  return areNodeTypesEquals(a?.type, b?.type) && areEquals<Attrs>(a?.attrs, b?.attrs);
+export function areNodesEquals(
+  a?: NodeForLookup,
+  b?: NodeForLookup,
+  filter?: FilterKeys<Attrs>
+): boolean {
+  const attrsA = filterProps<Attrs>(a?.attrs, filter);
+  const attrsB = filterProps<Attrs>(b?.attrs, filter);
+  return areNodeTypesEquals(a?.type, b?.type) && areEquals<Attrs>(attrsA, attrsB);
 }
 
 /**
@@ -278,7 +285,8 @@ export function isAlignableNode(node: ProseNode): boolean {
  * @returns Child node that satisfies the condition or undefined if not found
  */
 export function findNodeBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number) => boolean): ExtendedNode | undefined {
-  const resolve = (pos: number) => $from.node(0).resolve(pos);
+  const resolve = (pos: number) => $from.doc.resolve(pos);
+
   for (let pos = $from.pos; pos <= $to.pos; pos++) {
     const $pos = resolve(pos);
     const node = $pos.node();
@@ -306,20 +314,12 @@ export function findNodeBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (
 export function findAllNodesBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number) => boolean): ExtendedNode[] {
   const nodes: ExtendedNode[] = [];
   const resolve = (pos: number) => $from.node(0).resolve(pos);
-  for (let pos = $from.pos; pos <= $to.pos; pos++) {
-    const $pos = resolve(pos);
-    const node = $pos.node();
 
-    // If node is valid, return it
+  $from.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
     if (isValid(node, pos)) {
-      nodes.push(extendNode(node, $pos));
+      nodes.push(extendNode(node, resolve(pos)));
     }
-
-    // Skip other positions of the node
-    if (node.childCount === 0) {
-      pos += node.nodeSize - 1;
-    }
-  }
+  });
   return nodes;
 }
 

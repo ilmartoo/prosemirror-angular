@@ -13,11 +13,18 @@ import {
 import {Command} from 'prosemirror-state';
 import {EditorView} from 'prosemirror-view';
 
-import {CursorActiveElements, MenuItemBasicAction, MenuItemStatus, MenuItemTypeAction} from './menu-item-types';
+import {
+  CursorActiveElements,
+  MenuItemBasicAction,
+  MenuItemPopupAction,
+  MenuItemStatus,
+  MenuItemTypeAction
+} from './menu-item-types';
 import {MenuItemPopupForActionComponent} from './popups/menu-item-popup-for-action.component';
 import {executeAfter} from '../utilities/multipurpose-helper';
 import {Attrs} from 'prosemirror-model';
 import {UpdatableItem} from './updatable-item';
+import {DEFAULT_COLOR} from '../utilities/color';
 
 @Component({
   selector: 'app-menu-item-for-action',
@@ -27,7 +34,7 @@ import {UpdatableItem} from './updatable-item';
 })
 export class MenuItemForActionComponent extends UpdatableItem implements AfterViewInit, OnDestroy {
 
-  @Input({ required: true }) action!: MenuItemBasicAction | MenuItemTypeAction;
+  @Input({ required: true }) action!: MenuItemBasicAction | MenuItemTypeAction | MenuItemPopupAction;
   @Input({ required: false }) icon?: string;
   @Input({ required: false }) text?: string;
   @Input({ required: false }) tooltip?: string;
@@ -37,6 +44,7 @@ export class MenuItemForActionComponent extends UpdatableItem implements AfterVi
 
   protected view?: EditorView;
   protected cachedStatus: MenuItemStatus = MenuItemStatus.DISABLED;
+  protected cachedColor: string = DEFAULT_COLOR;
   protected popupRef?: ComponentRef<MenuItemPopupForActionComponent>;
 
   protected readonly MenuItemStatus = MenuItemStatus;
@@ -64,7 +72,7 @@ export class MenuItemForActionComponent extends UpdatableItem implements AfterVi
   ngAfterViewInit() {
     executeAfter(() => {
       // Generates Popup element if needed
-      if (this.isTypeAction(this.action) && this.action.popup) {
+      if (this.isPopupAction(this.action)) {
 
         // Creates the popup component
         this.popupRef = createComponent(
@@ -101,6 +109,7 @@ export class MenuItemForActionComponent extends UpdatableItem implements AfterVi
 
     const state = view.state;
     this.cachedStatus = this.action.status({state, elements});
+    this.cachedColor = this.action.color?.({state, elements}) || DEFAULT_COLOR;
   }
 
   /**
@@ -109,8 +118,18 @@ export class MenuItemForActionComponent extends UpdatableItem implements AfterVi
    * @protected
    * @returns True if action is a MenuItemTypeAction type
    */
-  protected isTypeAction(action: MenuItemBasicAction | MenuItemTypeAction): action is MenuItemTypeAction {
+  protected isTypeAction(action: MenuItemBasicAction | MenuItemTypeAction | MenuItemPopupAction): action is MenuItemTypeAction {
     return 'type' in action;
+  }
+
+  /**
+   * Checks if the action is a MenuItemPopupAction type
+   * @param action Action to check
+   * @protected
+   * @returns True if action is a MenuItemPopupAction type
+   */
+  protected isPopupAction(action: MenuItemBasicAction | MenuItemTypeAction | MenuItemPopupAction): action is MenuItemPopupAction {
+    return this.isTypeAction(action) && 'popup' in action;
   }
 
   /**

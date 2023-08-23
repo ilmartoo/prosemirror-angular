@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {MenuItemPopupInputComponent} from './menu-item-popup-input.component';
-import {ColorPalette} from './color';
+import {ColorPalette} from '../../utilities/color';
 
 @Component({
   selector: 'app-menu-item-popup-input-color-palette',
@@ -12,7 +12,7 @@ export class MenuItemPopupInputColorPaletteComponent extends MenuItemPopupInputC
 
   @Input({ required: true }) palette!: ColorPalette;
 
-  protected onChange(event: Event) {
+  protected onClick(event: MouseEvent) {
     this.value = (event.target as HTMLInputElement).value;
   }
 }

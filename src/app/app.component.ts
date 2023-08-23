@@ -26,7 +26,7 @@ export class AppComponent {
     '<p>' +
     '<span style="color: blue">Multi</span>' +
     '-' +
-    '<span style="color: green; background-color: lightgreen">styled</span>' +
+    '<span style="color: green; background-color: lime">styled</span>' +
     ' ' +
     '<span style="color: white; background-color: black">text</span>' +
     '</p>' +
@@ -35,7 +35,7 @@ export class AppComponent {
 
     '<h1><strong>[ FORMULAS ]</strong></h1>' +
     '<div katex-formula="x^2 + y^2 = z^2"></div>' +
-    '<div katex-formula="\\begin{bmatrix} a & 2 & 3 \\\\ a & b & c \\end{bmatrix}"></div>' +
+    '<div katex-formula="\\begin{bmatrix} 1 & 2 & 3 \\\\ a & b & c \\\\ x & y & z \\end{bmatrix}"></div>' +
     '<div katex-formula="\\ce{CO2 + C -> 2 C0}"></div>' +
 
     '<p></p>' +

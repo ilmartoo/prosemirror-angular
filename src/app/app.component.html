@@ -35,13 +35,21 @@
     <app-menu-item-separator></app-menu-item-separator>
 
     <!-- Colors -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.text_color"
-                              icon="text-color"
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_color"
+                              icon="font-color"
                               tooltip="Text color"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.background_color"
-                              icon="text-background"
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_background"
+                              icon="font-background"
                               tooltip="Background color"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_family"
+                              icon="font-family"
+                              tooltip="Font type"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_size"
+                              icon="font-size"
+                              tooltip="Font size"
     ></app-menu-item-for-action>
 
     <app-menu-item-separator></app-menu-item-separator>

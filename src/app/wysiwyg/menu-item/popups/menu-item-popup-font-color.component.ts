@@ -1,17 +1,17 @@
 import {MenuItemPopupForActionComponent} from './menu-item-popup-for-action.component';
 import {Component} from '@angular/core';
 import {MarkType} from 'prosemirror-model';
-import {ColorPalette, cssColor, hexColor} from '../popup-inputs/color';
+import {ColorPalette, cssColor, hexColor} from '../../utilities/color';
 import {EditorState} from 'prosemirror-state';
-import {retrieveMenuPlugin} from '../../menu/menu.component';
+import {retrieveActiveElements} from '../../menu/menu.component';
 import {markTypes} from '../../text-editor/custom-schema';
 
 @Component({
-  selector: 'app-menu-item-popup-text-color',
-  templateUrl: './menu-item-popup-text-color.component.html',
+  selector: 'app-menu-item-popup-font-color',
+  templateUrl: './menu-item-popup-font-color.component.html',
   styleUrls: ['./menu-item-action-popup.component.scss'],
 })
-export class MenuItemPopupTextColorComponent extends MenuItemPopupForActionComponent<MarkType> {
+export class MenuItemPopupFontColorComponent extends MenuItemPopupForActionComponent<MarkType> {
   protected readonly INPUTS = {
     COLOR: 'color',
   }
@@ -43,11 +43,10 @@ export class MenuItemPopupTextColorComponent extends MenuItemPopupForActionCompo
   };
 
   protected override reset(state: EditorState) {
-    const plugin = retrieveMenuPlugin(state);
+    const elements = retrieveActiveElements(state);
 
-    const txtColorMark = plugin?.getState(state)?.hasMarkType(markTypes.txt_color);
-    let color = txtColorMark ? txtColorMark.attrs['color'] as string : '';
-
+    const txtColorMark = elements.hasMarkType(markTypes.font_color);
+    let color = txtColorMark?.attrs['color'] as string || '';
     this.setValue(this.INPUTS.COLOR, color);
   }
 
