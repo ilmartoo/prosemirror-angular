@@ -399,7 +399,14 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
 		}, 0),
   },
   // Table nodes
-  [NodeSpecs.TABLE]: tableNodesMap.table,
+  [NodeSpecs.TABLE]: {
+    ...tableNodesMap.table,
+    toDOM: (node) => toDOM(
+      'div',
+      {class: 'table-wrapper'},
+      tableNodesMap.table.toDOM!(node)
+    ),
+  },
   [NodeSpecs.ROW]: tableNodesMap.table_row,
   [NodeSpecs.HEADER]: tableNodesMap.table_header,
   [NodeSpecs.CELL]: tableNodesMap.table_cell,
@@ -500,6 +507,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
       MarkSpecs.CODE,
       MarkSpecs.FONT_COLOR,
       MarkSpecs.FONT_BACKGROUND,
+      MarkSpecs.FONT_FAMILY,
       MarkSpecs.SUPERSCRIPT,
       MarkSpecs.SUBSCRIPT,
     ),
@@ -574,6 +582,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
       }),
     }],
     toDOM: (mark) => toDOM('span', {
+      class: 'font-color',
       style: generateStyles({'--font-color': mark.attrs['color']})
     }, 0),
   },
@@ -591,6 +600,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
 			}),
 		}],
 		toDOM: (mark) => toDOM('span', {
+      class: 'font-background',
 			style: generateStyles({'--font-background': mark.attrs['color']})
 		}, 0),
 	},
@@ -608,6 +618,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
 			}),
 		}],
 		toDOM: (mark) => toDOM('span', {
+      class: 'font-family',
 			style: generateStyles({'--font-family': mark.attrs['family']})
 		}, 0),
 	},
@@ -625,6 +636,7 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
 			}),
 		}],
 		toDOM: (mark) => toDOM('span', {
+      class: 'font-size',
 			style: generateStyles({'--font-size': mark.attrs['size']})
 		}, 0),
 	},

@@ -2,7 +2,7 @@ import {MenuItemPopupForActionComponent} from './menu-item-popup-for-action.comp
 import {Component} from '@angular/core';
 import {MarkType} from 'prosemirror-model';
 import {EditorState} from 'prosemirror-state';
-import {retrieveActiveElements} from '../../menu/menu.component';
+import {cursorActiveElements} from '../../menu/menu.component';
 import {markTypes} from '../../text-editor/custom-schema';
 import {Radio, radioDefaultValue, radioValue} from '../../utilities/radio';
 
@@ -29,10 +29,11 @@ export class MenuItemPopupFontSizeComponent extends MenuItemPopupForActionCompon
     radioValue('30', '30px'),
     radioValue('36', '36px'),
     radioValue('48', '48px'),
+    radioValue('60', '60px'),
   ];
 
   protected override reset(state: EditorState) {
-    const elements = retrieveActiveElements(state);
+    const elements = cursorActiveElements(state);
 
     const sizeMark = elements.hasMarkType(markTypes.font_size);
     let size = sizeMark?.attrs['size'] as string || '';

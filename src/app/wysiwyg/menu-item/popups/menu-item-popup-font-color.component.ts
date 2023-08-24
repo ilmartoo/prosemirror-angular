@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 import {MarkType} from 'prosemirror-model';
 import {ColorPalette, cssColor, hexColor} from '../../utilities/color';
 import {EditorState} from 'prosemirror-state';
-import {retrieveActiveElements} from '../../menu/menu.component';
+import {cursorActiveElements} from '../../menu/menu.component';
 import {markTypes} from '../../text-editor/custom-schema';
 
 @Component({
@@ -43,7 +43,7 @@ export class MenuItemPopupFontColorComponent extends MenuItemPopupForActionCompo
   };
 
   protected override reset(state: EditorState) {
-    const elements = retrieveActiveElements(state);
+    const elements = cursorActiveElements(state);
 
     const txtColorMark = elements.hasMarkType(markTypes.font_color);
     let color = txtColorMark?.attrs['color'] as string || '';

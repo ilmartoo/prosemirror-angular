@@ -12,9 +12,16 @@
   $base-indent-padding: 1.5rem;
 
   --font-color: $base-text-color;
+  color: $base-text-color;
+
   --font-background: $base-background;
+  background: $base-background;
+
   --font-family: $base-font-family;
+  font-family: $base-font-family;
+
   --font-size: $base-font-size;
+  font-size: $base-font-size;
 
   line-height: 1.5;
   text-align: left;
@@ -22,19 +29,31 @@
   -webkit-user-select: auto;
   user-select: auto;
 
-  * {
-    color: var(--font-color, inherit);
-    background: var(--font-background, inherit);
-    font-family: var(--font-family, inherit);
-    font-size: var(--font-size, inherit);
+  // Font styling //
+  .font-color {
+    color: var(--font-color);
   }
+
+  .font-background {
+    display: inline-block;
+    background: var(--font-background);
+  }
+
+  .font-family {
+    font-family: var(--font-family);
+  }
+
+  .font-size {
+    font-size: var(--font-size);
+  }
+  // // // // // //
 
   // Hide insertion caret if a atom node is selected
   &:has(.atom.ProseMirror-selectednode) {
     caret-color: transparent;
   }
 
-  h1, h2, h3, p, table, ol, ul,
+  h1, h2, h3, p, .table-wrapper, ol, ul,
   pre, blockquote, .indent, .img-card {
     display: block;
     margin: 0.5rem 0;
@@ -99,12 +118,6 @@
     border-radius: 0.125rem;
     border: $unselected-border;
 
-    overflow: clip;
-
-    & * {
-      background: $base-background;
-    }
-
     &.ProseMirror-selectednode,
     &:hover {
       border: $selected-border;
@@ -134,6 +147,8 @@
   }
 
   code {
+    display: inline-block;
+
     font-size: small;
     font-family: 'Courier New', 'Courier', 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
 
@@ -211,35 +226,40 @@
     }
   }
 
-  table {
-    display: table;
-    border-collapse: collapse;
-    table-layout: fixed;
-
-    max-width: 100%;
+  .table-wrapper {
     margin: 1rem 0;
 
-    tr {
+    overflow-x: auto;
+
+    table {
+      display: table;
+      border-collapse: collapse;
+      table-layout: auto;
+
       width: 100%;
-      min-height: 1rem;
 
-      td, th {
-        border: black solid 1px;
-
-        min-width: 2.5rem;
-        max-width: 30rem;
+      tr {
+        width: 100%;
         min-height: 1rem;
 
-        margin: 0;
-        padding: 0.25rem 0.5rem;
+        td, th {
+          border: black solid 1px;
 
-        overflow: auto;
+          min-width: 2.5rem;
+          max-width: 30rem;
+          min-height: 1rem;
 
-        &.selectedCell {
-          background-color: rgb(217, 232, 255);
+          margin: 0;
+          padding: 0.25rem 0.5rem;
 
-          *::selection {
-            background-color: $base-background;
+          overflow: auto;
+
+          &.selectedCell {
+            background-color: rgb(217, 232, 255);
+
+            *::selection {
+              background-color: $base-background;
+            }
           }
         }
       }

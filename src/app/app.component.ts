@@ -29,14 +29,31 @@ export class AppComponent {
     '<span style="color: green; background-color: lime">styled</span>' +
     ' ' +
     '<span style="color: white; background-color: black">text</span>' +
+    ' ' +
+    '<p>' +
+    '<span style="font-family: &quot;Times New Roman&quot;, serif">This text is in Times New Roman font</span>' +
+    '</p>' +
+    ' ' +
+    '<p>' +
+    '<span style="font-size: 8">tiny</span>' +
+    ' - ' +
+    '<span style="font-size: 12">small</span>' +
+    ' - ' +
+    'normal' +
+    ' - ' +
+    '<span style="font-size: 30">big</span>' +
+    ' - ' +
+    '<span style="font-size: 60">huge</span>' +
     '</p>' +
 
     '<p></p>' +
 
     '<h1><strong>[ FORMULAS ]</strong></h1>' +
-    '<div katex-formula="x^2 + y^2 = z^2"></div>' +
-    '<div katex-formula="\\begin{bmatrix} 1 & 2 & 3 \\\\ a & b & c \\\\ x & y & z \\end{bmatrix}"></div>' +
-    '<div katex-formula="\\ce{CO2 + C -> 2 C0}"></div>' +
+    '<p>' +
+    '<span katex-formula="x^2 + y^2 = z^2"></span>' +
+    '<span katex-formula="\\begin{bmatrix} 1 & 2 & 3 \\\\ a & b & c \\\\ x & y & z \\end{bmatrix}"></span>' +
+    '<span katex-formula="\\ce{CO2 + C -> 2 C0}"></span>' +
+    '</p>' +
 
     '<p></p>' +
 

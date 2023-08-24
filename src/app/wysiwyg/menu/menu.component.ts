@@ -74,9 +74,8 @@ export class MenuComponent implements PluginView {
  * @param state Editor state
  * @returns Menu plugin (Not null -> Active elements plugin must be passed at editor initialization)
  */
-export function retrieveMenuPlugin(state: EditorState): Plugin<CursorActiveElements> {
-  const plugin = state.plugins.find(p => p.spec.key === MenuComponent.PLUGIN_KEY);
-  return plugin!;
+export function cursorActiveElementsPlugin(state: EditorState): Plugin<CursorActiveElements> {
+  return state.plugins.find(p => p.spec.key === MenuComponent.PLUGIN_KEY)!;
 }
 
 /**
@@ -84,7 +83,6 @@ export function retrieveMenuPlugin(state: EditorState): Plugin<CursorActiveEleme
  * @param state Editor state
  * @returns Active elements (Not null -> Active elements plugin must be passed at editor initialization)
  */
-export function retrieveActiveElements(state: EditorState): CursorActiveElements {
-  const elements = retrieveMenuPlugin(state).getState(state);
-  return elements!;
+export function cursorActiveElements(state: EditorState): CursorActiveElements {
+  return cursorActiveElementsPlugin(state).getState(state)!;
 }

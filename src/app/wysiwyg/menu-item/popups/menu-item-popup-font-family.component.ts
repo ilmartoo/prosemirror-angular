@@ -2,7 +2,7 @@ import {MenuItemPopupForActionComponent} from './menu-item-popup-for-action.comp
 import {Component} from '@angular/core';
 import {MarkType} from 'prosemirror-model';
 import {EditorState} from 'prosemirror-state';
-import {retrieveActiveElements} from '../../menu/menu.component';
+import {cursorActiveElements} from '../../menu/menu.component';
 import {markTypes} from '../../text-editor/custom-schema';
 import {Radio, radioDefaultValue, RadioValue, radioValue} from '../../utilities/radio';
 import {generateStyles} from '../../utilities/multipurpose-helper';
@@ -22,13 +22,13 @@ export class MenuItemPopupFontFamilyComponent extends MenuItemPopupForActionComp
     radioValue('Roboto', 'Roboto, sans-serif'),
     radioValue('Arial', 'Arial, sans-serif'),
     radioValue('Calibri', 'Calibri, sans-serif'),
-    radioValue('Times New Roman', '\'Times New Roman\', serif'),
+    radioValue('Times New Roman', '\"Times New Roman\", serif'),
     radioValue('Georgia', 'Georgia, serif'),
     radioValue('Rockwell', 'Rockwell, serif'),
     radioValue('Consolas', 'Consolas, monospace'),
-    radioValue('Courier New', '\'Courier New\', monospace'),
-    radioValue('Lucida Console', '\'Lucida Console\', monospace'),
-    radioValue('Comic Sans', '\'Comic Sans\', cursive'),
+    radioValue('Courier New', '\"Courier New\", monospace'),
+    radioValue('Lucida Console', '\"Lucida Console\", monospace'),
+    radioValue('Comic Sans', '\"Comic Sans\", cursive'),
     radioValue('Impact', 'Impact, monospace'),
     radioValue('Papyrus', 'papyrus, fantasy'),
   ];
@@ -38,7 +38,7 @@ export class MenuItemPopupFontFamilyComponent extends MenuItemPopupForActionComp
   });
 
   protected override reset(state: EditorState) {
-    const elements = retrieveActiveElements(state);
+    const elements = cursorActiveElements(state);
 
     const familyMark = elements.hasMarkType(markTypes.font_family);
     let family = familyMark?.attrs['family'] as string || '';
