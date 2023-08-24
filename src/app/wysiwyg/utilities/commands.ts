@@ -4,7 +4,7 @@
 
 import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
 import {Attrs, Fragment, Mark, MarkType, Node as ProseNode, NodeRange, NodeType} from 'prosemirror-model';
-import {AlignmentStyle, INDENT_LEVEL_STEP, markTypes, nodeTypes} from '../text-editor/custom-schema';
+import {AlignmentStyle, INDENT_LEVEL_STEP, markTypes, NodeGroups, nodeTypes} from '../text-editor/custom-schema';
 import {
   chainCommands,
   createParagraphNear,
@@ -37,7 +37,7 @@ import {wrapInList} from 'prosemirror-schema-list';
  * Selects the text of the given range
  * @param from Start of the range
  * @param to End of the range
- * @returns Command to select the text between the given positions
+ * @returns The command to select the text between the given positions
  */
 export function selectRange(from: number, to: number): Command {
   if (from > to) {
@@ -63,7 +63,7 @@ export function selectRange(from: number, to: number): Command {
  * @param from Start of the range
  * @param to End of the range
  * @param inheritMarks When a selection is passed, if the new text should inherit replaced text's marks
- * @returns Command to replace the text
+ * @returns The command to replace the text
  */
 export function replaceWithMarkedText(text: string, marks: Mark[], from: number, to?: number, inheritMarks = true): Command {
   if (to && from > to) {
@@ -102,7 +102,7 @@ export function replaceWithMarkedText(text: string, marks: Mark[], from: number,
  * @param from Start of the selection
  * @param to End of the selection
  * @param marks Array of marks or mark types to remove. All if null or undefined
- * @returns Command to remove the mark, mark type or all marks in the selection
+ * @returns The command to remove the mark, mark type or all marks in the selection
  */
 export function removeMarks(from: number, to: number, marks?: (Mark | MarkType)[] | null): Command {
   if (from > to) {
@@ -130,7 +130,7 @@ export function removeMarks(from: number, to: number, marks?: (Mark | MarkType)[
  * Expands the selected marks and mark types into individual ranges and removes them from the expanded ranges
  * @param pos Position to start the range expansion
  * @param marks Marks and mark types to expand and remove
- * @returns Command remove the marks and mark types from the expanded ranges
+ * @returns The command remove the marks and mark types from the expanded ranges
  */
 export function expandAndRemoveMarks(pos: number, marks: (Mark | MarkType)[]): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
@@ -166,7 +166,7 @@ export function expandAndRemoveMarks(pos: number, marks: (Mark | MarkType)[]): C
  * Inserts content at the given position of the editor
  * @param at Position to insert
  * @param content Content to insert
- * @returns Command to insert the content at the given position
+ * @returns The command to insert the content at the given position
  */
 export function insertContent(at: number, content: ProseNode | Fragment | readonly ProseNode[]): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
@@ -194,7 +194,7 @@ export function insertContent(at: number, content: ProseNode | Fragment | readon
  * @param content Content to insert
  * @param from Start of the range
  * @param to End of the range
- * @returns Command to replace the content
+ * @returns The command to replace the content
  */
 export function editContent(content: ProseNode | Fragment | readonly ProseNode[], from: number, to?: number): Command {
   if (to && from > to) {
@@ -245,7 +245,7 @@ export function editContent(content: ProseNode | Fragment | readonly ProseNode[]
  * @param at Position to insert the table at
  * @param rows Number of rows of the table
  * @param cols Number of columns of the table
- * @returns Command to insert a table with the given dimensions at the specified position of the document
+ * @returns The command to insert a table with the given dimensions at the specified position of the document
  */
 export function insertTable(at: number, rows: number, cols: number): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
@@ -260,7 +260,7 @@ export function insertTable(at: number, rows: number, cols: number): Command {
  * Changes the parent element's list type from the current cursor position to the one specified
  * @param listType New list node type
  * @param attrs Attrs for the new list node
- * @returns Command to change the parent list type
+ * @returns The command to change the parent list type
  */
 export function changeListType(listType: NodeType, attrs?: Attrs | null): Command {
   return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
@@ -296,44 +296,52 @@ export function changeListType(listType: NodeType, attrs?: Attrs | null): Comman
  */
 export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
   const {$head , $anchor} = state.selection;
-  let range = $head.blockRange($anchor);
+  const range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  let wrapping = findWrapping(range, nodeTypes.indent);
-  if (!wrapping) {
-    const isIndentable = (node: ProseNode) => isValidContent(nodeTypes.indent, node);
-    const indentableNode = findAncestor(range.$from, isIndentable, range.depth);
+  const indentableNodesDepth = range.depth;
+  const content = findAllNodesBetween(
+    $head,
+    $anchor,
+    (node, pos, depth) => depth === indentableNodesDepth,
+  );
+  if (content.length === 0) { return false; } // No nodes inside range (Can't occur in normal circumstances)
 
-    // Cancel if no parent indentable node is found
-    if (!indentableNode) { return false; }
+  const isIndentable = (node: ProseNode) => isValidContent(nodeTypes.indent, node);
+  const allNodesAreIndentable = content.every(isIndentable);
+  if (!allNodesAreIndentable) { return false; } // Can't indent if not all nodes are indentable
 
-    const $from = state.doc.resolve(indentableNode.before);
-    const $to = state.doc.resolve(indentableNode.after);
-    range = new NodeRange($from, $to, indentableNode.depth);
-    wrapping = findWrapping(range, nodeTypes.indent);
-  }
+  const $from = state.doc.resolve(content[0].start);
+  const $to = state.doc.resolve(content[content.length - 1].end);
+  const wrapRange = new NodeRange($from, $to, range.depth);
 
-  // Cancel if no valid wrapping parent node is found
-  if (!wrapping) { return false; }
+  const parent = ancestorAt($anchor, range.depth);
+  const isParentIndentNode = areNodeTypesEquals(parent.type, nodeTypes.indent);
+  const isOnlyIndentedContent = parent.content.size === ($to.pos - $from.pos);
 
-  if (dispatch) {
-    const tr = extendTransaction(state.tr);
+  // Update indent level if is already wrapped and is the only content of the indentation
+  if (isParentIndentNode && isOnlyIndentedContent) {
+    if (dispatch) {
+      const tr = extendTransaction(state.tr);
 
-    const parent = ancestorAt(range.$from, range.depth);
-    const isParentIndentNode = areNodeTypesEquals(parent.type, nodeTypes.indent)
-
-    // Update indent level if is already wrapped and is the only content of the indentation
-    if (isParentIndentNode && parent.content.size === range.end - range.start) {
       const updatedLevel = parent.attrs['level'] + INDENT_LEVEL_STEP;
       tr.setNodeAttribute(parent.before, 'level',  updatedLevel);
+
+      dispatch(tr.scrollIntoView());
     }
-    // Wrap in new indent otherwise
-    else {
+  }
+  else {
+    const wrapping = findWrapping(wrapRange, nodeTypes.indent);
+    if (!wrapping) { return false; } // No wrapping could be found
+
+    if (dispatch) {
+      const tr = extendTransaction(state.tr);
+
       tr.wrap(range, wrapping);
       tr.mapAndSelect($anchor.pos, $head.pos);
-    }
 
-    dispatch(tr.scrollIntoView());
+      dispatch(tr.scrollIntoView());
+    }
   }
   return true;
 }

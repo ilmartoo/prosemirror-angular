@@ -23,8 +23,6 @@ export type ExtendedNode = ProseNode & {
   readonly after: number,
   /** Depth of the node */
   readonly depth: number,
-  /** Size of the node */
-  get size(): number;
 };
 /** Ancestor of a node */
 export type AncestorNode = ExtendedNode & {
@@ -89,14 +87,15 @@ export class AncestorsList extends Array<AncestorNode> {
  * @returns Reference to the extended node for chaining
  */
 export function extendNode(node: ProseNode, $pos: ResolvedPos, depth: number = $pos.depth): ExtendedNode {
-  const extendedNodeRef = node as ExtendedNode;
+  const start = $pos.start(depth);
+  const end = $pos.end(depth);
+  const topNode = depth === 0;
   return addProps<ExtendedNode>(node, {
-    before: depth < 1 ? $pos.start(depth) : $pos.before(depth),
-    start: $pos.start(depth),
-    end: $pos.end(depth),
-    after: depth < 1 ? $pos.end(depth) : $pos.after(depth),
     depth: depth,
-    get size() { return extendedNodeRef.before + extendedNodeRef.nodeSize; },
+    start,
+    end,
+    before: topNode ? start : $pos.before(depth),
+    after: topNode ? end : $pos.after(depth),
   });
 }
 
@@ -231,32 +230,13 @@ export function findAllAncestors($pos: ResolvedPos,
 }
 
 /**
- * Retrieves the ancestor node at the given position with the given depth
+ * Retrieves the ancestor node at the given position with the given depth or the direct parent if not specified
  * @param $pos Position for the ancestor retrieval
  * @param depth Depth of the ancestor
  * @returns Ancestor node at the given depth
  */
-export function ancestorAt($pos: ResolvedPos, depth: number): ExtendedNode {
+export function ancestorAt($pos: ResolvedPos, depth: number = ($pos.depth > 0 ? $pos.depth - 1 : 0)): ExtendedNode {
   return extendNode($pos.node(depth), $pos, depth);
-}
-
-/**
- * Retrieves all child nodes from the range parent node contained inside the range
- * @param range Range to get the nodes from
- * @returns List of child nodes inside the range
- */
-export function childNodesInRange(range: NodeRange): ExtendedNode[] {
-  const children: ExtendedNode[] = [];
-  const parent = range.parent;
-  const basePos = range.$from.start(range.depth);
-
-  parent.forEach((node, offset) => {
-    if (basePos + offset <= range.$to.pos) {
-      children.push(extendNode(node, parent.resolve(offset), range.depth + 1));
-    }
-  });
-
-  return children;
 }
 
 /**
@@ -284,7 +264,7 @@ export function isAlignableNode(node: ProseNode): boolean {
  * @param isValid Function to check if the child is valid
  * @returns Child node that satisfies the condition or undefined if not found
  */
-export function findNodeBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number) => boolean): ExtendedNode | undefined {
+export function findNodeBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number, depth: number) => boolean): ExtendedNode | undefined {
   const resolve = (pos: number) => $from.doc.resolve(pos);
 
   for (let pos = $from.pos; pos <= $to.pos; pos++) {
@@ -292,7 +272,7 @@ export function findNodeBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (
     const node = $pos.node();
 
     // If node is valid, return it
-    if (isValid(node, pos)) {
+    if (isValid(node, pos, $pos.depth)) {
       return extendNode(node, $pos);
     }
 
@@ -305,19 +285,22 @@ export function findNodeBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (
 }
 
 /**
- * Finds a node between the positions that satisfies the given condition
+ * Finds all nodes between the positions that satisfies the given condition
  * @param $from Starting position for lookup
  * @param $to Finish position for lookup
  * @param isValid Function to check if the child is valid
  * @returns Child node that satisfies the condition or undefined if not found
  */
-export function findAllNodesBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number) => boolean): ExtendedNode[] {
+export function findAllNodesBetween($from: ResolvedPos, $to: ResolvedPos, isValid: (node: ProseNode, pos: number, depth: number) => boolean): ExtendedNode[] {
+  if ($from.pos > $to.pos) { return findAllNodesBetween($to, $from, isValid); }
+
   const nodes: ExtendedNode[] = [];
-  const resolve = (pos: number) => $from.node(0).resolve(pos);
+  const resolve = (pos: number) => $from.doc.resolve(pos);
 
   $from.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
-    if (isValid(node, pos)) {
-      nodes.push(extendNode(node, resolve(pos)));
+    const $pos = resolve(pos);
+    if (isValid(node, pos, $pos.depth)) {
+      nodes.push(extendNode(node, $pos));
     }
   });
   return nodes;

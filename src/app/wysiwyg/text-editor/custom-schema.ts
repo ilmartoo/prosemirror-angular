@@ -393,7 +393,7 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
         }),
       },
     ],
-    toDOM: (node) => toDOM('span', {
+    toDOM: (node) => toDOM('div', {
       class: 'indent',
 			style: generateStyles({'--indent-level': node.attrs['level']}),
 		}, 0),
