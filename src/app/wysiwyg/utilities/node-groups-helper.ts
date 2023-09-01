@@ -39,14 +39,14 @@ export function groupRepeat(group: string, rep: number): string {
  */
 export function groupRange(group: string, min: number, max?: number): string {
   if (!max) {
-    if (min <= 0) { return `${group}*`; }       // group* -> [0, INF)
-    else if (min === 1) { return `${group}+`; } // group+ -> [1, INF]
-    else { return `${group}{${min},}`; }        // group{min,} -> [min, INF)
+    if (min <= 0) { return `(${group})*`; }       // (group)* -> [0, INF)
+    else if (min === 1) { return `(${group})+`; } // (group)+ -> [1, INF)
+    else { return `(${group}){${min},}`; }        // (group){min,} -> [min, INF)
   }
 
   if (min > max) { return groupRange(group, max, min); } // min <-> max
 
   return min === max
-    ? `${group}{${min}}`         // group{rep} -> min = max
-    : `${group}{${min},${max}}`; // group{min,max} -> [min, max]
+    ? `(${group}){${min}}`         // (group){rep} -> [min, min] = [max, max]
+    : `(${group}){${min},${max}}`; // (group){min,max} -> [min, max]
 }

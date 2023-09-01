@@ -7,11 +7,11 @@ import {EditorState} from "prosemirror-state";
 import {addProps, areEquals, FilterKeys, filterProps} from "./multipurpose-helper";
 
 /** Alias for the needed Mark elements to perform a ProseMirrorHelper mark lookup */
-export type MarkForLookup = Mark | { type: { name: string }, attrs?: Attrs };
+export type MarkForLookup = Mark | Readonly<{ type: { name: string }, attrs?: Attrs }>;
 /** Alias for the needed MarkType elements to perform a ProseMirrorHelper mark type lookup */
-export type MarkTypeForLookup = MarkType | { name: string };
+export type MarkTypeForLookup = MarkType | Readonly<{ name: string }>;
 /** Mark data & position for helper functions */
-export type ExtendedMark = Mark & { pos: number };
+export type ExtendedMark = Mark & Readonly<{ pos: number }>;
 
 /**
  * Retrieves all active marks in any subsection of the document range
@@ -114,7 +114,7 @@ export function searchForMarkTypeInSelection(type: MarkTypeForLookup, state: Edi
  */
 export function isMarkTypeActiveAt(type: MarkTypeForLookup, $pos: ResolvedPos): ExtendedMark | undefined {
   const mark = $pos.marks().find(m => m.type.name === type.name);
-  return mark ? addProps<ExtendedMark>(mark, {pos: $pos.pos}) : undefined;
+  return mark ? addProps<ExtendedMark, Mark>(mark, {pos: $pos.pos}) : undefined;
 }
 
 /**

@@ -2,9 +2,9 @@
  * Custom ProseMirror custom functions
  */
 
-import {Command, EditorState, TextSelection, Transaction} from 'prosemirror-state';
+import {Command, EditorState, Selection, TextSelection, Transaction} from 'prosemirror-state';
 import {Attrs, Fragment, Mark, MarkType, Node as ProseNode, NodeRange, NodeType} from 'prosemirror-model';
-import {AlignmentStyle, INDENT_LEVEL_STEP, markTypes, NodeGroups, nodeTypes} from '../text-editor/custom-schema';
+import {AlignableNodeData, AlignmentStyle, INDENT_LEVEL_STEP, markTypes, nodeTypes} from '../text-editor/custom-schema';
 import {
   chainCommands,
   createParagraphNear,
@@ -15,7 +15,7 @@ import {
   splitBlockKeepMarks,
   wrapIn
 } from 'prosemirror-commands';
-import {canJoin, findWrapping} from 'prosemirror-transform';
+import {findWrapping} from 'prosemirror-transform';
 import {extendTransaction} from "./transactions-helper";
 import {
   ancestorAt,
@@ -25,13 +25,24 @@ import {
   findAllNodesBetween,
   findAncestor,
   findAncestorOfType,
+  findNodeBetween,
   isAlignableNode,
-  isListNode
 } from "./nodes-helper";
 import {expandMarkActiveRange, expandMarkTypeActiveRange, isMarkAllowed} from './marks-helper';
 import {createTable} from './table-helper';
 import {isValidContent} from './node-content-helper';
-import {wrapInList} from 'prosemirror-schema-list';
+import {
+  canDeindentListItems,
+  canIndentListItems,
+  ExtendedList,
+  ExtendedListItem,
+  extendList,
+  findListElement,
+  isListItemNode,
+  isListNode,
+  isListNodeType
+} from './list-helper';
+import {goTo, offsetFrom} from './resolved-pos-helper';
 
 /**
  * Selects the text of the given range
@@ -87,6 +98,30 @@ export function replaceWithMarkedText(text: string, marks: Mark[], from: number,
       }
       marks.forEach(mark => tr.addMark(from, tr.selection.to, mark));
       tr.setSelection(TextSelection.create(tr.doc, from, tr.selection.to));
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+export function clearFormat(from: number, to: number): Command {
+  if (from > to) {
+    return clearFormat(to, from);
+  }
+
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    if (dispatch) {
+      const tr = state.tr;
+
+      tr.removeMark(from, to);
+
+      const nodesToClear = findAllNodesBetween(goTo(tr.doc, from), goTo(tr.doc, to), () => true);
+      for (const node of nodesToClear) {
+        if (isAlignableNode(node)) {
+          tr.setNodeAttribute(node.before, AlignableNodeData.ATTR_NAME, AlignableNodeData.DEFAULT_VALUE);
+        }
+      }
 
       dispatch(tr.scrollIntoView());
     }
@@ -154,7 +189,7 @@ export function expandAndRemoveMarks(pos: number, marks: (Mark | MarkType)[]): C
     if (dispatch) {
       const tr = state.tr;
 
-      expansions.forEach(exp => tr.removeMark(exp.range.start, exp.range.end, exp.mark));
+      expansions.forEach(exp => tr.removeMark(exp.range.$from.pos, exp.range.$to.pos, exp.mark));
 
       dispatch(tr.scrollIntoView());
     }
@@ -220,19 +255,21 @@ export function editContent(content: ProseNode | Fragment | readonly ProseNode[]
     else {
       const $to = state.doc.resolve(to);
 
-      const range = $from.blockRange($to);
-      if (!range) { return false; } // Cancel if range do not exist
+      const depth = $from.parent === $to.parent ? $from.depth : $from.blockRange($to)?.depth;
+      if (!depth) { return false; } // Cancel if range do not exist
 
       const ancestor = findAncestor(
         $from,
         (node) => node.type.validContent(fragment),
-        range.depth
+        depth
       );
       if (!ancestor) { return false; } // Cancel if content cannot be inserted at the position specified
 
       if (dispatch) {
         const tr = state.tr;
+
         tr.replaceWith(from, to, fragment);
+
         dispatch(tr.scrollIntoView());
       }
     }
@@ -257,67 +294,35 @@ export function insertTable(at: number, rows: number, cols: number): Command {
 }
 
 /**
- * Changes the parent element's list type from the current cursor position to the one specified
- * @param listType New list node type
- * @param attrs Attrs for the new list node
- * @returns The command to change the parent list type
- */
-export function changeListType(listType: NodeType, attrs?: Attrs | null): Command {
-  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
-    const {$head} = state.selection;
-
-    const isDifferentListType = (node: ProseNode): boolean =>
-      isListNode(node) && areNodeTypesEquals(node.type, listType) && isValidContent(listType, node.content);
-    const listNode = findAncestor($head, isDifferentListType);
-    if (!listNode) { return false; } // Cancel if no different list type with compatible content is found
-
-    if (dispatch) {
-      const tr = state.tr;
-
-      const $anchor = state.selection.$anchor;
-      const from = listNode.before;
-      const to = listNode.nodeSize + listNode.before;
-      const newList = listType.create(attrs, listNode.content);
-
-      tr.replaceWith(from, to, newList);
-      tr.setSelection(new TextSelection(tr.doc.resolve($anchor.pos), tr.doc.resolve($head.pos)));
-
-      dispatch(tr.scrollIntoView());
-    }
-    return true;
-  }
-}
-
-/**
  * Increases indent on selected area
  * @param state State of the editor
  * @param dispatch Dispatch function
  * @returns False if the command cannot be executed
  */
 export const increaseBlockIndent: Command = (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
-  const {$head , $anchor} = state.selection;
+  const {$from, $to, $head , $anchor} = state.selection;
   const range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  const indentableNodesDepth = range.depth;
+  const indentableNodesDepth = range.depth + 1;
   const content = findAllNodesBetween(
-    $head,
-    $anchor,
+    $from,
+    $to,
     (node, pos, depth) => depth === indentableNodesDepth,
   );
-  if (content.length === 0) { return false; } // No nodes inside range (Can't occur in normal circumstances)
+  if (content.length === 0) { return false; }
 
   const isIndentable = (node: ProseNode) => isValidContent(nodeTypes.indent, node);
   const allNodesAreIndentable = content.every(isIndentable);
   if (!allNodesAreIndentable) { return false; } // Can't indent if not all nodes are indentable
 
-  const $from = state.doc.resolve(content[0].start);
-  const $to = state.doc.resolve(content[content.length - 1].end);
-  const wrapRange = new NodeRange($from, $to, range.depth);
+  const $start = state.doc.resolve(content[0].before);
+  const $end = state.doc.resolve(content[content.length - 1].after);
+  const wrapRange = new NodeRange($start, $end, range.depth);
 
   const parent = ancestorAt($anchor, range.depth);
   const isParentIndentNode = areNodeTypesEquals(parent.type, nodeTypes.indent);
-  const isOnlyIndentedContent = parent.content.size === ($to.pos - $from.pos);
+  const isOnlyIndentedContent = parent.content.size === ($end.pos - $start.pos);
 
   // Update indent level if is already wrapped and is the only content of the indentation
   if (isParentIndentNode && isOnlyIndentedContent) {
@@ -357,7 +362,7 @@ export const decreaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
   const range = $head.blockRange($anchor);
   if (!range) { return false; }
 
-  const indentNode = findAncestorOfType(range.$from, nodeTypes.indent);
+  const indentNode = findAncestorOfType(range.$from, nodeTypes.indent, range.depth);
   if (!indentNode) { return false; }
 
   const updatedLevel = indentNode.attrs['level'] - INDENT_LEVEL_STEP;
@@ -392,65 +397,58 @@ export const decreaseBlockIndent: Command = (state: EditorState, dispatch?: (tr:
  * @returns False if the command cannot be executed
  */
 export const increaseListIndent: Command = (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
-  const {$anchor, $head} = state.selection;
-  let range = $anchor.blockRange($head);
+  const {$from, $to, $anchor, $head} = state.selection;
+  const range = $from.blockRange($to);
   if (!range) { return false; }
 
-  const isListItem = (node?: ProseNode | null) => areNodeTypesEquals(node?.type, nodeTypes.list_item);
+  const listNodes = findAllAncestors($from, isListNode, range.depth);
+  if (listNodes.length === 0) { return false; } // Is not inside a list
 
-  const rangeParent = ancestorAt(range.$from, range.depth);
-  let listNode: ExtendedNode;
+  const selectionList = listNodes[0];
+  const baseList = listNodes[listNodes.length - 1];
+  const extBaseList = extendList(baseList, baseList.depth);
 
-  let from: number;
-  let to: number;
+  const firstListElement = findListElement(extBaseList, $from.before(selectionList.depth + 1));
+  const lastListElement = findListElement(extBaseList, $to.before(selectionList.depth + 1));
+  if (!firstListElement || !lastListElement) { return false; } // No list elements can be found
 
-  let selectedFirstChild = false;
-  let selectedAllContent = false;
+  const canIndent = canIndentListItems(extBaseList, firstListElement.item.before, lastListElement.item.before);
+  if (!canIndent) { return false; } // Cannot indent list items
 
-  // Selected a list item or a subsection of it
-  if (isListItem(rangeParent)) {
-    listNode = ancestorAt(range.$from, range.depth - 1);
-
-    from = range.$from.before(range.depth); // Set from just before list_item open tag
-    to = range.$from.after(range.depth);    // Set to just after list_item close tag
-
-    selectedFirstChild = rangeParent === listNode.firstChild;
-  }
-  // Selected multiple list items
-  else if (isListItem(rangeParent.firstChild)) {
-    listNode = rangeParent;
-
-    from = range.$from.before(range.depth + 1); // Set from just before first selected list_item open tag
-    to = range.$to.after(range.depth + 1);      // Set to just after last selected list_item close tag
-
-    selectedFirstChild = listNode.start === from;
-    selectedAllContent =  listNode.content.size === to - from;
-  }
-  // Cancel if no list is detected
-  else { return false; }
-
-  // Cancel if first list item is selected or all list content is selected
-  if (selectedFirstChild || selectedAllContent) { return true; }
-
-  const $from = state.doc.resolve(from);
-  const $to = state.doc.resolve(to);
-  range = new NodeRange($from, $to, range.depth - 1);
-  const wrapping = findWrapping(range, listNode.type);
-  if (!wrapping) { return false; } // Cancel if no wrapping is found
+  const prevItem = firstListElement.list.items[firstListElement.index - 1];
+  if (!prevItem) { return false; } // Previous position does not exist
 
   if (dispatch) {
-    const tr = extendTransaction(state.tr);
+    const tr = state.tr;
 
-    tr.wrap(range, wrapping);
-    if (canJoin(tr.doc, $from.pos)) {
-      tr.join($from.pos);
-    }
-    tr.mapAndSelect($anchor.pos, $head.pos);
+    const posBeforeFirstItem = firstListElement.item.before - selectionList.before;
+    const posEndLastItem = lastListElement.item.end - selectionList.before;
+    const listItemsCut = selectionList.cut(posBeforeFirstItem, posEndLastItem).content;
+
+    const replaceFrom = prevItem.before;
+    const replaceTo = lastListElement.item.end;
+
+    let content = nodeTypes.list_item.create(null, [
+        prevItem.paragraph,
+        prevItem.sublist
+          ? prevItem.sublist.type.create(prevItem.sublist.attrs, prevItem.sublist.content.append(listItemsCut))
+          : selectionList.type.create(null, listItemsCut)
+      ]
+    );
+    tr.replaceWith(replaceFrom, replaceTo, content);
+
+    const selectionPosDiff = prevItem.sublist
+      ? -2 // -2 because we remove a list closing tag and list item closing tag from ahead
+      : 0;
+    const $newAnchor = goTo(tr.doc, $anchor.pos + selectionPosDiff);
+    const $newHead = goTo(tr.doc, $head.pos + selectionPosDiff);
+    tr.setSelection(new TextSelection($newAnchor, $newHead));
 
     dispatch(tr.scrollIntoView());
   }
   return true;
 }
+
 
 /**
  * Decreases the indent of the selected list item node content
@@ -459,22 +457,220 @@ export const increaseListIndent: Command = (state: EditorState, dispatch?: (tr: 
  * @returns False if the command cannot be executed
  */
 export const decreaseListIndent: Command = (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
-  const {$anchor, $head} = state.selection;
-  let range = $anchor.blockRange($head);
+  const initialSelection = state.selection;
+  const {$from, $to} = initialSelection;
+  const range = $from.blockRange($to);
   if (!range) { return false; }
 
-  const listNodes = findAllAncestors(range.$from, isListNode, range.depth);
-  if (listNodes.length < 2) { return false; } // Cancel if list does not have a parent list wrapping it
+  const listNodes = findAllAncestors($from, isListNode, range.depth);
+  if (listNodes.length === 0) { return false; } // Is not inside a list
+
+  const selectionList = listNodes[0];
+  const baseList = listNodes[listNodes.length - 1];
+  const extBaseList = extendList(baseList, baseList.depth);
+
+  const firstListElement = findListElement(extBaseList, $from.before(selectionList.depth + 1));
+  const lastListElement = findListElement(extBaseList, $to.before(selectionList.depth + 1));
+  if (!firstListElement || !lastListElement) { return false; } // No list elements can be found
+
+  const canDeindent = canDeindentListItems(extBaseList, firstListElement.item.before, lastListElement.item.before);
+  if (!canDeindent) { return false; } // Cannot indent list items
 
   if (dispatch) {
-    const tr = extendTransaction(state.tr);
+    const tr = state.tr;
 
-    const listToUnwrap = listNodes[0];
-    tr.unwrapNode(listToUnwrap);
+    if (listNodes.length === 1) {
+      deindentFromBaseList(tr, initialSelection, extBaseList, firstListElement.index, lastListElement.index);
+    }
+    else {
+      const parentItem = ancestorAt($from, selectionList.depth - 1);
+      const parent = findListElement(extBaseList, parentItem.before)!;
 
+      deindentFromSubList(tr, initialSelection, parent.list, parent.item, selectionList, firstListElement.item, lastListElement.item);
+    }
     dispatch(tr.scrollIntoView());
   }
   return true;
+}
+
+// Helper function to deindent a list when it is the base list
+function deindentFromBaseList(
+  tr: Transaction,
+  initialSelection: Selection,
+  baseList: ExtendedList,
+  firstSelectedItemIndex: number,
+  lastSelectedItemIndex: number,
+) {
+  const beforeDeindentContent: ProseNode[] = [];
+  const extractedNodes: ProseNode[] = [];
+  let afterDeindentContent: Fragment = Fragment.empty;
+
+  let toPosDiff = 0;
+
+  let i = 0;
+  // Before selection
+  for (; i < firstSelectedItemIndex; i++) {
+    beforeDeindentContent.push(baseList.items[i]);
+  }
+
+  // Inside selection and before last item selected
+  for (; i < lastSelectedItemIndex; i++) {
+    const li = baseList.items[i];
+    extractedNodes.push(
+      li.paragraph,
+      ...(li.sublist ? [li.sublist] : [])
+    );
+    toPosDiff -= 2;
+  }
+
+  // Last item selected
+  const lastElement = baseList.items[i];
+  i++;
+
+  // After selection
+  for (; i < baseList.items.length; i++) {
+    afterDeindentContent = afterDeindentContent.append(
+      Fragment.from(baseList.items[i])
+    );
+  }
+
+  extractedNodes.push(lastElement.paragraph);
+  const listLE = lastElement.sublist;
+  extractedNodes.push(listLE
+    ? listLE.type.create(listLE.attrs, listLE.content.append(afterDeindentContent))
+    : baseList.type.create(baseList.attrs, afterDeindentContent)
+  );
+
+
+
+  const fragmentFromListSlice = (nodes: ProseNode[]) =>
+    nodes.length > 0
+      ? Fragment.from(baseList.type.create(baseList.attrs, nodes))
+      : Fragment.empty;
+
+  const replacedContent = Fragment.empty
+    .append(fragmentFromListSlice(beforeDeindentContent))
+    .append(Fragment.from(extractedNodes));
+
+  tr.replaceWith(baseList.before, baseList.end, replacedContent);
+
+  const {$anchor, $head} = initialSelection;
+  const isAnchorBefore = $anchor.pos <= $head.pos;
+  const correspondingDiff = (isAnchor: boolean) => isAnchor === isAnchorBefore ? 0 : toPosDiff;
+
+  const $newAnchor = goTo(tr.doc, $anchor.pos + correspondingDiff(true));
+  const $newHead = goTo(tr.doc, $head.pos + correspondingDiff(false));
+  tr.setSelection(new TextSelection($newAnchor, $newHead));
+}
+
+// Helper function to deindent a list when it is not the base list
+function deindentFromSubList(
+  tr: Transaction,
+  initialSelection: Selection,
+  parentList: ExtendedNode,
+  parentListSelectedItem: ExtendedListItem,
+  selectionList: ExtendedNode,
+  firstSelectedItem: ExtendedListItem,
+  lastSelectedItem: ExtendedListItem,
+) {
+
+  //    FS | 1LI                        1LI
+  //       | 2LI                        2LI
+  //       | 3LI                        3LI
+  //          ·                          ·
+  //    SI | 4LI                        4LI
+  //          ·                          ·
+  // SI_BS |  - 4.1LI                    - 4.1LI
+  //          ·                          ·
+  // SI_SS |  - 4.2LI <<[Selection]     4.2LI
+  //       |  - 4.3LI <<[Selection]     4.3LI
+  //          ·                          ·
+  // SI_SL |  - 4.4LI <<[Selection]     4.4LI
+  //          ·                          ·
+  // SI_AS |  - 4.5LI                    - 4.5LI
+  //          ·                          ·
+  //    LS | 5LI                        5LI
+  //       | 6LI                        6LI
+  //       | 7LI                        7LI
+
+  const offsetFromParentList = (pos: number) => offsetFrom(parentList.before, pos);
+  const offsetFromSelectionList = (pos: number) => offsetFrom(selectionList.before, pos);
+
+  // FS - List content before sublist item
+  const startFS = offsetFromParentList(parentList.before);
+  const endFS = offsetFromParentList(parentListSelectedItem.before - 1); // -1 to remove unmatched closing tags
+  const FS = parentList.cut(startFS, endFS).content;
+
+  // LS - List content after sublist item
+  const startLS = offsetFromParentList(parentListSelectedItem.after);
+  const endLS = offsetFromParentList(parentList.end - 1); // -1 to remove unmatched closing tags
+  const LS = parentList.cut(startLS, endLS).content;
+
+  // SI_BS - Sublist item until selection start
+  const startSI_BS = offsetFromSelectionList(selectionList.start);
+  const endSI_BS = offsetFromSelectionList(firstSelectedItem.before - 1); // -1 to remove unmatched closing tags
+  const SI_BS = selectionList.cut(startSI_BS, endSI_BS).content;
+
+  // SI + SI_BS - List item with selection + Sublist item until selection start
+  const SI__SI_BS = Fragment.from(
+    parentListSelectedItem.type.create(
+      parentListSelectedItem.attrs,
+      [
+        parentListSelectedItem.paragraph,
+        ...(SI_BS.childCount > 0 ? [selectionList.type.create(selectionList.attrs, SI_BS)] : [])
+      ]
+    )
+  );
+
+  // SI_AS - Sublist items after last item
+  const startSI_AS = offsetFromSelectionList(lastSelectedItem.after);
+  const endSI_AS = offsetFromSelectionList(selectionList.end - 1); // -1 to remove unmatched closing tags
+  const SI_AS = selectionList.cut(startSI_AS, endSI_AS).content;
+
+  // SI_SS - Sublist minus last selected item & rest
+  const startSI_SS = offsetFromSelectionList(firstSelectedItem.before);
+  const endSI_SS = offsetFromSelectionList(lastSelectedItem.before - 1); // -1 to remove unmatched closing tags
+  const SI_SS = selectionList.cut(startSI_SS, endSI_SS).content;
+
+  // SI_SL + SI_AS - Last item & rest
+  const lastItemSublist = lastSelectedItem.sublist;
+  const isEmptySI_AS = SI_AS.childCount === 0;
+
+  const contentListSI_SL = Fragment.empty
+    .append(lastItemSublist?.content ?? Fragment.empty)
+    .append(isEmptySI_AS ? Fragment.empty : SI_AS);
+
+  const contentSI_SL__SI_AS: ProseNode[] = [
+    lastSelectedItem.paragraph,
+    ...(
+      lastItemSublist
+        ? [lastItemSublist.type.create(lastItemSublist.attrs, contentListSI_SL)]
+        : (isEmptySI_AS ? [] : [selectionList.type.create(null, contentListSI_SL)])
+    )
+  ];
+
+  const SI_SL__SI_AS = Fragment.from(
+    lastSelectedItem.type.create(lastSelectedItem.attrs, contentSI_SL__SI_AS)
+  );
+
+  // Replace parent list with modified parent list
+  const newParentListContent = Fragment.empty
+    .append(FS)
+    .append(SI__SI_BS)
+    .append(SI_SS)
+    .append(SI_SL__SI_AS)
+    .append(LS)
+  const newParentList = parentList.type.create(parentList.attrs, newParentListContent);
+
+  tr.replaceWith(parentList.before, parentList.end, newParentList);
+
+  const {$anchor, $head} = initialSelection;
+  const selectionPosDiff = SI_BS.childCount === 0
+    ? 0
+    : 2; // +2 because we add a list closing tag and a list item closing tag ahead
+  const $newAnchor = goTo(tr.doc, $anchor.pos + selectionPosDiff);
+  const $newHead = goTo(tr.doc, $head.pos + selectionPosDiff);
+  tr.setSelection(new TextSelection($newAnchor, $newHead));
 }
 
 /**
@@ -492,6 +688,131 @@ export const increaseIndent: Command = chainCommands(increaseListIndent, increas
  * @returns False if command cannot be executed
  */
 export const decreaseIndent: Command = chainCommands(decreaseListIndent, decreaseBlockIndent);
+
+/**
+ * Changes the parent element's list type from the current cursor position to the one specified
+ * @param listType New list node type
+ * @param attrs Attrs for the new list node
+ * @returns The command to change the parent list type
+ */
+export function changeListType(listType: NodeType, attrs?: Attrs | null): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const {$from, $to} = state.selection;
+    const range = $from.blockRange($to);
+    if (!range) { return false; }
+
+    const isDifferentListType = (node: ProseNode): boolean =>
+      isListNode(node) && !areNodeTypesEquals(node.type, listType) && isValidContent(listType, node.content);
+    const listNode = findAncestor($from, isDifferentListType, range.depth);
+    if (!listNode) { return false; } // Cancel if no different list type with compatible content is found
+
+    if (dispatch) {
+      const tr = state.tr;
+
+      tr.setNodeMarkup(listNode.before, listType, attrs);
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+/**
+ * Unwraps the selected list type
+ * @param listType List type to unwrap
+ * @returns The command to unwrap a list
+ */
+export function unwrapFromList(listType: NodeType): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const {$from, $to} = state.selection;
+    const range = $from.blockRange($to);
+    if (!range) { return false; }
+
+    const wrapper = findAncestor($from, isListNode, range.depth);
+    if (!wrapper || !areNodeTypesEquals(wrapper.type, listType)) { return false; } // The nearest list is not from the specified type
+
+    if (dispatch) {
+      const tr = extendTransaction(state.tr);
+
+      const wrapperParent = ancestorAt($from, wrapper.depth - 1);
+      const children: ProseNode[] = [];
+      for (let i = 0; i < wrapper.childCount; i++) {
+        const child = wrapper.child(i);
+        children.push(isValidContent(wrapperParent.type, child) ? child : child.child(0));
+      }
+      tr.replaceWith(wrapper.before, wrapper.after, children);
+
+      const $pos = tr.doc.resolve(wrapper.start);
+      tr.setSelection(new TextSelection($pos, $pos));
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
+
+/**
+ * Wraps the selected items into a list
+ * @param listType List type use as wrap
+ * @returns The command to wrap elements into a list
+ */
+export function wrapInList(listType: NodeType): Command {
+  return function (state: EditorState, dispatch?: (tr: Transaction) => void): boolean {
+    const {$from, $to} = state.selection;
+    const range = $from.blockRange($to);
+    if (!range) { return false; }
+
+    if (!isListNodeType(listType)) { return false } // Cancel if it is not a valid list type
+
+    const listNodesDepth = range.depth + 1;
+    const nodes = findAllNodesBetween($from, $to,
+      (node, pos, depth) => depth === listNodesDepth
+    );
+
+    if (nodes.length === 0) { return false; } // Cancel if no children is found
+
+    const parent = ancestorAt($from, range.depth);
+
+    if (isListItemNode(parent) || isListNode(parent)) { return false; } // Cancel wrap if it is inside a list
+
+    if (!nodes.every(node =>
+      isValidContent(listType, node) || isValidContent(nodeTypes.list_item, node)
+    )) { return false; } // All elements must be a list or valid content for a list item
+
+    if (dispatch) {
+      const tr = extendTransaction(state.tr);
+
+      const parsedNodes = nodes.map((node) =>
+        isValidContent(listType, node) ? node : nodeTypes.list_item.create(null, node)
+      );
+
+      let list: ProseNode;
+      // Replace current list & append elements
+      const firstNode = parsedNodes[0];
+      if (isListNode(firstNode)) {
+        list = listType.create(null, firstNode.content.append(Fragment.from(parsedNodes.slice(1))));
+      }
+      // Create a list normally
+      else {
+        list = listType.create(null, parsedNodes);
+      }
+
+      const from = nodes[0].before;
+      const to = nodes[nodes.length - 1].after;
+
+      tr.replaceWith(from, to, list);
+
+      const newPosNode = findNodeBetween(tr.doc.resolve(from), tr.doc.resolve(to), (node) => node.inlineContent);
+      if (newPosNode) {
+        const $pos = tr.doc.resolve(newPosNode.start);
+        tr.setSelection(new TextSelection($pos, $pos));
+      }
+
+      dispatch(tr.scrollIntoView());
+    }
+    return true;
+  }
+}
 
 /**
  * Replaces a selection in a list node with a new list item
@@ -522,9 +843,7 @@ export const newListItem: Command = (state: EditorState, dispatch?: (tr: Transac
  * @return Command of the chained commmands
  */
 export const listCommands = (listType: NodeType): Command =>
-  chainCommands(wrapInList(listType), changeListType(listType));
-  // TODO: unwrapList
-  // chainCommands(wrapInList(this.type), changeListType(this.type), unwrapList(this.type));
+  chainCommands(unwrapFromList(listType), changeListType(listType), wrapInList(listType));
 
 /**
  * Replaces a selection in a node with a new line
@@ -654,7 +973,7 @@ export function changeTextAlignment(alignment?: AlignmentStyle): Command {
       const tr = state.tr;
 
       for (const paragraph of alignableChildNodes) {
-        tr.setNodeAttribute(paragraph.before, 'alignment',  alignment);
+        tr.setNodeAttribute(paragraph.before, AlignableNodeData.ATTR_NAME,  alignment);
       }
 
       dispatch(tr.scrollIntoView());

@@ -6,10 +6,11 @@
  * @param props Properties to add
  * @returns Reference to the given object with the updated props for chaining
  */
-export function addProps<R extends object = object>(item: object, props: { [p in keyof R]?: R[p] }): R {
+export function addProps<R extends T, T = object>(item: T, props: { [p in keyof Omit<R, keyof T>]: R[p] }): R {
   const ref = item as R;
   for (let prop in props) {
-    ref[prop] = props[prop]!;
+    const p = prop as keyof Omit<R, keyof T>;
+    ref[p] = props[p];
   }
   return ref;
 }

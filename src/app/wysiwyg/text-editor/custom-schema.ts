@@ -8,8 +8,7 @@ import {
   ParseRule,
   Schema
 } from 'prosemirror-model';
-import {bulletList, listItem, orderedList} from 'prosemirror-schema-list';
-import {groupChain, groupOr, groupRange} from "../utilities/node-groups-helper";
+import {groupChain, groupRange} from "../utilities/node-groups-helper";
 import {tableNodes} from 'prosemirror-tables';
 import {generateStyles} from '../utilities/multipurpose-helper';
 
@@ -46,6 +45,28 @@ export function getDOMAttrs(dom: string | HTMLElement, f: (dom: HTMLElement) => 
   return f(dom);
 }
 
+/// Alignment ///
+export enum AlignmentStyle {
+  LEFT = 'left',
+  CENTER = 'center',
+  RIGHT = 'right',
+  JUSTIFY = 'justify',
+}
+
+export enum AlignmentType {
+  BLOCK = 'block',
+  TEXT = 'text',
+}
+
+export enum AlignableNodeData {
+  ATTR_NAME = 'alignment',
+  DEFAULT_VALUE = AlignmentStyle.LEFT,
+}
+
+export type AlignableNode = ProseNode & Readonly<{ attrs: Attrs & {
+  [AlignableNodeData.ATTR_NAME]: AlignmentStyle,
+} }>;
+
 /**
  * Adds all needed logic for the block to be an alignable block
  * - `alignment` attribute
@@ -59,9 +80,9 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 	if (!spec.toDOM) { return spec; } // If no transformation to DOM nodes present, cannot be aligned
 
 	const group: string = groupChain(spec.group || '', NodeGroups.ALIGNABLE);
-	const attrs: {[attr: string]: AttributeSpec} = {
+	const attrs: {[attr: string | AlignableNodeData]: AttributeSpec} = {
 		...spec.attrs,
-		alignment: { default: AlignmentStyle.LEFT },
+    [AlignableNodeData.ATTR_NAME]: { default: AlignableNodeData.DEFAULT_VALUE },
 	};
 	const parseDOM: ParseRule[] | undefined = spec.parseDOM?.map(rule => ({
 		...rule,
@@ -106,9 +127,9 @@ export function alignable(type: AlignmentType, spec: NodeSpec): NodeSpec {
 		// DOMOutputSpec is a string
 		if (typeof(dom) === 'string') { return dom; } // Cannot change string -> Logic too complicated
 
-    const alignment = type !== AlignmentType.TEXT && node.attrs['alignment'] === AlignmentStyle.JUSTIFY
+    const alignment = type !== AlignmentType.TEXT && node.attrs[AlignableNodeData.ATTR_NAME] === AlignmentStyle.JUSTIFY
       ? AlignmentStyle.LEFT
-      : node.attrs['alignment'];
+      : node.attrs[AlignableNodeData.ATTR_NAME];
 
 		// DOMOutputSpec is an array
 		if ('length' in dom) {
@@ -228,24 +249,10 @@ export enum NodeGroups {
 
 // List constants
 const LIST_GROUPS = groupChain(NodeGroups.BLOCK, NodeGroups.LIST);
-const LIST_CONTENT = groupRange(groupOr('list_item', NodeGroups.LIST), 0);
-const LIST_ITEM_CONTENT = groupRange('inline', 0);
+const LIST_CONTENT = groupRange(NodeSpecs.LIST_ITEM, 0);
 
 // Indent constants
 export const INDENT_LEVEL_STEP = 1;
-
-// Alignment types
-export enum AlignmentStyle {
-	LEFT = 'left',
-	CENTER = 'center',
-	RIGHT = 'right',
-	JUSTIFY = 'justify',
-}
-
-export enum AlignmentType {
-	BLOCK = 'block',
-	TEXT = 'text',
-}
 
 const tableNodesMap = tableNodes({
   tableGroup: NodeGroups.BLOCK,
@@ -312,10 +319,22 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
       { tag: 'h1', attrs: { level: 1 } },
       { tag: 'h2', attrs: { level: 2 } },
       { tag: 'h3', attrs: { level: 3 } },
-      { tag: 'h4', attrs: { level: 4 } },
-      { tag: 'h5', attrs: { level: 5 } },
-      { tag: 'h6', attrs: { level: 6 } }
+      { tag: 'h4', attrs: { level: 3 } }, // Max level is 3
+      { tag: 'h5', attrs: { level: 3 } }, // Max level is 3
+      { tag: 'h6', attrs: { level: 3 } }, // Max level is 3
     ],
+    marks: groupChain(
+      MarkSpecs.BOLD,
+      MarkSpecs.ITALIC,
+      MarkSpecs.LINK,
+      MarkSpecs.SUPERSCRIPT,
+      MarkSpecs.SUBSCRIPT,
+      MarkSpecs.FONT_FAMILY,
+      MarkSpecs.FONT_BACKGROUND,
+      MarkSpecs.FONT_COLOR,
+      MarkSpecs.STRIKETHROUGH,
+      MarkSpecs.UNDERLINE,
+    ),
     toDOM: (node) => toDOM(`h${node.attrs['level']}`, null, 0),
   }),
   // Code block
@@ -363,20 +382,36 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
   }),
   // Ordered list
   [NodeSpecs.ORDERED_LIST]: {
-    ...orderedList,
     content: LIST_CONTENT,
     group: LIST_GROUPS,
+    attrs: {
+      order: { default: 1 }
+    },
+    parseDOM: [{
+      tag: 'ol',
+      getAttrs: (dom) => getDOMAttrs(dom, (dom) => ({
+        order: dom.hasAttribute("start") ? +dom.getAttribute("start")! : 1
+      })),
+    }],
+    toDOM: (node) => toDOM('ol', {start: node.attrs['order']}, 0),
   },
 	// Bullet list
 	[NodeSpecs.BULLET_LIST]: {
-		...bulletList,
 		content: LIST_CONTENT,
 		group: LIST_GROUPS,
+    parseDOM: [{
+      tag: 'ul',
+    }],
+    toDOM: () => toDOM('ul', null, 0),
 	},
   // List item
   [NodeSpecs.LIST_ITEM]: {
-    ...listItem,
-    content: LIST_ITEM_CONTENT,
+    content: groupChain(NodeSpecs.PARAGRAPH, groupRange(NodeGroups.LIST, 0, 1)),
+    defining: true,
+    parseDOM: [{
+      tag: 'li',
+    }],
+    toDOM: () => toDOM('li', null, 0),
   },
   // Indent
   [NodeSpecs.INDENT]: {
@@ -449,6 +484,78 @@ export const schemaNodes: {[node in NodeSpecs]: NodeSpec} = {
 
 // Schema marks //
 export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
+  // Text color
+  [MarkSpecs.FONT_COLOR]: {
+    attrs: {
+      color: { },
+    },
+    parseDOM: [{
+      tag: '*',
+      consuming: false,
+      getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+        const color = dom.style.color;
+        return color ? { color } : false;
+      }),
+    }],
+    toDOM: (mark) => toDOM('span', {
+      class: 'font-color',
+      style: generateStyles({'--font-color': mark.attrs['color']})
+    }, 0),
+  },
+  // Background color
+  [MarkSpecs.FONT_BACKGROUND]: {
+    attrs: {
+      color: { },
+    },
+    parseDOM: [{
+      tag: '*',
+      consuming: false,
+      getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+        const color = dom.style.backgroundColor;
+        return color ? { color } : false;
+      }),
+    }],
+    toDOM: (mark) => toDOM('span', {
+      class: 'font-background',
+      style: generateStyles({'--font-background': mark.attrs['color']})
+    }, 0),
+  },
+  // Font family
+  [MarkSpecs.FONT_FAMILY]: {
+    attrs: {
+      family: { },
+    },
+    parseDOM: [{
+      tag: '*',
+      consuming: false,
+      getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+        const family = dom.style.fontFamily;
+        return family ? { family } : false;
+      }),
+    }],
+    toDOM: (mark) => toDOM('span', {
+      class: 'font-family',
+      style: generateStyles({'--font-family': mark.attrs['family']})
+    }, 0),
+  },
+  // Font size
+  [MarkSpecs.FONT_SIZE]: {
+    attrs: {
+      size: { },
+    },
+    parseDOM: [{
+      tag: '*',
+      consuming: false,
+      getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
+        const size = dom.style.fontSize;
+        return size ? { size } : false;
+      }),
+    }],
+    toDOM: (mark) => toDOM('span', {
+      class: 'font-size',
+      style: generateStyles({'--font-size': mark.attrs['size']})
+    }, 0),
+  },
   // Link
   [MarkSpecs.LINK]: {
     attrs: {
@@ -568,78 +675,6 @@ export const schemaMarks: {[mark in MarkSpecs]: MarkSpec} = {
       MarkSpecs.SUPERSCRIPT,
     ),
   },
-  // Text color
-  [MarkSpecs.FONT_COLOR]: {
-    attrs: {
-      color: { },
-    },
-    parseDOM: [{
-      tag: '*',
-      consuming: false,
-      getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
-        const color = dom.style.color;
-        return color ? { color } : false;
-      }),
-    }],
-    toDOM: (mark) => toDOM('span', {
-      class: 'font-color',
-      style: generateStyles({'--font-color': mark.attrs['color']})
-    }, 0),
-  },
-	// Background color
-	[MarkSpecs.FONT_BACKGROUND]: {
-		attrs: {
-			color: { },
-		},
-		parseDOM: [{
-			tag: '*',
-			consuming: false,
-			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
-				const color = dom.style.backgroundColor;
-				return color ? { color } : false;
-			}),
-		}],
-		toDOM: (mark) => toDOM('span', {
-      class: 'font-background',
-			style: generateStyles({'--font-background': mark.attrs['color']})
-		}, 0),
-	},
-	// Font family
-	[MarkSpecs.FONT_FAMILY]: {
-		attrs: {
-			family: { },
-		},
-		parseDOM: [{
-			tag: '*',
-			consuming: false,
-			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
-				const family = dom.style.fontFamily;
-				return family ? { family } : false;
-			}),
-		}],
-		toDOM: (mark) => toDOM('span', {
-      class: 'font-family',
-			style: generateStyles({'--font-family': mark.attrs['family']})
-		}, 0),
-	},
-	// Font size
-	[MarkSpecs.FONT_SIZE]: {
-		attrs: {
-			size: { },
-		},
-		parseDOM: [{
-			tag: '*',
-			consuming: false,
-			getAttrs: (dom) => getDOMAttrs(dom, (dom) => {
-				const size = dom.style.fontSize;
-				return size ? { size } : false;
-			}),
-		}],
-		toDOM: (mark) => toDOM('span', {
-      class: 'font-size',
-			style: generateStyles({'--font-size': mark.attrs['size']})
-		}, 0),
-	},
 };
 
 /// CUSTOM SCHEMA ///

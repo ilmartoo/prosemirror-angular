@@ -27,12 +27,12 @@ export class MenuItemPopupLinkComponent extends MenuItemPopupForActionComponent<
 
     // If open when a link is on head
     if (selectedLink && markRange) {
-      this.setValue(this.INPUTS.TITLE, textBetween(state.doc, markRange.start, markRange.end));
+      this.setValue(this.INPUTS.TITLE, textBetween(state.doc, markRange.$from.pos, markRange.$to.pos));
       this.setValue(this.INPUTS.REFERENCE, selectedLink.attrs['href'] as string);
 
       this.selection = {
-        from: markRange.start,
-        to: markRange.end,
+        from: markRange.$from.pos,
+        to: markRange.$to.pos,
         isLink: true,
       };
     }

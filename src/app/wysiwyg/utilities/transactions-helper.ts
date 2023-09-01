@@ -43,7 +43,7 @@ export type ExtendedTransaction = Transaction & {
  */
 export function extendTransaction(tr: Transaction): ExtendedTransaction {
   const extr = tr as ExtendedTransaction;
-  return addProps<ExtendedTransaction>(tr, {
+  return addProps<ExtendedTransaction, Transaction>(tr, {
     mapAndResolveResolvedPos: ($pos: ResolvedPos) => mapAndResolveResolvedPos(extr, $pos),
     mapAndResolvePos: (pos: number) => mapAndResolvePos(extr, pos),
     unwrapNode: (node: ExtendedNode) => unwrapNode(extr, node),

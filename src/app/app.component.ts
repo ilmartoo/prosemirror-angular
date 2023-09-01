@@ -9,7 +9,7 @@ import {menuItemTypes} from './wysiwyg/menu-item/menu-item-types';
 export class AppComponent {
   title = 'Prosemirror Demo';
 
-  protected readonly MENU_ITEM_TYPES = menuItemTypes;
+  protected readonly menuItemTypes = menuItemTypes;
   protected readonly initialData =
     '<h1><strong>[ TEXT STYLING ]</strong></h1>' +
     '<p>' +
@@ -45,6 +45,10 @@ export class AppComponent {
     ' - ' +
     '<span style="font-size: 60">huge</span>' +
     '</p>' +
+    ' ' +
+    '<p style="text-align: left">Left aligned text</p>' +
+    '<p style="text-align: center">Center aligned text</p>' +
+    '<p style="text-align: right">Right aligned text</p>' +
 
     '<p></p>' +
 
@@ -150,9 +154,9 @@ export class AppComponent {
              '$ sudo rm -rf /*' +
     '      </code></pre>' +
     '    </td>' +
-    '    <td><p style="text-align: left">Left aligned text TODO</p></td>' +
-    '    <td><p style="text-align: center">Center aligned text TODO</p></td>' +
-    '    <td><p style="text-align: right">Right aligned text TODO</p></td>' +
+    '    <td><p style="text-align: left">Left aligned text</p></td>' +
+    '    <td><p style="text-align: center">Center aligned text</p></td>' +
+    '    <td><p style="text-align: right">Right aligned text</p></td>' +
     '  </tr>' +
     '</table>' +
     '';

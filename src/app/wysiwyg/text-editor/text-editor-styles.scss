@@ -1,5 +1,5 @@
 .text-editor {
-  // Overflow pass
+  overflow: hidden;
 
   app-menu {
     position: sticky;
@@ -17,10 +17,9 @@
   }
 
   .prosemirror-wrapper {
-    overflow: hidden auto; // Element that scrolls
     overflow-wrap: normal;
 
-    padding-inline: 0.25rem;
+    padding-inline: 1rem;
 
     .ProseMirror {
       white-space: pre-wrap;

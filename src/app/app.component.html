@@ -3,51 +3,55 @@
   <app-text-editor class="editor" [initialData]="initialData">
 
     <!-- Basic marks -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.bold"
+    <app-menu-item-for-action [action]="menuItemTypes.bold"
                               icon="bold"
                               tooltip="Bold"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.italic"
+    <app-menu-item-for-action [action]="menuItemTypes.italic"
                               icon="italic"
                               tooltip="Italic"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.underline"
+    <app-menu-item-for-action [action]="menuItemTypes.underline"
                               icon="underline"
                               tooltip="Underline"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.strikethrough"
+    <app-menu-item-for-action [action]="menuItemTypes.strikethrough"
                               icon="strikethrough"
                               tooltip="Strikethrough"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.superscript"
+    <app-menu-item-for-action [action]="menuItemTypes.superscript"
                               icon="superscript"
                               tooltip="Superscript"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.subscript"
+    <app-menu-item-for-action [action]="menuItemTypes.subscript"
                               icon="subscript"
                               tooltip="Subscript"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.inline_code"
+    <app-menu-item-for-action [action]="menuItemTypes.inline_code"
                               icon="code"
                               tooltip="Inline code"
+    ></app-menu-item-for-action>
+    <app-menu-item-for-action [action]="menuItemTypes.clear_format"
+                              icon="clear-format"
+                              tooltip="Clear format"
     ></app-menu-item-for-action>
 
     <app-menu-item-separator></app-menu-item-separator>
 
-    <!-- Colors -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_color"
+    <!-- Font -->
+    <app-menu-item-for-action [action]="menuItemTypes.font_color"
                               icon="font-color"
                               tooltip="Text color"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_background"
+    <app-menu-item-for-action [action]="menuItemTypes.font_background"
                               icon="font-background"
                               tooltip="Background color"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_family"
+    <app-menu-item-for-action [action]="menuItemTypes.font_family"
                               icon="font-family"
                               tooltip="Font type"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.font_size"
+    <app-menu-item-for-action [action]="menuItemTypes.font_size"
                               icon="font-size"
                               tooltip="Font size"
     ></app-menu-item-for-action>
@@ -55,15 +59,15 @@
     <app-menu-item-separator></app-menu-item-separator>
 
     <!-- Special marks & nodes -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.link"
+    <app-menu-item-for-action [action]="menuItemTypes.link"
                               icon="link"
                               tooltip="Create link"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.remove_link"
+    <app-menu-item-for-action [action]="menuItemTypes.remove_link"
                               icon="link-remove"
                               tooltip="Delete link"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.image"
+    <app-menu-item-for-action [action]="menuItemTypes.image"
                               icon="image"
                               tooltip="Insert image"
     ></app-menu-item-for-action>
@@ -71,7 +75,7 @@
     <app-menu-item-separator></app-menu-item-separator>
 
     <!-- KaTeX -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.katex_formula"
+    <app-menu-item-for-action [action]="menuItemTypes.katex_formula"
                               icon="function"
                               tooltip="Function"
     ></app-menu-item-for-action>
@@ -79,35 +83,35 @@
     <app-menu-item-separator></app-menu-item-separator>
 
     <!-- Table -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.create_table"
+    <app-menu-item-for-action [action]="menuItemTypes.create_table"
                               icon="table-plus"
                               tooltip="Create table"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.delete_table"
+    <app-menu-item-for-action [action]="menuItemTypes.delete_table"
                               icon="table-remove"
                               tooltip="Delete table"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_column_before"
+    <app-menu-item-for-action [action]="menuItemTypes.add_table_column_before"
                               icon="table-column-plus-before"
                               tooltip="Add column before"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_column_after"
+    <app-menu-item-for-action [action]="menuItemTypes.add_table_column_after"
                               icon="table-column-plus-after"
                               tooltip="Add column after"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.delete_table_row"
+    <app-menu-item-for-action [action]="menuItemTypes.delete_table_row"
                               icon="table-row-remove"
                               tooltip="Delete row"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_row_before"
+    <app-menu-item-for-action [action]="menuItemTypes.add_table_row_before"
                               icon="table-row-plus-before"
                               tooltip="Add row before"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.add_table_row_after"
+    <app-menu-item-for-action [action]="menuItemTypes.add_table_row_after"
                               icon="table-row-plus-after"
                               tooltip="Add row after"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.delete_table_column"
+    <app-menu-item-for-action [action]="menuItemTypes.delete_table_column"
                               icon="table-column-remove"
                               tooltip="Delete column"
     ></app-menu-item-for-action>
@@ -115,27 +119,27 @@
     <app-menu-item-separator></app-menu-item-separator>
 
     <!-- Basic nodes -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.paragraph"
+    <app-menu-item-for-action [action]="menuItemTypes.paragraph"
                               icon="paragraph"
                               tooltip="Paragraph"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.heading_1"
+    <app-menu-item-for-action [action]="menuItemTypes.heading_1"
                               icon="header1"
                               tooltip="Header 1"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.heading_2"
+    <app-menu-item-for-action [action]="menuItemTypes.heading_2"
                               icon="header2"
                               tooltip="Header 2"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.heading_3"
+    <app-menu-item-for-action [action]="menuItemTypes.heading_3"
                               icon="header3"
                               tooltip="Header 3"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.blockquote"
+    <app-menu-item-for-action [action]="menuItemTypes.blockquote"
                               icon="blockquote"
                               tooltip="Quote text"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.code_block"
+    <app-menu-item-for-action [action]="menuItemTypes.code_block"
                               icon="code-block"
                               tooltip="Code block"
     ></app-menu-item-for-action>
@@ -143,19 +147,19 @@
     <app-menu-item-separator></app-menu-item-separator>
 
     <!-- Text alignment -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.left_alignment"
+    <app-menu-item-for-action [action]="menuItemTypes.left_alignment"
                               icon="align_left"
                               tooltip="Left align text"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.centered_alignment"
+    <app-menu-item-for-action [action]="menuItemTypes.centered_alignment"
                               icon="align_centered"
                               tooltip="Center text"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.right_alignment"
+    <app-menu-item-for-action [action]="menuItemTypes.right_alignment"
                               icon="align_right"
                               tooltip="Right align text"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.justified_alignment"
+    <app-menu-item-for-action [action]="menuItemTypes.justified_alignment"
                               icon="align_justified"
                               tooltip="Justify text"
     ></app-menu-item-for-action>
@@ -163,11 +167,11 @@
     <app-menu-item-separator></app-menu-item-separator>
 
     <!-- Lists -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.bullet_list"
+    <app-menu-item-for-action [action]="menuItemTypes.bullet_list"
                               icon="list-bullet"
                               tooltip="Bullet list"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.ordered_list"
+    <app-menu-item-for-action [action]="menuItemTypes.ordered_list"
                               icon="list-ordered"
                               tooltip="Ordered list"
     ></app-menu-item-for-action>
@@ -178,11 +182,11 @@
     <!--  ></app-menu-item>-->
 
     <!-- Indents -->
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.deindent"
+    <app-menu-item-for-action [action]="menuItemTypes.deindent"
                               icon="indent-decrease"
                               tooltip="Decrease indent"
     ></app-menu-item-for-action>
-    <app-menu-item-for-action [action]="MENU_ITEM_TYPES.indent"
+    <app-menu-item-for-action [action]="menuItemTypes.indent"
                               icon="indent-increase"
                               tooltip="Increase indent"
     ></app-menu-item-for-action>

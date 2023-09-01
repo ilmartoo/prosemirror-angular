@@ -1,5 +1,5 @@
 import {Command, EditorState} from 'prosemirror-state';
-import {AlignmentStyle, markTypes, nodeTypes} from '../text-editor/custom-schema';
+import {AlignableNodeData, AlignmentStyle, markTypes, nodeTypes} from '../text-editor/custom-schema';
 import {Attrs, Mark, MarkType, NodeType} from 'prosemirror-model';
 import {setBlockType, toggleMark} from 'prosemirror-commands';
 import {
@@ -11,12 +11,11 @@ import {
 } from '../utilities/marks-helper';
 import {
   AncestorNode,
-  ancestorNodesAtCursor,
+  ancestorNodesAtSelection,
   AncestorsList,
   areNodesEquals,
   areNodeTypesEquals,
   isAlignableNode,
-  isListNode,
   NodeForLookup,
   NodeTypeForLookup
 } from '../utilities/nodes-helper';
@@ -26,6 +25,7 @@ import {
   changeFontFamily,
   changeFontSize,
   changeTextAlignment,
+  clearFormat,
   decreaseIndent,
   editContent,
   expandAndRemoveMarks,
@@ -56,6 +56,7 @@ import {MenuItemPopupFormulaComponent} from './popups/menu-item-popup-formula.co
 import {FilterKeys} from '../utilities/multipurpose-helper';
 import {MenuItemPopupFontFamilyComponent} from './popups/menu-item-popup-font-family.component';
 import {MenuItemPopupFontSizeComponent} from './popups/menu-item-popup-font-size.component';
+import {isListNode} from '../utilities/list-helper';
 
 /** Possible statuses of the menu item */
 export enum MenuItemStatus {
@@ -134,7 +135,7 @@ export class CursorActiveElements {
    */
   static from(state: EditorState): CursorActiveElements {
     const marks = activeMarksInSelectionEnd(state);
-    const ancestors = ancestorNodesAtCursor(state);
+    const ancestors = ancestorNodesAtSelection(state);
     return new CursorActiveElements(marks, ancestors);
   }
 }
@@ -171,8 +172,10 @@ export type MenuItemPopupAction<
   }
 )
 
-export type MarkMenuItemActions =
-  | 'link'
+type BasicActions =
+  | 'clear_format'
+  ;
+type MarkTypeActions =
   | 'remove_link'
   | 'inline_code'
   | 'underline'
@@ -181,13 +184,15 @@ export type MarkMenuItemActions =
   | 'bold'
   | 'superscript'
   | 'subscript'
-	| 'font_color'
-	| 'font_background'
+  ;
+type MarkPopupActions =
+  | 'link'
+  | 'font_color'
+  | 'font_background'
   | 'font_family'
   | 'font_size'
   ;
-export type NodeMenuItemActions =
-  | 'image'
+type NodeTypeActions =
   | 'blockquote'
   | 'indent'
   | 'deindent'
@@ -198,7 +203,6 @@ export type NodeMenuItemActions =
   | 'code_block'
   | 'ordered_list'
   | 'bullet_list'
-  | 'create_table'
   | 'delete_table'
   | 'add_table_row_before'
   | 'add_table_row_after'
@@ -210,11 +214,19 @@ export type NodeMenuItemActions =
 	| 'centered_alignment'
 	| 'right_alignment'
 	| 'justified_alignment'
+  ;
+type NodePopupActions =
+  | 'image'
+  | 'create_table'
   | 'katex_formula'
   ;
-export type MenuItemTypes =
-  & { readonly [action in NodeMenuItemActions]: MenuItemTypeAction<NodeType> | MenuItemPopupAction<NodeType> }
-  & { readonly [action in MarkMenuItemActions]: MenuItemTypeAction<MarkType> | MenuItemPopupAction<MarkType> };
+export type MenuItemTypes = Readonly<
+  & { [action in BasicActions]: MenuItemBasicAction }
+  & { [action in MarkTypeActions]: MenuItemTypeAction<MarkType> }
+  & { [action in MarkPopupActions]: MenuItemPopupAction<MarkType> }
+  & { [action in NodeTypeActions]: MenuItemTypeAction<NodeType> }
+  & { [action in NodePopupActions]: MenuItemPopupAction<NodeType> }
+  >;
 
 /** List of predefined basic menu item types */
 export const menuItemTypes: MenuItemTypes = {
@@ -337,8 +349,23 @@ export const menuItemTypes: MenuItemTypes = {
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
   },
+  clear_format: {
+    attrs({state, attrs}) {
+      return {
+        from: state.selection.from,
+        to: state.selection.to,
+        ...attrs
+      };
+    },
+    command({state, attrs}): Command {
+      const {from, to} = this.attrs({state, attrs});
+      return clearFormat(from, to);
+    },
+    status({state, attrs}) {
+      return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
+    },
+  },
 
-  // Color related //
   // Font related //
   font_color: changeColor(true),
   font_background: changeColor(false),
@@ -417,8 +444,8 @@ export const menuItemTypes: MenuItemTypes = {
   paragraph: {
     type: nodeTypes.paragraph,
     attrs({attrs}) { return attrs ?? {}; },
-    command(): Command {
-      return setBlockType(this.type);
+    command({state, attrs}): Command {
+      return setBlockType(this.type, this.attrs({state, attrs}));
     },
     status({state, elements, attrs}): MenuItemStatus {
       return elements.hasNodeType(this.type) ? MenuItemStatus.ACTIVE
@@ -474,7 +501,7 @@ export const menuItemTypes: MenuItemTypes = {
       return listCommands(this.type);
     },
     status({state, elements, attrs}): MenuItemStatus {
-      const isCurrentType = areMarkTypesEquals(elements.firstAncestor(isListNode)?.type, this.type);
+      const isCurrentType = areNodeTypesEquals(elements.firstAncestor(isListNode)?.type, this.type);
       return isCurrentType ? MenuItemStatus.ACTIVE
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
@@ -486,7 +513,7 @@ export const menuItemTypes: MenuItemTypes = {
       return listCommands(this.type);
     },
     status({state, elements, attrs}): MenuItemStatus {
-      const isCurrentType = areMarkTypesEquals(elements.firstAncestor(isListNode)?.type, this.type);
+      const isCurrentType = areNodeTypesEquals(elements.firstAncestor(isListNode)?.type, this.type);
       return isCurrentType ? MenuItemStatus.ACTIVE
         : (this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED);
     },
@@ -573,7 +600,7 @@ function heading_action(level: number): MenuItemTypeAction<NodeType> {
     },
     status({state, elements, attrs}): MenuItemStatus {
       const node: NodeForLookup = {type: this.type, attrs: this.attrs({state, attrs})};
-      if (elements.hasNode(node,  {exclude: ['alignment']})) { return MenuItemStatus.ACTIVE; }
+      if (elements.hasNode(node,  {exclude: [AlignableNodeData.ATTR_NAME]})) { return MenuItemStatus.ACTIVE; }
 
       return this.command({state, attrs})(state) ? MenuItemStatus.ENABLED : MenuItemStatus.DISABLED;
     },
@@ -672,7 +699,7 @@ function alignText(alignment: AlignmentStyle): MenuItemTypeAction<NodeType> {
     status({state, attrs, elements}): MenuItemStatus {
       const {alignment} = this.attrs({state, attrs});
       const alignableNode = elements.ancestors.find(node => isAlignableNode(node));
-      if (alignableNode?.attrs['alignment'] === alignment) {
+      if (alignableNode?.attrs[AlignableNodeData.ATTR_NAME] === alignment) {
         return MenuItemStatus.ACTIVE;
       }
 
