@@ -31,10 +31,10 @@ export class AppComponent {
     '<span style="color: white; background-color: black">text</span>' +
     ' ' +
     '<p>' +
-    '<span style="font-family: &quot;Times New Roman&quot;, serif">This text is in Times New Roman font</span>' +
+    '<span style="font-family: SortsMillGoudyTTRegular, serif">This text is in Sorts Mill Goudy font</span>' +
     '</p>' +
     ' ' +
-    '<p>' +
+    '<p><span style="font-family: GeometricSansSerifv1Regular, serif">' +
     '<span style="font-size: 8">tiny</span>' +
     ' - ' +
     '<span style="font-size: 12">small</span>' +
@@ -44,7 +44,7 @@ export class AppComponent {
     '<span style="font-size: 30">big</span>' +
     ' - ' +
     '<span style="font-size: 60">huge</span>' +
-    '</p>' +
+    '</span></p>' +
     ' ' +
     '<p style="text-align: left">Left aligned text</p>' +
     '<p style="text-align: center">Center aligned text</p>' +

@@ -19,18 +19,17 @@ export class MenuItemPopupFontFamilyComponent extends MenuItemPopupForActionComp
 
   protected readonly radio: Radio = [
     radioDefaultValue('Helvetica'),
-    radioValue('Roboto', 'Roboto, sans-serif'),
-    radioValue('Arial', 'Arial, sans-serif'),
-    radioValue('Calibri', 'Calibri, sans-serif'),
-    radioValue('Times New Roman', '\"Times New Roman\", serif'),
-    radioValue('Georgia', 'Georgia, serif'),
-    radioValue('Rockwell', 'Rockwell, serif'),
-    radioValue('Consolas', 'Consolas, monospace'),
+    radioValue('Roboto', 'RobotoRegular, sans-serif'),
+    radioValue('Criativa', 'CriativaSansRegular, sans-serif'),
+    radioValue('Gauge', 'GaugeRegular, sans-serif'),
+    radioValue('Sorts Mill Goudy', 'SortsMillGoudyTTRegular, serif'),
+    radioValue('Geometric', 'GeometricSansSerifv1Regular, serif'),
+    radioValue('CMU Concrete', 'CMUConcreteRoman, serif'),
     radioValue('Courier New', '\"Courier New\", monospace'),
-    radioValue('Lucida Console', '\"Lucida Console\", monospace'),
-    radioValue('Comic Sans', '\"Comic Sans\", cursive'),
-    radioValue('Impact', 'Impact, monospace'),
-    radioValue('Papyrus', 'papyrus, fantasy'),
+    radioValue('Interval', 'IntervalBook, monospace'),
+    radioValue('DejaVu', 'DejaVuMarkupBook, monospace'),
+    radioValue('Comic Relief', 'ComicReliefRegular, fantasy'),
+    radioValue('GFS Ambrosia', 'GFSAmbrosiaRegular, fantasy'),
   ];
 
   protected readonly radioValueStyle = (radioValue: RadioValue): string => generateStyles({
